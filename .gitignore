@@ -93,3 +93,6 @@ target/
 
 # Debug files
 *.dSYM/
+
+# IDEA and PyCharm files
+.idea/
