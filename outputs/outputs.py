@@ -1,7 +1,16 @@
 import RPi.GPIO as GPIO
 import time
 
+from shift_reg_lib import ShiftRegister
 
+
+# устанавливаем пины
+si = 37  # пин для входных данных
+rck = 33  # пин для сдвига регистров хранения
+sck = 35  # пин для синхросигнала и сдвига
+sclr = 40  # пин для очистки
+
+WorkRegistr = ShiftRegister(si, sck, rck, sclr)
 
 class Outputs(object):
     # Константы:
@@ -51,6 +60,43 @@ class Outputs(object):
 
         self.openthirdblind = 0x20000
         self.closethirdblind = 0x10000
+
+        self.currentstate = 0x0
+
+        self.control_Door_dict = {'Open first door':self.openfirstdoor,
+                           'Close first door':self.closefirstdoor,
+                            'Open second door': self.openseconddoor,
+                            'Close second door': self.closeseconddoor,
+                            'Open third door': self.openthirddoor,
+                            'Close third door': self.closethirddoor,
+                            'Open fourth door': self.openfourthdoor,
+                            'Close fourth door': self.closefourthdoor}
+
+        self.controlLED_dict = {'On first LED':self.firstLED,
+                                 'Off first LED': self.firstLED,
+                                 'On second LED':self.secondLED,
+                                 'Off second LED': self.secondLED,
+                                 'On third LED': self.thirdLED,
+                                 'OFF third LED': self.thirdLED,
+                                 'On Fourth LED': self.fourthLED,
+                                 'Off Fourth LED': self.fourthLED,
+                                 'On fifth LED': self.fifthLED,
+                                 'Off fifth LED': self.fifthLED,
+                                 'On sixth LED': self.sixthLED,
+                                 'Off sixth LED':self.sixthLED}
+
+        self.control_Cooler_dict = {'On cooler': self.cooler,
+                                  'Off cooler': self.cooler}
+
+
+        self.control_Blind_dict = {'Open first blind': self.openfirstblind,
+                                 'Close first blind': self.closefirstblind,
+                                 'Open second blind': self.opensecondblind,
+                                 'Close second blind': self.closesecondblind,
+                                 'Open third blind': self.openthirdblind,
+                                 'Close third blind': self.closethirdblind}
+
+
         return
 
     def __del__(self):
@@ -58,20 +104,29 @@ class Outputs(object):
         Деструктор, проивзодит установку всех компонентов в начальное состояние
         :return: none
         """
-
-
-        # TODO: пока БЕЗ cleanup!!!!
+        self.control_Door_dict.clear()
+        self.controlLED_dict.clear()
+        self.control_Cooler_dict.clear()
+        self.control_Blind_dict.clear()
         return
-    open_door('to kitchen')
+
     def open_door(self, door_id):
         """
         Функция для открытия двери
         :param door_id: идентификатор двери (строка либо число, выбери сам)
         :return: True - успешно, False - неуспешно
         """
-        # TODO: написать код и убрать NotImplementedError
-        raise NotImplementedError('Not implemented')
-        return False
+        if door_id != str:
+            raise ValueError('Value must be a string literal')
+
+        if door_id not in self.control_Door_dict():
+            raise ValueError('Value not found')
+
+        RightDoor = self.control_Door_dict.get(door_id)
+        WorkRegistr.write_data(RightDoor)
+
+
+        return
 
     def turn_light(self, room_name, light_action):
         """
