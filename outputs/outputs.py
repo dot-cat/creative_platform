@@ -112,10 +112,61 @@ class Outputs(object):
             raise ValueError('Value not found')
 
         door_data = self.control_Door_dict.get(door_id)
-        self.set_bit(door_data[0].pin_number, door_data[0].value)
-        self.set_bit(door_data[1].pin_number, door_data[1].value)
-        WorkRegistr.write_data(self.current_state)
-        return True
+        if(self.check_bit(door_data[0].pin_number) == 1):
+            self.set_bit(door_data[0].pin_number, self.ON)
+            self.set_bit(door_data[1].pin_number, self.ON)
+            WorkRegistr.write_data(self.current_state)
+            return
+        else:
+            self.set_bit(door_data[0].pin_number, door_data[0].value)
+            self.set_bit(door_data[1].pin_number, door_data[1].value)
+            WorkRegistr.write_data(self.current_state)
+            return True
+
+    def close_door(self, door_id):
+        """
+        Функция для открытия двери
+        :param door_id: идентификатор двери (строка либо число, выбери сам)
+        :return: True - успешно, False - неуспешно
+        """
+        if type(door_id) != str:
+            raise ValueError('Value must be a string literal')
+
+        if door_id not in self.control_Door_dict:
+            raise ValueError('Value not found')
+
+        door_data = self.control_Door_dict.get(door_id)
+        if (self.check_bit(door_data[0].pin_number) == 0):
+            self.set_bit(door_data[0].pin_number, self.OFF)
+            self.set_bit(door_data[1].pin_number, self.OFF)
+            WorkRegistr.write_data(self.current_state)
+            return
+        else:
+            self.set_bit(door_data[0].pin_number, door_data[0].value)
+            self.set_bit(door_data[1].pin_number, door_data[1].value)
+            WorkRegistr.write_data(self.current_state)
+            return True
+
+
+    def stop_door(self, door_id):
+        if type(door_id) != str:
+            raise ValueError('Value must be a string literal')
+
+        if door_id not in self.control_Door_dict:
+            raise ValueError('Value not found')
+
+        door_data = self.control_Door_dict.get(door_id)
+        if (self.check_bit(door_data[0].pin_number) == 0):
+            self.set_bit(door_data[0].pin_number, self.OFF)
+            self.set_bit(door_data[1].pin_number, self.OFF)
+            WorkRegistr.write_data(self.current_state)
+            return
+        else:
+            self.set_bit(door_data[0].pin_number, self.ON)
+            self.set_bit(door_data[1].pin_number, self.ON)
+            WorkRegistr.write_data(self.current_state)
+
+
 
     def turn_light(self, room_name, light_action):
         """
@@ -165,3 +216,20 @@ class Outputs(object):
             self.current_state |= (1 << bit_num)
 
         return
+
+
+    def check_bit(self, bit_num):
+        if bit_num < 0:
+            raise ValueError('Bit number must be positive or zero')
+        copy_current_state = self.current_state
+
+        if ((copy_current_state >> bit_num) & 1):
+            return 1
+        else:
+            return 0
+
+
+
+
+
+
