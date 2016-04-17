@@ -105,7 +105,7 @@ class Outputs(object):
         :param door_id: идентификатор двери (строка либо число, выбери сам)
         :return: True - успешно, False - неуспешно
         """
-        if door_id != str:
+        if type(door_id) != str:
             raise ValueError('Value must be a string literal')
 
         if door_id not in self.control_Door_dict:
@@ -127,7 +127,7 @@ class Outputs(object):
         if type(room_name) != str:
             raise ValueError('room_name must be a string')
 
-        elif room_name not in self.ROOMS:
+        elif room_name not in self.room_led_dict:
             raise ValueError('unable to find the room with such name')
 
         elif light_action not in self.ACTIONS:
@@ -139,10 +139,10 @@ class Outputs(object):
         led_data = self.room_led_dict.get(room_name)
 
         if light_action == self.ON:
-            self.set_bit(led_data.pin_number, 1)
+            self.set_bit(led_data, 1)
 
         elif light_action == self.OFF:
-            self.set_bit(led_data.pin_number, 0)
+            self.set_bit(led_data, 0)
 
         else:
             raise ValueError('Unknown action')
@@ -155,7 +155,7 @@ class Outputs(object):
         if bit_num < 0:
             raise ValueError('Bit number must be positive or zero')
 
-        if value != 0 or value != 1:
+        if value != 0 and value != 1:
             raise ValueError('Value must be 1 or zero, True or False')
 
         if value == 0:

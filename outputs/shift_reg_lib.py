@@ -3,7 +3,7 @@ import time
 
 
 class ShiftRegister(object):
-    def __init__(self, si, sck, rck, sclr, num_of_slaves):  # обьявляем конструктор
+    def __init__(self, si, sck, rck, sclr):  # обьявляем конструктор
         """
         Конструктор объекта
         :param si: номер пина для данных
@@ -78,8 +78,8 @@ class ShiftRegister(object):
         :param data: 8 бит данных
         :return: none
         """
-        if data > 0xFF:
-            raise ValueError('Number of bits in data can\'t exceed 8 bits')
+        #if data > 0xFF:
+        #    raise ValueError('Number of bits in data can\'t exceed 8 bits')
 
         # Очищаем содержимое регистра
         self.clear()
