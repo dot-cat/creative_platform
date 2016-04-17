@@ -18,7 +18,12 @@ class PinData(object):
         self.pin_number = pin_number
         self.value = value
         return 
-    
+
+class PinOneData(object):
+    def __init__(self, pin_number):
+        self.pin_number = pin_number
+        return
+
 
 class Outputs(object):
     # Константы:
@@ -63,7 +68,12 @@ class Outputs(object):
                                   'Open third door':   [PinData(self.door_3_plus, 1), PinData(self.door_3_minus, 0)],
                                   'Close third door':  [PinData(self.door_3_plus, 0), PinData(self.door_3_minus, 1)],
                                   'Open fourth door':  [PinData(self.door_4_plus, 1), PinData(self.door_4_minus, 0)],
-                                  'Close fourth door': [PinData(self.door_4_plus, 0), PinData(self.door_4_minus, 1)]
+                                  'Close fourth door': [PinData(self.door_4_plus, 0), PinData(self.door_4_minus, 1)],
+                                  'First door': [PinOneData(self.door_1_plus), PinOneData(self.door_1_minus)],
+                                  'Second door':  [PinOneData(self.door_2_plus), PinOneData(self.door_2_minus)],
+                                  'Third door':   [PinOneData(self.door_3_plus), PinOneData(self.door_3_minus)],
+                                  'Fourth door': [PinOneData(self.door_4_plus), PinOneData(self.door_4_minus)],
+
                                   }
 
         self.room_led_dict = {'room 1':  self.diode_1,
