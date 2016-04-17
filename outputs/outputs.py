@@ -140,8 +140,10 @@ class Outputs(object):
 
         if light_action == self.ON:
             self.set_bit(led_data.pin_number, 1)
+
         elif light_action == self.OFF:
             self.set_bit(led_data.pin_number, 0)
+
         else:
             raise ValueError('Unknown action')
 
