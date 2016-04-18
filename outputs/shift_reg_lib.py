@@ -3,7 +3,7 @@ import time
 
 
 class ShiftRegister(object):
-    def __init__(self, si, sck, rck, sclr, num_of_slaves):  # обьявляем конструктор
+    def __init__(self, si, sck, rck, sclr):  # обьявляем конструктор
         """
         Конструктор объекта
         :param si: номер пина для данных
@@ -43,9 +43,9 @@ class ShiftRegister(object):
         Установка всех выводов в ноль
         :return: none
         """
-        GPIO.output(self.si, GPIO.LOW)  # Устанавливаем пин в логический ноль
-        GPIO.output(self.rck, GPIO.LOW)  # Устанавливаем пин в логический ноль
-        GPIO.output(self.clk, GPIO.LOW)  # Устанавливаем пин в логический ноль
+        GPIO.output(self.si,   GPIO.LOW)  # Устанавливаем пин в логический ноль
+        GPIO.output(self.rck,  GPIO.LOW)  # Устанавливаем пин в логический ноль
+        GPIO.output(self.clk,  GPIO.LOW)  # Устанавливаем пин в логический ноль
         GPIO.output(self.sclr, GPIO.LOW)  # Устанавливаем пин в логический ноль
         return
 
@@ -78,14 +78,14 @@ class ShiftRegister(object):
         :param data: 8 бит данных
         :return: none
         """
-        if data > 0xFF:
-            raise ValueError('Number of bits in data can\'t exceed 8 bits')
+        #if data > 0xFF:
+        #    raise ValueError('Number of bits in data can\'t exceed 8 bits')
 
         # Очищаем содержимое регистра
         self.clear()
 
-        for i in range(0, 8):  # Обрабатываем восемь бит
-            if data & 0x80:    # Проверяем старший бит, если он равен единице...
+        for i in range(0, 24):   # Обрабатываем восемь бит
+            if data & 0x800000:  # Проверяем старший бит, если он равен единице...
                 GPIO.output(self.si, GPIO.HIGH)  # ...то отправляем единицу в регистр
             else:
                 GPIO.output(self.si, GPIO.LOW)   # ...иначе отправляем ноль
