@@ -12,24 +12,25 @@ sclr = 40  # пин для очистки
 
 WorkRegistr = ShiftRegister(si, sck, rck, sclr)
 
-
-class PinData(object):
-    def __init__(self, pin_number, value):
-        self.pin_number = pin_number
-        self.value = value
+class PolarElement(object):
+    def __init__(self, shift_plus, shift_minus):
+        self.shift_plus = shift_plus
+        self.shift_minus = shift_minus
         return 
 
-class PinOneData(object):
-    def __init__(self, pin_number):
-        self.pin_number = pin_number
-        return
+
+#class PinData(object):
+#    def __init__(self, shift, value):
+#        self.shift = shift
+#        self.value = value
+#        return
 
 
 class Outputs(object):
     # Константы:
     ON  = True
     OFF = False
-    ACTIONS = [ON, OFF]
+    STATES = [ON, OFF]
 
     def __init__(self):
         """
@@ -37,66 +38,53 @@ class Outputs(object):
         :return: none
         """
 
-        self.door_1_plus  = 0
-        self.door_1_minus = 1
-        self.door_2_plus  = 2
-        self.door_2_minus = 3
-        self.diode_1 = 4
-        self.diode_2 = 5
-        self.door_3_plus  = 6
-        self.door_3_minus = 7
-        self.door_4_plus  = 8
-        self.door_4_minus = 9
-        self.diode_3 = 10
-        self.diode_4 = 11
-        self.blind_1_plus  = 12
-        self.blind_1_minus = 13
-        self.blind_2_plus  = 14
-        self.blind_2_minus = 15
-        self.blind_3_plus  = 16
-        self.blind_3_minus = 17
-        self.diode_5 = 18
-        self.diode_6 = 19
-        self.cooler  = 20
+        self.door_1_plus  = 16 #0
+        self.door_1_minus = 17 #1
+        self.door_2_plus  = 18 #2
+        self.door_2_minus = 19 #3
+        self.diode_1 = 20 #4
+        self.diode_2 = 21 #5
+        self.door_3_plus  = 22 #6
+        self.door_3_minus = 23 #7
+        self.door_4_plus  = 8 #8
+        self.door_4_minus = 9 #9
+        self.diode_3 = 10 #10
+        self.diode_4 = 11 #11
+        self.blind_1_plus  = 12 #12
+        self.blind_1_minus = 13 #13
+        self.blind_2_plus  = 14 #14
+        self.blind_2_minus = 15 #15
+        self.blind_3_plus  = 16 #16
+        self.blind_3_minus = 17 #17
+        self.diode_5 = 2 #18
+        self.diode_6 = 3 #19
+        self.cooler  = 4 #20
 
         self.current_state = 0x0
 
-        self.control_Door_dict = {'Open first door':   [PinData(self.door_1_plus, 1), PinData(self.door_1_minus, 0)],
-                                  'Close first door':  [PinData(self.door_1_plus, 0), PinData(self.door_1_minus, 1)],
-                                  'Open second door':  [PinData(self.door_2_plus, 1), PinData(self.door_2_minus, 0)],
-                                  'Close second door': [PinData(self.door_2_plus, 0), PinData(self.door_2_minus, 1)],
-                                  'Open third door':   [PinData(self.door_3_plus, 1), PinData(self.door_3_minus, 0)],
-                                  'Close third door':  [PinData(self.door_3_plus, 0), PinData(self.door_3_minus, 1)],
-                                  'Open fourth door':  [PinData(self.door_4_plus, 1), PinData(self.door_4_minus, 0)],
-                                  'Close fourth door': [PinData(self.door_4_plus, 0), PinData(self.door_4_minus, 1)],
-                                  'First door': [PinOneData(self.door_1_plus), PinOneData(self.door_1_minus)],
-                                  'Second door':  [PinOneData(self.door_2_plus), PinOneData(self.door_2_minus)],
-                                  'Third door':   [PinOneData(self.door_3_plus), PinOneData(self.door_3_minus)],
-                                  'Fourth door': [PinOneData(self.door_4_plus), PinOneData(self.door_4_minus)],
+        self.door_shifts = {
+                              'First door':   PolarElement(self.door_1_plus, self.door_1_minus),
+                              'Second door':  PolarElement(self.door_2_plus, self.door_2_minus),
+                              'Third door':   PolarElement(self.door_3_plus, self.door_3_minus),
+                              'Fourth door':  PolarElement(self.door_4_plus, self.door_4_minus)
+                            }
 
-                                  }
+        self.room_led_shifts = {
+                                'room 1':  self.diode_1,
+                                'room 2':  self.diode_2,
+                                'room 3':  self.diode_3,
+                                'room 4':  self.diode_4,
+                                'room 5':  self.diode_5,
+                                'room 6':  self.diode_6
+                               }
 
-        self.room_led_dict = {'room 1':  self.diode_1,
-                              'room 2':  self.diode_2,
-                              'room 3':  self.diode_3,
-                              'room 4':  self.diode_4,
-                              'room 5':  self.diode_5,
-                              'room 6':  self.diode_6
-                              }
+        self.coolers_shifts = {'cooler':  self.cooler}
 
-        self.control_Cooler_dict = {'On cooler':  PinData(self.cooler, 1),
-                                    'Off cooler': PinData(self.cooler, 0)}
-
-        self.control_Blind_dict = {'Open first blind':   [PinData(self.blind_1_plus, 1), PinData(self.blind_1_minus, 0)],
-                                   'Close first blind':  [PinData(self.blind_1_plus, 0), PinData(self.blind_1_minus, 1)],
-                                   'Open second blind':  [PinData(self.blind_2_plus, 1), PinData(self.blind_1_minus, 0)],
-                                   'Close second blind': [PinData(self.blind_2_plus, 0), PinData(self.blind_1_minus, 1)],
-                                   'Open third blind':   [PinData(self.blind_3_plus, 1), PinData(self.blind_1_minus, 0)],
-                                   'Close third blind':  [PinData(self.blind_3_plus, 0), PinData(self.blind_1_minus, 1)],
-                                   'First blind': [PinOneData(self.blind_1_plus), PinOneData(self.blind_1_minus)],
-                                   'Second blind': [PinOneData(self.blind_2_plus), PinOneData(self.blind_1_minus)],
-                                   'Third blind': [PinOneData(self.blind_3_plus), PinOneData(self.blind_1_minus)]
-                                   }
+        self.blind_shifts = {
+                               'First blind':  PolarElement(self.blind_1_plus, self.blind_1_minus),
+                               'Second blind': PolarElement(self.blind_2_plus, self.blind_2_minus),
+                               'Third blind':  PolarElement(self.blind_3_plus, self.blind_3_minus)
+                            }
 
 
         return
@@ -106,10 +94,10 @@ class Outputs(object):
         Деструктор, проивзодит установку всех компонентов в начальное состояние
         :return: none
         """
-        self.control_Door_dict.clear()
-        self.room_led_dict.clear()
-        self.control_Cooler_dict.clear()
-        self.control_Blind_dict.clear()
+        self.door_shifts.clear()
+        self.room_led_shifts.clear()
+        self.coolers_shifts.clear()
+        self.blind_shifts.clear()
         return
 
     def open_door(self, door_id):
@@ -121,18 +109,19 @@ class Outputs(object):
         if type(door_id) != str:
             raise ValueError('Value must be a string literal')
 
-        if door_id not in self.control_Door_dict:
+        if door_id not in self.door_shifts:
             raise ValueError('Value not found')
 
-        door_data = self.control_Door_dict.get(door_id)
-        if(self.check_bit(door_data[0].pin_number) == 1):
-            self.set_bit(door_data[0].pin_number, 1)
-            self.set_bit(door_data[1].pin_number, 1)
+        door_data = self.door_shifts.get(door_id)
+        
+        if self.check_bit(door_data.shift_plus) == 1:
+            self.set_bit(door_data.shift_plus,  1)
+            self.set_bit(door_data.shift_minus, 1)
             WorkRegistr.write_data(self.current_state)
             return
         else:
-            self.set_bit(door_data[0].pin_number, door_data[0].value)
-            self.set_bit(door_data[1].pin_number, door_data[1].value)
+            self.set_bit(door_data.shift_plus,  1)
+            self.set_bit(door_data.shift_minus, 0)
             WorkRegistr.write_data(self.current_state)
             return True
 
@@ -145,18 +134,19 @@ class Outputs(object):
         if type(door_id) != str:
             raise ValueError('Value must be a string literal')
 
-        if door_id not in self.control_Door_dict:
+        if door_id not in self.door_shifts:
             raise ValueError('Value not found')
 
-        door_data = self.control_Door_dict.get(door_id)
-        if (self.check_bit(door_data[0].pin_number) == 0):
-            self.set_bit(door_data[0].pin_number, 0)
-            self.set_bit(door_data[1].pin_number, door_data[1].false)
+        door_data = self.door_shifts.get(door_id)
+
+        if self.check_bit(door_data.shift_plus) == 0:
+            self.set_bit(door_data.shift_plus,  0)
+            self.set_bit(door_data.shift_minus, 0)
             WorkRegistr.write_data(self.current_state)
             return
         else:
-            self.set_bit(door_data[0].pin_number, door_data[0].value)
-            self.set_bit(door_data[1].pin_number, door_data[1].value)
+            self.set_bit(door_data.shift_plus,  0)
+            self.set_bit(door_data.shift_minus, 1)
             WorkRegistr.write_data(self.current_state)
             return True
 
@@ -165,18 +155,18 @@ class Outputs(object):
         if type(door_id) != str:
             raise ValueError('Value must be a string literal')
 
-        if door_id not in self.control_Door_dict:
+        if door_id not in self.door_shifts:
             raise ValueError('Value not found')
 
-        door_data = self.control_Door_dict.get(door_id)
-        if (self.check_bit(door_data[0].pin_number) == 0):
-            self.set_bit(door_data[0].pin_number, 0)
-            self.set_bit(door_data[1].pin_number, door_data[1].false)
+        door_data = self.door_shifts.get(door_id)
+        if (self.check_bit(door_data[0].shift) == 0):
+            self.set_bit(door_data[0].shift, 0)
+            self.set_bit(door_data[1].shift, door_data[1].false)
             WorkRegistr.write_data(self.current_state)
             return
         else:
-            self.set_bit(door_data[0].pin_number, 1)
-            self.set_bit(door_data[1].pin_number, door_data[1].true)
+            self.set_bit(door_data[0].shift, 1)
+            self.set_bit(door_data[1].shift, door_data[1].true)
             WorkRegistr.write_data(self.current_state)
             return
 
@@ -189,18 +179,18 @@ class Outputs(object):
         if type(blind_id) != str:
             raise ValueError('Value must be a string literal')
 
-        if blind_id not in self.control_Blind_dict:
+        if blind_id not in self.blind_shifts:
             raise ValueError('Value not found')
 
-        blind_data = self.control_Blind_dict.get(blind_id)
-        if (self.check_bit(blind_data[0].pin_number) == 0):
-            self.set_bit(blind_data[0].pin_number, blind_data[0].false)
-            self.set_bit(blind_data[1].pin_number, blind_data[0].false)
+        blind_data = self.blind_shifts.get(blind_id)
+        if (self.check_bit(blind_data[0].shift) == 0):
+            self.set_bit(blind_data[0].shift, blind_data[0].false)
+            self.set_bit(blind_data[1].shift, blind_data[0].false)
             WorkRegistr.write_data(self.current_state)
             return
         else:
-            self.set_bit(blind_data[0].pin_number, blind_data[0].value)
-            self.set_bit(blind_data[1].pin_number, blind_data[1].value)
+            self.set_bit(blind_data[0].shift, blind_data[0].value)
+            self.set_bit(blind_data[1].shift, blind_data[1].value)
             WorkRegistr.write_data(self.current_state)
             return True
 
@@ -208,18 +198,18 @@ class Outputs(object):
         if type(blind_id) != str:
             raise ValueError('Value must be a string literal')
 
-        if blind_id not in self.control_Blind_dict:
+        if blind_id not in self.blind_shifts:
             raise ValueError('Value not found')
 
-        blind_data = self.control_Blind_dict.get(blind_id)
-        if (self.check_bit(blind_data[0].pin_number) == 0):
-            self.set_bit(blind_data[0].pin_number, blind_data[0].false)
-            self.set_bit(blind_data[1].pin_number, blind_data[0].false)
+        blind_data = self.blind_shifts.get(blind_id)
+        if (self.check_bit(blind_data[0].shift) == 0):
+            self.set_bit(blind_data[0].shift, blind_data[0].false)
+            self.set_bit(blind_data[1].shift, blind_data[0].false)
             WorkRegistr.write_data(self.current_state)
             return
         else:
-            self.set_bit(blind_data[0].pin_number, blind_data[0].true)
-            self.set_bit(blind_data[1].pin_number, blind_data[1].true)
+            self.set_bit(blind_data[0].shift, blind_data[0].true)
+            self.set_bit(blind_data[1].shift, blind_data[1].true)
             WorkRegistr.write_data(self.current_state)
             return
 
@@ -227,46 +217,46 @@ class Outputs(object):
         if type(blind_id) != str:
             raise ValueError('Value must be a string literal')
 
-        if blind_id not in self.control_Blind_dict:
+        if blind_id not in self.blind_shifts:
             raise ValueError('Value not found')
 
-        blind_data = self.control_Blind_dict.get(blind_id)
-        if (self.check_bit(blind_data[0].pin_number) == 1):
-            self.set_bit(blind_data[0].pin_number, blind_data[0].true)
-            self.set_bit(blind_data[1].pin_number, blind_data[1].true)
+        blind_data = self.blind_shifts.get(blind_id)
+        if (self.check_bit(blind_data[0].shift) == 1):
+            self.set_bit(blind_data[0].shift, blind_data[0].true)
+            self.set_bit(blind_data[1].shift, blind_data[1].true)
             WorkRegistr.write_data(self.current_state)
             return
         else:
-            self.set_bit(blind_data[0].pin_number, blind_data[0].value)
-            self.set_bit(blind_data[1].pin_number, blind_data[1].value)
+            self.set_bit(blind_data[0].shift, blind_data[0].value)
+            self.set_bit(blind_data[1].shift, blind_data[1].value)
             WorkRegistr.write_data(self.current_state)
             return True
 
-    def turn_light(self, room_name, light_action):
+    def turn_light(self, room_name, state):
         """
         Включение или выключение света
         :param room_name: имя комнаты, строка
-        :param light_action: включить либо выключить свет
+        :param state: включить либо выключить свет
         :return: True - успешно, False - неуспешно
         """
         if type(room_name) != str:
             raise ValueError('room_name must be a string')
 
-        elif room_name not in self.room_led_dict:
+        elif room_name not in self.room_led_shifts:
             raise ValueError('unable to find the room with such name')
 
-        elif light_action not in self.ACTIONS:
+        elif state not in self.STATES:
             raise ValueError('wrong action with lights')
 
-        elif room_name not in self.room_led_dict:
+        elif room_name not in self.room_led_shifts:
             raise ValueError('Value not found')
 
-        led_data = self.room_led_dict.get(room_name)
+        led_data = self.room_led_shifts.get(room_name)
 
-        if light_action == self.ON:
+        if state == self.ON:
             self.set_bit(led_data, 1)
 
-        elif light_action == self.OFF:
+        elif state == self.OFF:
             self.set_bit(led_data, 0)
 
         else:
@@ -277,15 +267,17 @@ class Outputs(object):
         return True
 
     def turn_cooler(self, cooler_id):
-
-        if(cooler_id != str):
+        if cooler_id != str:
             raise ValueError('Value must be a string literal')
 
-        if cooler_id not in self.control_Cooler_dict:
-            raise ValueError('Value not found')
+        if cooler_id not in self.coolers_shifts:
+            raise ValueError('Cooler name is not found')
 
-        cooler_data = self.control_Cooler_dict.get(cooler_id)
-        self.set_bit(cooler_data[0].pin_number, cooler_data[0].value)
+        cooler_data = self.coolers_shifts.get(cooler_id)
+
+        if
+
+        self.set_bit(cooler_data[0].shift, cooler_data[0].value)
         WorkRegistr.write_data(self.current_state)
 
 
@@ -311,12 +303,4 @@ class Outputs(object):
             return 1
         else:
             return 0
-
-
-
-
-
-
-
-
 
