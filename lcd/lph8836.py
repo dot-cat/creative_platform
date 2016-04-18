@@ -1,9 +1,11 @@
 import spidev
-import RPIO
+#import RPIO
+import RPi.GPIO as GPIO
 
-CS_LCD = 10
+GPIO.setmode(GPIO.BOARD)
+CS_LCD = 40
 
-RPIO.setup(CS_LCD, RPIO.OUT, initial=RPIO.HIGH)
+GPIO.setup(CS_LCD, GPIO.OUT, initial=GPIO.HIGH)
 
 
 class hitachi(object):
@@ -18,18 +20,19 @@ class hitachi(object):
                       0x33, 0x07, 0x00, 0x34, 0x00, 0x05, 0x35, 0x07, 0x03, 0x36, 0x07, 0x07,
                       0x37, 0x00, 0x07, 0x3A, 0x12, 0x00, 0x3B, 0x00, 0x09, 0x07, 0x00, 0x05,
                       0x07, 0x00, 0x25, 0x07, 0x00, 0x27, 0x07, 0x00, 0x37]
-#    lph_rect_coord[6][3] = [0x74, 0x00, 0x16,
-#                       0x76, 131, 0,
-#                        0x74, 0x00, 0x17,
-#                        0x76, 18, 10,
-#                        0x74, 0x00, 0x21,
-#                        0x76, 10, 0]
+
+    lph_rect_coord = [[0x74, 0x00, 0x16],
+                        [0x76, 131, 0],
+                        [0x74, 0x00, 0x17],
+                        [0x76, 18, 10],
+                        [0x74, 0x00, 0x21],
+                        [0x76, 10, 0]]
 
     def __cs_hi(self):
-        RPIO.output(CS_LCD, 1)
+        GPIO.output(CS_LCD, GPIO.HIGH)
 
     def __cs_lo(self):
-        RPIO.output(CS_LCD, 0)
+        GPIO.output(CS_LCD, GPIO.LOW)
 
     def __init__(self):
         self.h_fontbg = 0x00
@@ -83,11 +86,13 @@ class hitachi(object):
             self.lph_rect_coord[5][2] = y1
         for i in range(0, 6):
             self.__cs_lo()
-            self.spi_send(lph_rect_coord[i][0])
-            self.spi_send(lph_rect_coord[i][1])
-            self.spi_send(lph_rect_coord[i][2])
+            self.spi_send(self.lph_rect_coord[i][0])
+            self.spi_send(self.lph_rect_coord[i][1])
+            self.spi_send(self.lph_rect_coord[i][2])
             self.__cs_hi()
         self.lph_spi_com(0x22)
+
+
 
     def fill_rect(self, hRGB, lRGB):
         self.__cs_lo()
