@@ -276,6 +276,19 @@ class Outputs(object):
 
         return True
 
+    def turn_cooler(self, cooler_id):
+
+        if(cooler_id != str):
+            raise ValueError('Value must be a string literal')
+
+        if cooler_id not in self.control_Cooler_dict:
+            raise ValueError('Value not found')
+
+        cooler_data = self.control_Cooler_dict.get(cooler_id)
+        self.set_bit(cooler_data[0].pin_number, cooler_data[0].value)
+        WorkRegistr.write_data(self.current_state)
+
+
     def set_bit(self, bit_num, value):
         if bit_num < 0:
             raise ValueError('Bit number must be positive or zero')
