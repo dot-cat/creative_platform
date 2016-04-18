@@ -126,8 +126,8 @@ class Outputs(object):
 
         door_data = self.control_Door_dict.get(door_id)
         if(self.check_bit(door_data[0].pin_number) == 1):
-            self.set_bit(door_data[0].pin_number, door_data[0].true)
-            self.set_bit(door_data[1].pin_number, door_data[0].true)
+            self.set_bit(door_data[0].pin_number, 1)
+            self.set_bit(door_data[1].pin_number, 1)
             WorkRegistr.write_data(self.current_state)
             return
         else:
@@ -150,7 +150,7 @@ class Outputs(object):
 
         door_data = self.control_Door_dict.get(door_id)
         if (self.check_bit(door_data[0].pin_number) == 0):
-            self.set_bit(door_data[0].pin_number, door_data[0].false)
+            self.set_bit(door_data[0].pin_number, 0)
             self.set_bit(door_data[1].pin_number, door_data[1].false)
             WorkRegistr.write_data(self.current_state)
             return
@@ -170,12 +170,12 @@ class Outputs(object):
 
         door_data = self.control_Door_dict.get(door_id)
         if (self.check_bit(door_data[0].pin_number) == 0):
-            self.set_bit(door_data[0].pin_number, door_data[0].false)
+            self.set_bit(door_data[0].pin_number, 0)
             self.set_bit(door_data[1].pin_number, door_data[1].false)
             WorkRegistr.write_data(self.current_state)
             return
         else:
-            self.set_bit(door_data[0].pin_number, door_data[0].true)
+            self.set_bit(door_data[0].pin_number, 1)
             self.set_bit(door_data[1].pin_number, door_data[1].true)
             WorkRegistr.write_data(self.current_state)
             return
