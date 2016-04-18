@@ -21,7 +21,7 @@ class hitachi(object):
                       0x37, 0x00, 0x07, 0x3A, 0x12, 0x00, 0x3B, 0x00, 0x09, 0x07, 0x00, 0x05,
                       0x07, 0x00, 0x25, 0x07, 0x00, 0x27, 0x07, 0x00, 0x37]
 
-    lph_rect_coord = [[0x74, 0x00, 0x16],
+    lph_rect_coord = [  [0x74, 0x00, 0x16],
                         [0x76, 131, 0],
                         [0x74, 0x00, 0x17],
                         [0x76, 18, 10],
@@ -45,21 +45,20 @@ class hitachi(object):
         self.spi.max_speed_hz = self.speed
         self.__cs_hi()
 
+    def __del__(self):
+        GPIO.cleanup()
+
     def spi_send(self, data):
         self.spi.xfer(data)
 
     def lph_spi_com(self, lph_com):
         self.__cs_lo()
-        self.spi_send(0x74)
-        self.spi_send(0x00)
-        self.spi_send(lph_com)
+        self.spi_send([0x74, 0x00, lph_com])
         self.__cs_hi()
 
     def lph_spi_dat(self, lph_dat_h, lph_dat_l):
         self.__cs_lo()
-        self.spi_send(0x76)
-        self.spi_send(lph_dat_h)
-        self.spi_send(lph_dat_l)
+        self.spi_send([0x76, lph_dat_h, lph_dat_l])
         self.__cs_hi()
 
     def lcd_init(self):
