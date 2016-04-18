@@ -126,8 +126,8 @@ class Outputs(object):
 
         door_data = self.control_Door_dict.get(door_id)
         if(self.check_bit(door_data[0].pin_number) == 1):
-            self.set_bit(door_data[0].pin_number, self.ON)
-            self.set_bit(door_data[1].pin_number, self.ON)
+            self.set_bit(door_data[0].pin_number, door_data[0].true)
+            self.set_bit(door_data[1].pin_number, door_data[0].true)
             WorkRegistr.write_data(self.current_state)
             return
         else:
@@ -150,8 +150,8 @@ class Outputs(object):
 
         door_data = self.control_Door_dict.get(door_id)
         if (self.check_bit(door_data[0].pin_number) == 0):
-            self.set_bit(door_data[0].pin_number, self.OFF)
-            self.set_bit(door_data[1].pin_number, self.OFF)
+            self.set_bit(door_data[0].pin_number, door_data[0].false)
+            self.set_bit(door_data[1].pin_number, door_data[1].false)
             WorkRegistr.write_data(self.current_state)
             return
         else:
@@ -170,13 +170,13 @@ class Outputs(object):
 
         door_data = self.control_Door_dict.get(door_id)
         if (self.check_bit(door_data[0].pin_number) == 0):
-            self.set_bit(door_data[0].pin_number, self.OFF)
-            self.set_bit(door_data[1].pin_number, self.OFF)
+            self.set_bit(door_data[0].pin_number, door_data[0].false)
+            self.set_bit(door_data[1].pin_number, door_data[1].false)
             WorkRegistr.write_data(self.current_state)
             return
         else:
-            self.set_bit(door_data[0].pin_number, self.ON)
-            self.set_bit(door_data[1].pin_number, self.ON)
+            self.set_bit(door_data[0].pin_number, door_data[0].true)
+            self.set_bit(door_data[1].pin_number, door_data[1].true)
             WorkRegistr.write_data(self.current_state)
             return
 
@@ -189,13 +189,13 @@ class Outputs(object):
         if type(blind_id) != str:
             raise ValueError('Value must be a string literal')
 
-        if blind_id not in self.control_Door_dict:
+        if blind_id not in self.control_Blind_dict:
             raise ValueError('Value not found')
 
-            blind_data = self.control_Blind_dict.get(blind_id)
+        blind_data = self.control_Blind_dict.get(blind_id)
         if (self.check_bit(blind_data[0].pin_number) == 0):
-            self.set_bit(blind_data[0].pin_number, self.OFF)
-            self.set_bit(blind_data[1].pin_number, self.OFF)
+            self.set_bit(blind_data[0].pin_number, blind_data[0].false)
+            self.set_bit(blind_data[1].pin_number, blind_data[0].false)
             WorkRegistr.write_data(self.current_state)
             return
         else:
@@ -208,18 +208,18 @@ class Outputs(object):
         if type(blind_id) != str:
             raise ValueError('Value must be a string literal')
 
-        if blind_id not in self.control_Door_dict:
+        if blind_id not in self.control_Blind_dict:
             raise ValueError('Value not found')
 
         blind_data = self.control_Blind_dict.get(blind_id)
         if (self.check_bit(blind_data[0].pin_number) == 0):
-            self.set_bit(blind_data[0].pin_number, self.OFF)
-            self.set_bit(blind_data[1].pin_number, self.OFF)
+            self.set_bit(blind_data[0].pin_number, blind_data[0].false)
+            self.set_bit(blind_data[1].pin_number, blind_data[0].false)
             WorkRegistr.write_data(self.current_state)
             return
         else:
-            self.set_bit(blind_data[0].pin_number, self.ON)
-            self.set_bit(blind_data[1].pin_number, self.ON)
+            self.set_bit(blind_data[0].pin_number, blind_data[0].true)
+            self.set_bit(blind_data[1].pin_number, blind_data[1].true)
             WorkRegistr.write_data(self.current_state)
             return
 
@@ -232,8 +232,8 @@ class Outputs(object):
 
         blind_data = self.control_Blind_dict.get(blind_id)
         if (self.check_bit(blind_data[0].pin_number) == 1):
-            self.set_bit(blind_data[0].pin_number, self.ON)
-            self.set_bit(blind_data[1].pin_number, self.ON)
+            self.set_bit(blind_data[0].pin_number, blind_data[0].true)
+            self.set_bit(blind_data[1].pin_number, blind_data[1].true)
             WorkRegistr.write_data(self.current_state)
             return
         else:
