@@ -110,20 +110,20 @@ class Outputs(object):
             raise ValueError('Value must be a string literal')
 
         if door_id not in self.door_shifts:
-            raise ValueError('Value not found')
+            raise ValueError('id not found')
 
         door_data = self.door_shifts.get(door_id)
-        
+
         if self.check_bit(door_data.shift_plus) == 1:
             self.set_bit(door_data.shift_plus,  1)
             self.set_bit(door_data.shift_minus, 1)
-            WorkRegistr.write_data(self.current_state)
-            return
+
         else:
             self.set_bit(door_data.shift_plus,  1)
             self.set_bit(door_data.shift_minus, 0)
-            WorkRegistr.write_data(self.current_state)
-            return True
+
+        WorkRegistr.write_data(self.current_state)
+        return True
 
     def close_door(self, door_id):
         """
@@ -135,108 +135,142 @@ class Outputs(object):
             raise ValueError('Value must be a string literal')
 
         if door_id not in self.door_shifts:
-            raise ValueError('Value not found')
+            raise ValueError('id not found')
 
         door_data = self.door_shifts.get(door_id)
 
         if self.check_bit(door_data.shift_plus) == 0:
             self.set_bit(door_data.shift_plus,  0)
             self.set_bit(door_data.shift_minus, 0)
-            WorkRegistr.write_data(self.current_state)
-            return
+
         else:
             self.set_bit(door_data.shift_plus,  0)
             self.set_bit(door_data.shift_minus, 1)
-            WorkRegistr.write_data(self.current_state)
-            return True
+
+        WorkRegistr.write_data(self.current_state)
+
+        return True
 
 
     def stop_door(self, door_id):
+        """
+        Функция для останова мотора двери
+        :param door_id: идентификатор двери (строка либо число, выбери сам)
+        :return: True - успешно, False - неуспешно
+        """
         if type(door_id) != str:
             raise ValueError('Value must be a string literal')
 
         if door_id not in self.door_shifts:
-            raise ValueError('Value not found')
+            raise ValueError('id not found')
 
         door_data = self.door_shifts.get(door_id)
-        if (self.check_bit(door_data[0].shift) == 0):
-            self.set_bit(door_data[0].shift, 0)
-            self.set_bit(door_data[1].shift, door_data[1].false)
-            WorkRegistr.write_data(self.current_state)
-            return
-        else:
-            self.set_bit(door_data[0].shift, 1)
-            self.set_bit(door_data[1].shift, door_data[1].true)
-            WorkRegistr.write_data(self.current_state)
-            return
 
-    def close_blind(self, blind_id):
+        # TODO: WTF????
+        #if self.check_bit(door_data.shift_plus) == 0:
+        #    self.set_bit(door_data.shift_plus,  0)
+        #    self.set_bit(door_data.shift_minus, 0)
+        #    WorkRegistr.write_data(self.current_state)
+        #    return
+        #else:
+        #    #self.set_bit(door_data[0].shift, 1)
+        #    #self.set_bit(door_data[1].shift, door_data[1].true)
+        #    self.set_bit(door_data.shift_plus,  0)
+        #    self.set_bit(door_data.shift_minus, 0)
+        #    WorkRegistr.write_data(self.current_state)
+        self.set_bit(door_data.shift_plus,  0)
+        self.set_bit(door_data.shift_minus, 0)
+        WorkRegistr.write_data(self.current_state)
+
+        return True
+
+    def open_blind(self, blind_id):
         """
-        Функция для открытия двери
-        :param door_id: идентификатор двери (строка либо число, выбери сам)
+        Функция для открытия шторы
+        :param blind_id: идентификатор шторки
         :return: True - успешно, False - неуспешно
         """
         if type(blind_id) != str:
             raise ValueError('Value must be a string literal')
 
         if blind_id not in self.blind_shifts:
-            raise ValueError('Value not found')
+            raise ValueError('id not found')
+        
+        blind_data = self.blind_shifts.get(blind_id)
+
+        if self.check_bit(blind_data.shift_plus) == 1:
+            self.set_bit(blind_data.shift_plus,  1)
+            self.set_bit(blind_data.shift_minus, 1)
+
+        else:
+            self.set_bit(blind_data.shift_plus,  1)
+            self.set_bit(blind_data.shift_minus, 0)
+
+        WorkRegistr.write_data(self.current_state)
+        return True
+
+    def close_blind(self, blind_id):
+        """
+        Функция для закрытия шторы
+        :param blind_id: идентификатор шторки
+        :return: True - успешно, False - неуспешно
+        """
+        if type(blind_id) != str:
+            raise ValueError('Value must be a string literal')
+
+        if blind_id not in self.blind_shifts:
+            raise ValueError('id not found')
 
         blind_data = self.blind_shifts.get(blind_id)
-        if (self.check_bit(blind_data[0].shift) == 0):
-            self.set_bit(blind_data[0].shift, blind_data[0].false)
-            self.set_bit(blind_data[1].shift, blind_data[0].false)
-            WorkRegistr.write_data(self.current_state)
-            return
+
+        if self.check_bit(blind_data.shift_plus) == 0:
+            self.set_bit(blind_data.shift_plus,  0)
+            self.set_bit(blind_data.shift_minus, 0)
+
         else:
-            self.set_bit(blind_data[0].shift, blind_data[0].value)
-            self.set_bit(blind_data[1].shift, blind_data[1].value)
-            WorkRegistr.write_data(self.current_state)
-            return True
+            self.set_bit(blind_data.shift_plus,  0)
+            self.set_bit(blind_data.shift_minus, 1)
+
+        WorkRegistr.write_data(self.current_state)
+        return True
 
     def stop_blind(self, blind_id):
+        """
+        Функция для останова мотора шкторки
+        :param blind_id: идентификатор двери (строка либо число, выбери сам)
+        :return: True - успешно, False - неуспешно
+        """
         if type(blind_id) != str:
             raise ValueError('Value must be a string literal')
 
-        if blind_id not in self.blind_shifts:
-            raise ValueError('Value not found')
+        if blind_id not in self.door_shifts:
+            raise ValueError('id not found')
 
-        blind_data = self.blind_shifts.get(blind_id)
-        if (self.check_bit(blind_data[0].shift) == 0):
-            self.set_bit(blind_data[0].shift, blind_data[0].false)
-            self.set_bit(blind_data[1].shift, blind_data[0].false)
-            WorkRegistr.write_data(self.current_state)
-            return
-        else:
-            self.set_bit(blind_data[0].shift, blind_data[0].true)
-            self.set_bit(blind_data[1].shift, blind_data[1].true)
-            WorkRegistr.write_data(self.current_state)
-            return
+        blind_data = self.door_shifts.get(blind_id)
 
-    def open_blind(self, blind_id):
-        if type(blind_id) != str:
-            raise ValueError('Value must be a string literal')
+        # TODO: WTF????
+        #if self.check_bit(door_data.shift_plus) == 0:
+        #    self.set_bit(door_data.shift_plus,  0)
+        #    self.set_bit(door_data.shift_minus, 0)
+        #    WorkRegistr.write_data(self.current_state)
+        #    return
+        #else:
+        #    #self.set_bit(door_data[0].shift, 1)
+        #    #self.set_bit(door_data[1].shift, door_data[1].true)
+        #    self.set_bit(door_data.shift_plus,  0)
+        #    self.set_bit(door_data.shift_minus, 0)
+        #    WorkRegistr.write_data(self.current_state)
+        self.set_bit(blind_data.shift_plus,  0)
+        self.set_bit(blind_data.shift_minus, 0)
+        WorkRegistr.write_data(self.current_state)
 
-        if blind_id not in self.blind_shifts:
-            raise ValueError('Value not found')
+        return True
 
-        blind_data = self.blind_shifts.get(blind_id)
-        if (self.check_bit(blind_data[0].shift) == 1):
-            self.set_bit(blind_data[0].shift, blind_data[0].true)
-            self.set_bit(blind_data[1].shift, blind_data[1].true)
-            WorkRegistr.write_data(self.current_state)
-            return
-        else:
-            self.set_bit(blind_data[0].shift, blind_data[0].value)
-            self.set_bit(blind_data[1].shift, blind_data[1].value)
-            WorkRegistr.write_data(self.current_state)
-            return True
-
-    def turn_light(self, room_name, state):
+    def turn_light(self, room_name, to_state):
         """
         Включение или выключение света
         :param room_name: имя комнаты, строка
-        :param state: включить либо выключить свет
+        :param to_state: включить либо выключить свет
         :return: True - успешно, False - неуспешно
         """
         if type(room_name) != str:
@@ -245,18 +279,15 @@ class Outputs(object):
         elif room_name not in self.room_led_shifts:
             raise ValueError('unable to find the room with such name')
 
-        elif state not in self.STATES:
+        elif to_state not in self.STATES:
             raise ValueError('wrong action with lights')
-
-        elif room_name not in self.room_led_shifts:
-            raise ValueError('Value not found')
 
         led_data = self.room_led_shifts.get(room_name)
 
-        if state == self.ON:
+        if to_state == self.ON:
             self.set_bit(led_data, 1)
 
-        elif state == self.OFF:
+        elif to_state == self.OFF:
             self.set_bit(led_data, 0)
 
         else:
@@ -266,7 +297,7 @@ class Outputs(object):
 
         return True
 
-    def turn_cooler(self, cooler_id):
+    def turn_cooler(self, cooler_id, to_state):
         if cooler_id != str:
             raise ValueError('Value must be a string literal')
 
@@ -275,11 +306,16 @@ class Outputs(object):
 
         cooler_data = self.coolers_shifts.get(cooler_id)
 
-        if
+        if to_state == self.ON:
+            self.set_bit(cooler_data, 1)
 
-        self.set_bit(cooler_data[0].shift, cooler_data[0].value)
+        elif to_state == self.OFF:
+            self.set_bit(cooler_data, 0)
+
+        else:
+            raise ValueError('Unknown action')
+
         WorkRegistr.write_data(self.current_state)
-
 
     def set_bit(self, bit_num, value):
         if bit_num < 0:
@@ -299,7 +335,7 @@ class Outputs(object):
             raise ValueError('Bit number must be positive or zero')
         copy_current_state = self.current_state
 
-        if ((copy_current_state >> bit_num) & 1):
+        if (copy_current_state >> bit_num) & 1:
             return 1
         else:
             return 0
