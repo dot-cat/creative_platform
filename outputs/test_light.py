@@ -7,14 +7,12 @@ from outputs import Outputs
 
 AllOutputs = Outputs()
 
-doors = ['First door', 'Second door', 'Third door', 'Fourth door']
+rooms = ['room 1', 'room 2', 'room 3', 'room 4', 'room 5', 'room 6']
 
-time.sleep(10)
-
-for door in doors:
-    AllOutputs.open_door(door)
+for room in rooms:
+    AllOutputs.turn_light(room, AllOutputs.ON)
     print("{0:b}".format(AllOutputs.current_state))
 
-for door in doors:
-    AllOutputs.close_door(door)
+for room in rooms:
+    AllOutputs.turn_light(room, AllOutputs.OFF)
     print("{0:b}".format(AllOutputs.current_state))

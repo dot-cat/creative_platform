@@ -12,18 +12,12 @@ sclr = 40  # пин для очистки
 
 WorkRegistr = ShiftRegister(si, sck, rck, sclr)
 
+
 class PolarElement(object):
     def __init__(self, shift_plus, shift_minus):
         self.shift_plus = shift_plus
         self.shift_minus = shift_minus
-        return 
-
-
-#class PinData(object):
-#    def __init__(self, shift, value):
-#        self.shift = shift
-#        self.value = value
-#        return
+        return
 
 
 class Outputs(object):
@@ -54,8 +48,8 @@ class Outputs(object):
         self.blind_1_minus = 13 #13
         self.blind_2_plus  = 14 #14
         self.blind_2_minus = 15 #15
-        self.blind_3_plus  = 16 #16
-        self.blind_3_minus = 17 #17
+        self.blind_3_plus  = 0 #16
+        self.blind_3_minus = 1 #17
         self.diode_5 = 2 #18
         self.diode_6 = 3 #19
         self.cooler  = 4 #20
@@ -123,6 +117,12 @@ class Outputs(object):
             self.set_bit(door_data.shift_minus, 0)
 
         WorkRegistr.write_data(self.current_state)
+
+        time.sleep(10)
+
+        self.set_bit(door_data.shift_plus,  1)
+        self.set_bit(door_data.shift_minus, 1)
+
         return True
 
     def close_door(self, door_id):
@@ -149,37 +149,11 @@ class Outputs(object):
 
         WorkRegistr.write_data(self.current_state)
 
-        return True
+        time.sleep(10)
 
-
-    def stop_door(self, door_id):
-        """
-        Функция для останова мотора двери
-        :param door_id: идентификатор двери (строка либо число, выбери сам)
-        :return: True - успешно, False - неуспешно
-        """
-        if type(door_id) != str:
-            raise ValueError('Value must be a string literal')
-
-        if door_id not in self.door_shifts:
-            raise ValueError('id not found')
-
-        door_data = self.door_shifts.get(door_id)
-
-        # TODO: WTF????
-        #if self.check_bit(door_data.shift_plus) == 0:
-        #    self.set_bit(door_data.shift_plus,  0)
-        #    self.set_bit(door_data.shift_minus, 0)
-        #    WorkRegistr.write_data(self.current_state)
-        #    return
-        #else:
-        #    #self.set_bit(door_data[0].shift, 1)
-        #    #self.set_bit(door_data[1].shift, door_data[1].true)
-        #    self.set_bit(door_data.shift_plus,  0)
-        #    self.set_bit(door_data.shift_minus, 0)
-        #    WorkRegistr.write_data(self.current_state)
         self.set_bit(door_data.shift_plus,  0)
         self.set_bit(door_data.shift_minus, 0)
+
         WorkRegistr.write_data(self.current_state)
 
         return True
@@ -207,6 +181,14 @@ class Outputs(object):
             self.set_bit(blind_data.shift_minus, 0)
 
         WorkRegistr.write_data(self.current_state)
+
+        time.sleep(10)
+
+        self.set_bit(blind_data.shift_plus,  1)
+        self.set_bit(blind_data.shift_minus, 1)
+
+        WorkRegistr.write_data(self.current_state)
+
         return True
 
     def close_blind(self, blind_id):
@@ -232,36 +214,12 @@ class Outputs(object):
             self.set_bit(blind_data.shift_minus, 1)
 
         WorkRegistr.write_data(self.current_state)
-        return True
 
-    def stop_blind(self, blind_id):
-        """
-        Функция для останова мотора шкторки
-        :param blind_id: идентификатор двери (строка либо число, выбери сам)
-        :return: True - успешно, False - неуспешно
-        """
-        if type(blind_id) != str:
-            raise ValueError('Value must be a string literal')
+        time.sleep(10)
 
-        if blind_id not in self.door_shifts:
-            raise ValueError('id not found')
-
-        blind_data = self.door_shifts.get(blind_id)
-
-        # TODO: WTF????
-        #if self.check_bit(door_data.shift_plus) == 0:
-        #    self.set_bit(door_data.shift_plus,  0)
-        #    self.set_bit(door_data.shift_minus, 0)
-        #    WorkRegistr.write_data(self.current_state)
-        #    return
-        #else:
-        #    #self.set_bit(door_data[0].shift, 1)
-        #    #self.set_bit(door_data[1].shift, door_data[1].true)
-        #    self.set_bit(door_data.shift_plus,  0)
-        #    self.set_bit(door_data.shift_minus, 0)
-        #    WorkRegistr.write_data(self.current_state)
         self.set_bit(blind_data.shift_plus,  0)
         self.set_bit(blind_data.shift_minus, 0)
+
         WorkRegistr.write_data(self.current_state)
 
         return True

@@ -43,9 +43,9 @@ class ShiftRegister(object):
         Установка всех выводов в ноль
         :return: none
         """
-        GPIO.output(self.si, GPIO.LOW)  # Устанавливаем пин в логический ноль
-        GPIO.output(self.rck, GPIO.LOW)  # Устанавливаем пин в логический ноль
-        GPIO.output(self.clk, GPIO.LOW)  # Устанавливаем пин в логический ноль
+        GPIO.output(self.si,   GPIO.LOW)  # Устанавливаем пин в логический ноль
+        GPIO.output(self.rck,  GPIO.LOW)  # Устанавливаем пин в логический ноль
+        GPIO.output(self.clk,  GPIO.LOW)  # Устанавливаем пин в логический ноль
         GPIO.output(self.sclr, GPIO.LOW)  # Устанавливаем пин в логический ноль
         return
 
@@ -84,8 +84,8 @@ class ShiftRegister(object):
         # Очищаем содержимое регистра
         self.clear()
 
-        for i in range(0, 24):  # Обрабатываем восемь бит
-            if data & 0x800000:    # Проверяем старший бит, если он равен единице...
+        for i in range(0, 24):   # Обрабатываем восемь бит
+            if data & 0x800000:  # Проверяем старший бит, если он равен единице...
                 GPIO.output(self.si, GPIO.HIGH)  # ...то отправляем единицу в регистр
             else:
                 GPIO.output(self.si, GPIO.LOW)   # ...иначе отправляем ноль
