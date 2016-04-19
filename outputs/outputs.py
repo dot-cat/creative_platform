@@ -5,9 +5,9 @@ from shift_reg_lib import ShiftRegister
 
 
 # устанавливаем пины
-si = 37  # пин для входных данных
-rck = 33  # пин для сдвига регистров хранения
-sck = 35  # пин для синхросигнала и сдвига
+si = 37    # пин для входных данных
+rck = 33   # пин для сдвига регистров хранения
+sck = 35   # пин для синхросигнала и сдвига
 sclr = 40  # пин для очистки
 
 WorkRegistr = ShiftRegister(si, sck, rck, sclr)
@@ -32,7 +32,6 @@ class Outputs(object):
         Конструктор, производит иницализацию всех компонентов, нееобходимых для вывода
         :return: none
         """
-
         self.door_1_plus  = 16 #0
         self.door_1_minus = 17 #1
         self.door_2_plus  = 18 #2
