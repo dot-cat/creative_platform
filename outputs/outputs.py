@@ -5,18 +5,19 @@ from shift_reg_lib import ShiftRegister
 
 
 # устанавливаем пины
-si = 37  # пин для входных данных
-rck = 33  # пин для сдвига регистров хранения
-sck = 35  # пин для синхросигнала и сдвига
+si = 37    # пин для входных данных
+rck = 33   # пин для сдвига регистров хранения
+sck = 35   # пин для синхросигнала и сдвига
 sclr = 40  # пин для очистки
 
 WorkRegistr = ShiftRegister(si, sck, rck, sclr)
 
 
-class PolarElement(object):
-    def __init__(self, shift_plus, shift_minus):
+class RotElement(object):
+    def __init__(self, shift_plus, shift_minus, rot_time=10):
         self.shift_plus = shift_plus
         self.shift_minus = shift_minus
+        self.rot_time = rot_time
         return
 
 
@@ -31,7 +32,6 @@ class Outputs(object):
         Конструктор, производит иницализацию всех компонентов, нееобходимых для вывода
         :return: none
         """
-
         self.door_1_plus  = 16 #0
         self.door_1_minus = 17 #1
         self.door_2_plus  = 18 #2
@@ -40,8 +40,8 @@ class Outputs(object):
         self.diode_2 = 21 #5
         self.door_3_plus  = 22 #6
         self.door_3_minus = 23 #7
-        self.door_4_plus  = 8 #8
-        self.door_4_minus = 9 #9
+        self.blind_4_plus  = 8 #8
+        self.blind_4_minus = 9 #9
         self.diode_3 = 10 #10
         self.diode_4 = 11 #11
         self.blind_1_plus  = 12 #12
@@ -57,10 +57,9 @@ class Outputs(object):
         self.current_state = 0x0
 
         self.door_shifts = {
-                              'First door':   PolarElement(self.door_1_plus, self.door_1_minus),
-                              'Second door':  PolarElement(self.door_2_plus, self.door_2_minus),
-                              'Third door':   PolarElement(self.door_3_plus, self.door_3_minus),
-                              'Fourth door':  PolarElement(self.door_4_plus, self.door_4_minus)
+                              'First door':   RotElement(self.door_1_plus, self.door_1_minus),
+                              'Second door':  RotElement(self.door_2_plus, self.door_2_minus),
+                              'Third door':   RotElement(self.door_3_plus, self.door_3_minus)
                             }
 
         self.room_led_shifts = {
@@ -75,13 +74,11 @@ class Outputs(object):
         self.coolers_shifts = {'cooler':  self.cooler}
 
         self.blind_shifts = {
-                               'First blind':  PolarElement(self.blind_1_plus, self.blind_1_minus),
-                               'Second blind': PolarElement(self.blind_2_plus, self.blind_2_minus),
-                               'Third blind':  PolarElement(self.blind_3_plus, self.blind_3_minus)
+                               'First blind':  RotElement(self.blind_1_plus, self.blind_1_minus),
+                               'Second blind': RotElement(self.blind_2_plus, self.blind_2_minus),
+                               'Third blind':  RotElement(self.blind_3_plus, self.blind_3_minus),
+                               'Fourth blind': RotElement(self.blind_4_plus, self.blind_4_minus)
                             }
-
-
-        return
 
     def __del__(self):
         """
@@ -149,7 +146,7 @@ class Outputs(object):
 
         WorkRegistr.write_data(self.current_state)
 
-        time.sleep(10)
+        time.sleep(door_data.rot_time)
 
         self.set_bit(door_data.shift_plus,  0)
         self.set_bit(door_data.shift_minus, 0)
@@ -182,7 +179,7 @@ class Outputs(object):
 
         WorkRegistr.write_data(self.current_state)
 
-        time.sleep(10)
+        time.sleep(blind_data.rot_time)
 
         self.set_bit(blind_data.shift_plus,  1)
         self.set_bit(blind_data.shift_minus, 1)
@@ -215,7 +212,7 @@ class Outputs(object):
 
         WorkRegistr.write_data(self.current_state)
 
-        time.sleep(10)
+        time.sleep(blind_data.rot_time)
 
         self.set_bit(blind_data.shift_plus,  0)
         self.set_bit(blind_data.shift_minus, 0)
