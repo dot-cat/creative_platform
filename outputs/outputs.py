@@ -10,11 +10,11 @@ rck = 33   # пин для сдвига регистров хранения
 sck = 35   # пин для синхросигнала и сдвига
 sclr = 40  # пин для очистки
 
-WorkRegistr = ShiftRegister(si, sck, rck, sclr)
+WorkRegistr = ShiftRegister(si, sck, rck, sclr, 2)
 
 
 class RotElement(object):
-    def __init__(self, shift_plus, shift_minus, rot_time=10):
+    def __init__(self, shift_plus, shift_minus, rot_time=1):
         self.shift_plus = shift_plus
         self.shift_minus = shift_minus
         self.rot_time = rot_time
@@ -115,7 +115,7 @@ class Outputs(object):
 
         WorkRegistr.write_data(self.current_state)
 
-        time.sleep(10)
+        time.sleep(door_data.rot_time)
 
         self.set_bit(door_data.shift_plus,  1)
         self.set_bit(door_data.shift_minus, 1)
