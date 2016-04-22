@@ -7,9 +7,9 @@ from outputs import Outputs
 
 AllOutputs = Outputs()
 
-doors = ['First door', 'Second door', 'Third door', 'Fourth door']
+doors = ['First door', 'Second door', 'Third door']
 
-time.sleep(10)
+#time.sleep(10)
 
 for door in doors:
     AllOutputs.open_door(door)

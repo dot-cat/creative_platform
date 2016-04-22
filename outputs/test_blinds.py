@@ -7,9 +7,9 @@ from outputs import Outputs
 
 AllOutputs = Outputs()
 
-blinds = ['First blind', 'Second blind', 'Third blind']
+blinds = ['First blind', 'Second blind', 'Third blind', 'Fourth blind']
 
-time.sleep(10)
+#time.sleep(10)
 
 for blind in blinds:
     AllOutputs.open_blind(blind)
