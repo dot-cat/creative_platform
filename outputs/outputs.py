@@ -32,27 +32,27 @@ class Outputs(object):
         Конструктор, производит иницализацию всех компонентов, нееобходимых для вывода
         :return: none
         """
-        self.door_1_plus  = 16 #0
-        self.door_1_minus = 17 #1
-        self.door_2_plus  = 18 #2
-        self.door_2_minus = 19 #3
-        self.diode_1 = 20 #4
-        self.diode_2 = 21 #5
-        self.door_3_plus  = 22 #6
-        self.door_3_minus = 23 #7
-        self.blind_4_plus  = 8 #8
-        self.blind_4_minus = 9 #9
-        self.diode_3 = 10 #10
-        self.diode_4 = 11 #11
-        self.blind_1_plus  = 12 #12
-        self.blind_1_minus = 13 #13
-        self.blind_2_plus  = 14 #14
-        self.blind_2_minus = 15 #15
-        self.blind_3_plus  = 0 #16
-        self.blind_3_minus = 1 #17
-        self.diode_5 = 2 #18
-        self.diode_6 = 3 #19
-        self.cooler  = 4 #20
+        self.door_1_plus  = 0
+        self.door_1_minus = 1
+        self.door_2_plus  = 2
+        self.door_2_minus = 3
+        self.diode_1 = 4
+        self.diode_2 = 5
+        self.door_3_plus  = 6
+        self.door_3_minus = 7
+        self.blind_4_plus  = 8
+        self.blind_4_minus = 9
+        self.diode_3 = 10
+        self.diode_4 = 11
+        self.blind_1_plus  = 12
+        self.blind_1_minus = 13
+        self.blind_2_plus  = 14
+        self.blind_2_minus = 15
+        self.blind_3_plus  = 16
+        self.blind_3_minus = 17
+        self.diode_5 = 18
+        self.diode_6 = 19
+        self.cooler  = 20
 
         self.current_state = 0x0
 
