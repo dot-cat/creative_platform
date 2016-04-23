@@ -1,16 +1,8 @@
 import RPi.GPIO as GPIO
 import time
 
-from shift_reg_lib import ShiftRegister
-
-
-# устанавливаем пины
-si = 37    # пин для входных данных
-rck = 33   # пин для сдвига регистров хранения
-sck = 35   # пин для синхросигнала и сдвига
-sclr = 40  # пин для очистки
-
-WorkRegistr = ShiftRegister(si, sck, rck, sclr, 2)
+from shift_reg_wrapper import ShiftRegWrapper
+from enum import Enum
 
 
 class RotElement(object):
@@ -29,9 +21,17 @@ class Outputs(object):
 
     def __init__(self):
         """
-        Конструктор, производит иницализацию всех компонентов, нееобходимых для вывода
+        Конструктор, производит иницализацию всех компонентов, необходимых для вывода
         :return: none
         """
+        # устанавливаем пины
+        si = 37    # пин для входных данных
+        rck = 33   # пин для сдвига регистров хранения
+        sck = 35   # пин для синхросигнала и сдвига
+        sclr = 40  # пин для очистки
+
+        self.shift_reg = ShiftRegWrapper(si, sck, rck, sclr, 2)
+
         self.door_1_plus  = 0
         self.door_1_minus = 1
         self.door_2_plus  = 2
@@ -53,8 +53,6 @@ class Outputs(object):
         self.diode_5 = 18
         self.diode_6 = 19
         self.cooler  = 20
-
-        self.current_state = 0x0
 
         self.door_shifts = {
                               'First door':   RotElement(self.door_1_plus, self.door_1_minus),
@@ -91,6 +89,9 @@ class Outputs(object):
         self.blind_shifts.clear()
         return
 
+    def get_state(self):
+        return self.shift_reg.get_buffer()
+
     def open_door(self, door_id):
         """
         Функция для открытия двери
@@ -105,20 +106,20 @@ class Outputs(object):
 
         door_data = self.door_shifts.get(door_id)
 
-        if self.check_bit(door_data.shift_plus) == 1:
-            self.set_bit(door_data.shift_plus,  1)
-            self.set_bit(door_data.shift_minus, 1)
+        if self.shift_reg.get_buf_bit(door_data.shift_plus) == 1:
+            self.shift_reg.set_buf_bit(door_data.shift_plus, 1)
+            self.shift_reg.set_buf_bit(door_data.shift_minus, 1)
 
         else:
-            self.set_bit(door_data.shift_plus,  1)
-            self.set_bit(door_data.shift_minus, 0)
+            self.shift_reg.set_buf_bit(door_data.shift_plus, 1)
+            self.shift_reg.set_buf_bit(door_data.shift_minus, 0)
 
-        WorkRegistr.write_data(self.current_state)
+        self.shift_reg.write_buffer()
 
         time.sleep(door_data.rot_time)
 
-        self.set_bit(door_data.shift_plus,  1)
-        self.set_bit(door_data.shift_minus, 1)
+        self.shift_reg.set_buf_bit(door_data.shift_plus, 1)
+        self.shift_reg.set_buf_bit(door_data.shift_minus, 1)
 
         return True
 
@@ -136,22 +137,22 @@ class Outputs(object):
 
         door_data = self.door_shifts.get(door_id)
 
-        if self.check_bit(door_data.shift_plus) == 0:
-            self.set_bit(door_data.shift_plus,  0)
-            self.set_bit(door_data.shift_minus, 0)
+        if self.shift_reg.get_buf_bit(door_data.shift_plus) == 0:
+            self.shift_reg.set_buf_bit(door_data.shift_plus, 0)
+            self.shift_reg.set_buf_bit(door_data.shift_minus, 0)
 
         else:
-            self.set_bit(door_data.shift_plus,  0)
-            self.set_bit(door_data.shift_minus, 1)
+            self.shift_reg.set_buf_bit(door_data.shift_plus, 0)
+            self.shift_reg.set_buf_bit(door_data.shift_minus, 1)
 
-        WorkRegistr.write_data(self.current_state)
+        self.shift_reg.write_buffer()
 
         time.sleep(door_data.rot_time)
 
-        self.set_bit(door_data.shift_plus,  0)
-        self.set_bit(door_data.shift_minus, 0)
+        self.shift_reg.set_buf_bit(door_data.shift_plus, 0)
+        self.shift_reg.set_buf_bit(door_data.shift_minus, 0)
 
-        WorkRegistr.write_data(self.current_state)
+        self.shift_reg.write_buffer()
 
         return True
 
@@ -169,22 +170,22 @@ class Outputs(object):
         
         blind_data = self.blind_shifts.get(blind_id)
 
-        if self.check_bit(blind_data.shift_plus) == 1:
-            self.set_bit(blind_data.shift_plus,  1)
-            self.set_bit(blind_data.shift_minus, 1)
+        if self.shift_reg.get_buf_bit(blind_data.shift_plus) == 1:
+            self.shift_reg.set_buf_bit(blind_data.shift_plus, 1)
+            self.shift_reg.set_buf_bit(blind_data.shift_minus, 1)
 
         else:
-            self.set_bit(blind_data.shift_plus,  1)
-            self.set_bit(blind_data.shift_minus, 0)
+            self.shift_reg.set_buf_bit(blind_data.shift_plus, 1)
+            self.shift_reg.set_buf_bit(blind_data.shift_minus, 0)
 
-        WorkRegistr.write_data(self.current_state)
+        self.shift_reg.write_buffer()
 
         time.sleep(blind_data.rot_time)
 
-        self.set_bit(blind_data.shift_plus,  1)
-        self.set_bit(blind_data.shift_minus, 1)
+        self.shift_reg.set_buf_bit(blind_data.shift_plus, 1)
+        self.shift_reg.set_buf_bit(blind_data.shift_minus, 1)
 
-        WorkRegistr.write_data(self.current_state)
+        self.shift_reg.write_buffer()
 
         return True
 
@@ -202,22 +203,22 @@ class Outputs(object):
 
         blind_data = self.blind_shifts.get(blind_id)
 
-        if self.check_bit(blind_data.shift_plus) == 0:
-            self.set_bit(blind_data.shift_plus,  0)
-            self.set_bit(blind_data.shift_minus, 0)
+        if self.shift_reg.get_buf_bit(blind_data.shift_plus) == 0:
+            self.shift_reg.set_buf_bit(blind_data.shift_plus, 0)
+            self.shift_reg.set_buf_bit(blind_data.shift_minus, 0)
 
         else:
-            self.set_bit(blind_data.shift_plus,  0)
-            self.set_bit(blind_data.shift_minus, 1)
+            self.shift_reg.set_buf_bit(blind_data.shift_plus, 0)
+            self.shift_reg.set_buf_bit(blind_data.shift_minus, 1)
 
-        WorkRegistr.write_data(self.current_state)
+        self.shift_reg.write_buffer()
 
         time.sleep(blind_data.rot_time)
 
-        self.set_bit(blind_data.shift_plus,  0)
-        self.set_bit(blind_data.shift_minus, 0)
+        self.shift_reg.set_buf_bit(blind_data.shift_plus, 0)
+        self.shift_reg.set_buf_bit(blind_data.shift_minus, 0)
 
-        WorkRegistr.write_data(self.current_state)
+        self.shift_reg.write_buffer()
 
         return True
 
@@ -240,15 +241,15 @@ class Outputs(object):
         led_data = self.room_led_shifts.get(room_name)
 
         if to_state == self.ON:
-            self.set_bit(led_data, 1)
+            self.shift_reg.set_buf_bit(led_data, 1)
 
         elif to_state == self.OFF:
-            self.set_bit(led_data, 0)
+            self.shift_reg.set_buf_bit(led_data, 0)
 
         else:
             raise ValueError('Unknown action')
 
-        WorkRegistr.write_data(self.current_state)
+        self.shift_reg.write_buffer()
 
         return True
 
@@ -262,36 +263,12 @@ class Outputs(object):
         cooler_data = self.coolers_shifts.get(cooler_id)
 
         if to_state == self.ON:
-            self.set_bit(cooler_data, 1)
+            self.shift_reg.set_buf_bit(cooler_data, 1)
 
         elif to_state == self.OFF:
-            self.set_bit(cooler_data, 0)
+            self.shift_reg.set_buf_bit(cooler_data, 0)
 
         else:
             raise ValueError('Unknown action')
 
-        WorkRegistr.write_data(self.current_state)
-
-    def set_bit(self, bit_num, value):
-        if bit_num < 0:
-            raise ValueError('Bit number must be positive or zero')
-
-        if value != 0 and value != 1:
-            raise ValueError('Value must be 1 or zero, True or False')
-
-        if value == 0:
-            self.current_state &= ~(1 << bit_num)
-        else:
-            self.current_state |= (1 << bit_num)
-        return
-
-    def check_bit(self, bit_num):
-        if bit_num < 0:
-            raise ValueError('Bit number must be positive or zero')
-        copy_current_state = self.current_state
-
-        if (copy_current_state >> bit_num) & 1:
-            return 1
-        else:
-            return 0
-
+        self.shift_reg.write_buffer()
