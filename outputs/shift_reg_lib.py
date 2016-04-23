@@ -78,6 +78,10 @@ class ShiftRegister(object):
         """
         Запись данных во сдвиговый регистр
         :param data: 8 бит данных
+            Например:
+            0000 0000 0000 0001 - выдать единицу на пин A главного регистра
+            0000 0000 0000 1001 - выдать единицу на пины A и D главного регистра
+            0000 1001 0000 0000  - выдать единицу на пины A и D первого зависимого регистра
         :return: none
         """
         if data >= (1 << self.num_of_digits):
@@ -88,17 +92,18 @@ class ShiftRegister(object):
         # Очищаем содержимое регистра
         self.clear()
 
-        pattern = 1  # Переменная-шаблон для выборки
+        # Маска для выборки старшего бита (most significant bit)
+        msb_mask = 1 << (self.num_of_digits - 1)
 
-        for i in range(0, self.num_of_digits):  # Обрабатываем восемь бит
-            if data & pattern:  # Проверяем i-й бит, если он равен единице...
+        for i in range(0, self.num_of_digits):  # Обрабатываем 8*N битов
+            if data & msb_mask:  # Проверяем старший бит, если он равен единице...
                 GPIO.output(self.si, GPIO.HIGH)  # ...то отправляем единицу в регистр
             else:
                 GPIO.output(self.si, GPIO.LOW)   # ...иначе отправляем ноль
 
             self.pulse(self.clk)  # Выполняем сдвиг содержимого регистра
 
-            pattern <<= 1  # Сдвигаем шаблон влево на один разряд
+            data <<= 1  # Сдвигаем данные влево на один разряд
 
         self.pulse(self.rck)  # Фиксируем значения
         return
