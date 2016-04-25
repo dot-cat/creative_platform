@@ -50,13 +50,13 @@ class Trigger(object):
         :param state: желаемое состояние
         :return: None
         """
-        assert self.States.on == True and self.States.off == False,\
+        assert self.States.on.value == True and self.States.off.value == False,\
             'state code changed, update this function before usage'
 
         if type(state) != self.States:
             raise ValueError('Type of state argument must be a Trigger.State')
 
-        self.shift_reg.set_buf_bit(self.bit_pos, state)
+        self.shift_reg.set_buf_bit(self.bit_pos, state.value)
         return
 
     def set_on(self):
@@ -127,8 +127,8 @@ class Slider(object):
         if type(state) != self.States:
             raise ValueError('Type of state argument must be a Slider.State')
 
-        self.shift_reg.set_buf_bit(self.bit_plus, state[0])
-        self.shift_reg.set_buf_bit(self.bit_minus, state[1])
+        self.shift_reg.set_buf_bit(self.bit_plus,  state.value[0])
+        self.shift_reg.set_buf_bit(self.bit_minus, state.value[1])
 
     def __apply_state(self):
         self.shift_reg.write_buffer()
@@ -164,16 +164,20 @@ class Slider(object):
 
 
 class Door(Slider):
-    pass
+    def __init__(self, shift_reg, bit_plus, bit_minus, switch_time=1):
+        Slider.__init__(self, shift_reg, bit_plus, bit_minus, switch_time)
 
 
 class Blinds(Slider):
-    pass
+    def __init__(self, shift_reg, bit_plus, bit_minus, switch_time=1):
+        Slider.__init__(self, shift_reg, bit_plus, bit_minus, switch_time)
 
 
 class Light(Trigger):
-    pass
+    def __init__(self, shift_reg, bit_pos):
+        Trigger.__init__(self, shift_reg, bit_pos)
 
 
 class Cooler(Trigger):
-    pass
+    def __init__(self, shift_reg, bit_pos):
+        Trigger.__init__(self, shift_reg, bit_pos)

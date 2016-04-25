@@ -5,14 +5,6 @@ from shift_reg_wrapper import ShiftRegWrapper
 from control_objects import *
 
 
-class RotElement(object):
-    def __init__(self, shift_plus, shift_minus, rot_time=1):
-        self.shift_plus = shift_plus
-        self.shift_minus = shift_minus
-        self.rot_time = rot_time
-        return
-
-
 class Outputs(object):
     # Константы:
     ON  = True
@@ -40,42 +32,42 @@ class Outputs(object):
         self.diode_2 = 5
         self.door_3_plus  = 6
         self.door_3_minus = 7
-        self.blind_4_plus  = 8
-        self.blind_4_minus = 9
-        self.diode_3 = 10
-        self.diode_4 = 11
-        self.blind_1_plus  = 12
-        self.blind_1_minus = 13
-        self.blind_2_plus  = 14
-        self.blind_2_minus = 15
-        self.blind_3_plus  = 16
-        self.blind_3_minus = 17
+        self.blind_1_plus  = 8
+        self.blind_1_minus = 9
+        self.blind_2_plus  = 10
+        self.blind_2_minus = 11
+        self.diode_3 = 12
+        self.diode_4 = 13
+        self.blind_3_plus  = 14
+        self.blind_3_minus = 15
+        self.blind_4_plus  = 16
+        self.blind_4_minus = 17
         self.diode_5 = 18
         self.diode_6 = 19
         self.cooler  = 20
 
         self.door_shifts = {
-                              'First door':   RotElement(self.door_1_plus, self.door_1_minus),
-                              'Second door':  RotElement(self.door_2_plus, self.door_2_minus),
-                              'Third door':   RotElement(self.door_3_plus, self.door_3_minus)
+                              'First door':   Door(self.shift_reg, self.door_1_plus, self.door_1_minus),
+                              'Second door':  Door(self.shift_reg, self.door_2_plus, self.door_2_minus),
+                              'Third door':   Door(self.shift_reg, self.door_3_plus, self.door_3_minus)
                             }
 
         self.room_led_shifts = {
-                                'room 1':  self.diode_1,
-                                'room 2':  self.diode_2,
-                                'room 3':  self.diode_3,
-                                'room 4':  self.diode_4,
-                                'room 5':  self.diode_5,
-                                'room 6':  self.diode_6
+                                'room 1':  Light(self.shift_reg, self.diode_1),
+                                'room 2':  Light(self.shift_reg, self.diode_2),
+                                'room 3':  Light(self.shift_reg, self.diode_3),
+                                'room 4':  Light(self.shift_reg, self.diode_4),
+                                'room 5':  Light(self.shift_reg, self.diode_5),
+                                'room 6':  Light(self.shift_reg, self.diode_6)
                                }
 
-        self.coolers_shifts = {'cooler':  self.cooler}
+        self.coolers_shifts = {'cooler':  Cooler(self.shift_reg, self.cooler)}
 
         self.blind_shifts = {
-                               'First blind':  RotElement(self.blind_1_plus, self.blind_1_minus),
-                               'Second blind': RotElement(self.blind_2_plus, self.blind_2_minus),
-                               'Third blind':  RotElement(self.blind_3_plus, self.blind_3_minus),
-                               'Fourth blind': RotElement(self.blind_4_plus, self.blind_4_minus)
+                               'First blind':  Blinds(self.shift_reg, self.blind_1_plus, self.blind_1_minus),
+                               'Second blind': Blinds(self.shift_reg, self.blind_2_plus, self.blind_2_minus),
+                               'Third blind':  Blinds(self.shift_reg, self.blind_3_plus, self.blind_3_minus),
+                               'Fourth blind': Blinds(self.shift_reg, self.blind_4_plus, self.blind_4_minus)
                             }
 
     def __del__(self):
@@ -106,20 +98,7 @@ class Outputs(object):
 
         door_data = self.door_shifts.get(door_id)
 
-        if self.shift_reg.get_buf_bit(door_data.shift_plus) == 1:
-            self.shift_reg.set_buf_bit(door_data.shift_plus, 1)
-            self.shift_reg.set_buf_bit(door_data.shift_minus, 1)
-
-        else:
-            self.shift_reg.set_buf_bit(door_data.shift_plus, 1)
-            self.shift_reg.set_buf_bit(door_data.shift_minus, 0)
-
-        self.shift_reg.write_buffer()
-
-        time.sleep(door_data.rot_time)
-
-        self.shift_reg.set_buf_bit(door_data.shift_plus, 1)
-        self.shift_reg.set_buf_bit(door_data.shift_minus, 1)
+        door_data.open()
 
         return True
 
@@ -137,22 +116,7 @@ class Outputs(object):
 
         door_data = self.door_shifts.get(door_id)
 
-        if self.shift_reg.get_buf_bit(door_data.shift_plus) == 0:
-            self.shift_reg.set_buf_bit(door_data.shift_plus, 0)
-            self.shift_reg.set_buf_bit(door_data.shift_minus, 0)
-
-        else:
-            self.shift_reg.set_buf_bit(door_data.shift_plus, 0)
-            self.shift_reg.set_buf_bit(door_data.shift_minus, 1)
-
-        self.shift_reg.write_buffer()
-
-        time.sleep(door_data.rot_time)
-
-        self.shift_reg.set_buf_bit(door_data.shift_plus, 0)
-        self.shift_reg.set_buf_bit(door_data.shift_minus, 0)
-
-        self.shift_reg.write_buffer()
+        door_data.close()
 
         return True
 
@@ -170,22 +134,7 @@ class Outputs(object):
         
         blind_data = self.blind_shifts.get(blind_id)
 
-        if self.shift_reg.get_buf_bit(blind_data.shift_plus) == 1:
-            self.shift_reg.set_buf_bit(blind_data.shift_plus, 1)
-            self.shift_reg.set_buf_bit(blind_data.shift_minus, 1)
-
-        else:
-            self.shift_reg.set_buf_bit(blind_data.shift_plus, 1)
-            self.shift_reg.set_buf_bit(blind_data.shift_minus, 0)
-
-        self.shift_reg.write_buffer()
-
-        time.sleep(blind_data.rot_time)
-
-        self.shift_reg.set_buf_bit(blind_data.shift_plus, 1)
-        self.shift_reg.set_buf_bit(blind_data.shift_minus, 1)
-
-        self.shift_reg.write_buffer()
+        blind_data.open()
 
         return True
 
@@ -203,22 +152,7 @@ class Outputs(object):
 
         blind_data = self.blind_shifts.get(blind_id)
 
-        if self.shift_reg.get_buf_bit(blind_data.shift_plus) == 0:
-            self.shift_reg.set_buf_bit(blind_data.shift_plus, 0)
-            self.shift_reg.set_buf_bit(blind_data.shift_minus, 0)
-
-        else:
-            self.shift_reg.set_buf_bit(blind_data.shift_plus, 0)
-            self.shift_reg.set_buf_bit(blind_data.shift_minus, 1)
-
-        self.shift_reg.write_buffer()
-
-        time.sleep(blind_data.rot_time)
-
-        self.shift_reg.set_buf_bit(blind_data.shift_plus, 0)
-        self.shift_reg.set_buf_bit(blind_data.shift_minus, 0)
-
-        self.shift_reg.write_buffer()
+        blind_data.close()
 
         return True
 
@@ -241,15 +175,15 @@ class Outputs(object):
         led_data = self.room_led_shifts.get(room_name)
 
         if to_state == self.ON:
-            self.shift_reg.set_buf_bit(led_data, 1)
+            led_data.set_on()
 
         elif to_state == self.OFF:
-            self.shift_reg.set_buf_bit(led_data, 0)
+            led_data.set_off()
 
         else:
             raise ValueError('Unknown action')
 
-        self.shift_reg.write_buffer()
+        led_data.apply_state()
 
         return True
 
@@ -263,12 +197,12 @@ class Outputs(object):
         cooler_data = self.coolers_shifts.get(cooler_id)
 
         if to_state == self.ON:
-            self.shift_reg.set_buf_bit(cooler_data, 1)
+            cooler_data.set_on()
 
         elif to_state == self.OFF:
-            self.shift_reg.set_buf_bit(cooler_data, 0)
+            cooler_data.set_off()
 
         else:
             raise ValueError('Unknown action')
 
-        self.shift_reg.write_buffer()
+        cooler_data.apply_state()
