@@ -1,16 +1,20 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 import RPi.GPIO as GPIO
 import time
 
 
 class ShiftRegister(object):
-    def __init__(self, si, sck, rck, sclr):  # обьявляем конструктор
+    def __init__(self, si, sck, rck, sclr, num_of_slaves=0):  # обьявляем конструктор
         """
         Конструктор объекта
         :param si: номер пина для данных
         :param sck: номер пина для синхросигнала
         :param rck: номер пина для синхросигнала
         :param sclr: номер пина для очистки содержимого регистра
-        :return:
+        :param num_of_slaves: количество зависимых сдвиговых регистров
+        :return: None
         """
         # проверка на правильность входных значений
         if type(si) != int or type(sck) != int or type(rck) != int or type(sclr) != int:
@@ -20,6 +24,7 @@ class ShiftRegister(object):
         self.clk = sck    # инициализация поля
         self.rck = rck    # инициализация поля
         self.sclr = sclr  # инициализация поля
+        self.num_of_digits = (num_of_slaves + 1) * 8  # Разрядность сбирки из регистров
 
         GPIO.setup(self.si, GPIO.OUT)    # Установка пина подачи данных на выход
         GPIO.setup(self.rck, GPIO.OUT)   # Установка пина сдвига на выход
@@ -76,23 +81,32 @@ class ShiftRegister(object):
         """
         Запись данных во сдвиговый регистр
         :param data: 8 бит данных
+            Например:
+            0000 0000 0000 0001 - выдать единицу на пин A главного регистра
+            0000 0000 0000 1001 - выдать единицу на пины A и D главного регистра
+            0000 1001 0000 0000  - выдать единицу на пины A и D первого зависимого регистра
         :return: none
         """
-        #if data > 0xFF:
-        #    raise ValueError('Number of bits in data can\'t exceed 8 bits')
+        if data >= (1 << self.num_of_digits):
+            raise ValueError(
+                'Number of bits in data can\'t exceed {0} bits'.format(self.num_of_digits)
+            )
 
         # Очищаем содержимое регистра
         self.clear()
 
-        for i in range(0, 24):   # Обрабатываем восемь бит
-            if data & 0x800000:  # Проверяем старший бит, если он равен единице...
+        # Маска для выборки старшего бита (most significant bit)
+        msb_mask = 1 << (self.num_of_digits - 1)
+
+        for i in range(0, self.num_of_digits):  # Обрабатываем 8*N битов
+            if data & msb_mask:  # Проверяем старший бит, если он равен единице...
                 GPIO.output(self.si, GPIO.HIGH)  # ...то отправляем единицу в регистр
             else:
                 GPIO.output(self.si, GPIO.LOW)   # ...иначе отправляем ноль
 
             self.pulse(self.clk)  # Выполняем сдвиг содержимого регистра
 
-            data <<= 1  # Сдвигаем переменную с данными на один бит влево
+            data <<= 1  # Сдвигаем данные влево на один разряд
 
         self.pulse(self.rck)  # Фиксируем значения
         return

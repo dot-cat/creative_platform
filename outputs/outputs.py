@@ -1,24 +1,8 @@
 import RPi.GPIO as GPIO
 import time
 
-from shift_reg_lib import ShiftRegister
-
-
-# устанавливаем пины
-si = 37    # пин для входных данных
-rck = 33   # пин для сдвига регистров хранения
-sck = 35   # пин для синхросигнала и сдвига
-sclr = 40  # пин для очистки
-
-WorkRegistr = ShiftRegister(si, sck, rck, sclr)
-
-
-class RotElement(object):
-    def __init__(self, shift_plus, shift_minus, rot_time=10):
-        self.shift_plus = shift_plus
-        self.shift_minus = shift_minus
-        self.rot_time = rot_time
-        return
+from shift_reg_wrapper import ShiftRegWrapper
+from control_objects import *
 
 
 class Outputs(object):
@@ -29,55 +13,61 @@ class Outputs(object):
 
     def __init__(self):
         """
-        Конструктор, производит иницализацию всех компонентов, нееобходимых для вывода
+        Конструктор, производит иницализацию всех компонентов, необходимых для вывода
         :return: none
         """
-        self.door_1_plus  = 16 #0
-        self.door_1_minus = 17 #1
-        self.door_2_plus  = 18 #2
-        self.door_2_minus = 19 #3
-        self.diode_1 = 20 #4
-        self.diode_2 = 21 #5
-        self.door_3_plus  = 22 #6
-        self.door_3_minus = 23 #7
-        self.blind_4_plus  = 8 #8
-        self.blind_4_minus = 9 #9
-        self.diode_3 = 10 #10
-        self.diode_4 = 11 #11
-        self.blind_1_plus  = 12 #12
-        self.blind_1_minus = 13 #13
-        self.blind_2_plus  = 14 #14
-        self.blind_2_minus = 15 #15
-        self.blind_3_plus  = 0 #16
-        self.blind_3_minus = 1 #17
-        self.diode_5 = 2 #18
-        self.diode_6 = 3 #19
-        self.cooler  = 4 #20
+        # устанавливаем пины
+        si = 37    # пин для входных данных
+        rck = 33   # пин для сдвига регистров хранения
+        sck = 35   # пин для синхросигнала и сдвига
+        sclr = 40  # пин для очистки
 
-        self.current_state = 0x0
+        self.shift_reg = ShiftRegWrapper(si, sck, rck, sclr, 2)
+
+        door_1_plus  = 0
+        door_1_minus = 1
+        door_2_plus  = 2
+        door_2_minus = 3
+        diode_1 = 4
+        diode_2 = 5
+        door_3_plus  = 6
+        door_3_minus = 7
+        blind_1_plus  = 8
+        blind_1_minus = 9
+        blind_2_plus  = 10
+        blind_2_minus = 11
+        diode_3 = 12
+        diode_4 = 13
+        blind_3_plus  = 14
+        blind_3_minus = 15
+        blind_4_plus  = 16
+        blind_4_minus = 17
+        diode_5 = 18
+        diode_6 = 19
+        cooler  = 20
 
         self.door_shifts = {
-                              'First door':   RotElement(self.door_1_plus, self.door_1_minus),
-                              'Second door':  RotElement(self.door_2_plus, self.door_2_minus),
-                              'Third door':   RotElement(self.door_3_plus, self.door_3_minus)
+                              'First door':   Door(self.shift_reg, door_1_plus, door_1_minus),
+                              'Second door':  Door(self.shift_reg, door_2_plus, door_2_minus),
+                              'Third door':   Door(self.shift_reg, door_3_plus, door_3_minus)
                             }
 
         self.room_led_shifts = {
-                                'room 1':  self.diode_1,
-                                'room 2':  self.diode_2,
-                                'room 3':  self.diode_3,
-                                'room 4':  self.diode_4,
-                                'room 5':  self.diode_5,
-                                'room 6':  self.diode_6
+                                'room 1':  Light(self.shift_reg, diode_1),
+                                'room 2':  Light(self.shift_reg, diode_2),
+                                'room 3':  Light(self.shift_reg, diode_3),
+                                'room 4':  Light(self.shift_reg, diode_4),
+                                'room 5':  Light(self.shift_reg, diode_5),
+                                'room 6':  Light(self.shift_reg, diode_6)
                                }
 
-        self.coolers_shifts = {'cooler':  self.cooler}
+        self.coolers_shifts = {'cooler':  Cooler(self.shift_reg, cooler)}
 
         self.blind_shifts = {
-                               'First blind':  RotElement(self.blind_1_plus, self.blind_1_minus),
-                               'Second blind': RotElement(self.blind_2_plus, self.blind_2_minus),
-                               'Third blind':  RotElement(self.blind_3_plus, self.blind_3_minus),
-                               'Fourth blind': RotElement(self.blind_4_plus, self.blind_4_minus)
+                               'First blind':  Blinds(self.shift_reg, blind_1_plus, blind_1_minus),
+                               'Second blind': Blinds(self.shift_reg, blind_2_plus, blind_2_minus),
+                               'Third blind':  Blinds(self.shift_reg, blind_3_plus, blind_3_minus),
+                               'Fourth blind': Blinds(self.shift_reg, blind_4_plus, blind_4_minus)
                             }
 
     def __del__(self):
@@ -90,6 +80,9 @@ class Outputs(object):
         self.coolers_shifts.clear()
         self.blind_shifts.clear()
         return
+
+    def get_state(self):
+        return self.shift_reg.get_buffer()
 
     def open_door(self, door_id):
         """
@@ -105,20 +98,7 @@ class Outputs(object):
 
         door_data = self.door_shifts.get(door_id)
 
-        if self.check_bit(door_data.shift_plus) == 1:
-            self.set_bit(door_data.shift_plus,  1)
-            self.set_bit(door_data.shift_minus, 1)
-
-        else:
-            self.set_bit(door_data.shift_plus,  1)
-            self.set_bit(door_data.shift_minus, 0)
-
-        WorkRegistr.write_data(self.current_state)
-
-        time.sleep(10)
-
-        self.set_bit(door_data.shift_plus,  1)
-        self.set_bit(door_data.shift_minus, 1)
+        door_data.open()
 
         return True
 
@@ -136,22 +116,7 @@ class Outputs(object):
 
         door_data = self.door_shifts.get(door_id)
 
-        if self.check_bit(door_data.shift_plus) == 0:
-            self.set_bit(door_data.shift_plus,  0)
-            self.set_bit(door_data.shift_minus, 0)
-
-        else:
-            self.set_bit(door_data.shift_plus,  0)
-            self.set_bit(door_data.shift_minus, 1)
-
-        WorkRegistr.write_data(self.current_state)
-
-        time.sleep(door_data.rot_time)
-
-        self.set_bit(door_data.shift_plus,  0)
-        self.set_bit(door_data.shift_minus, 0)
-
-        WorkRegistr.write_data(self.current_state)
+        door_data.close()
 
         return True
 
@@ -169,22 +134,7 @@ class Outputs(object):
         
         blind_data = self.blind_shifts.get(blind_id)
 
-        if self.check_bit(blind_data.shift_plus) == 1:
-            self.set_bit(blind_data.shift_plus,  1)
-            self.set_bit(blind_data.shift_minus, 1)
-
-        else:
-            self.set_bit(blind_data.shift_plus,  1)
-            self.set_bit(blind_data.shift_minus, 0)
-
-        WorkRegistr.write_data(self.current_state)
-
-        time.sleep(blind_data.rot_time)
-
-        self.set_bit(blind_data.shift_plus,  1)
-        self.set_bit(blind_data.shift_minus, 1)
-
-        WorkRegistr.write_data(self.current_state)
+        blind_data.open()
 
         return True
 
@@ -202,22 +152,7 @@ class Outputs(object):
 
         blind_data = self.blind_shifts.get(blind_id)
 
-        if self.check_bit(blind_data.shift_plus) == 0:
-            self.set_bit(blind_data.shift_plus,  0)
-            self.set_bit(blind_data.shift_minus, 0)
-
-        else:
-            self.set_bit(blind_data.shift_plus,  0)
-            self.set_bit(blind_data.shift_minus, 1)
-
-        WorkRegistr.write_data(self.current_state)
-
-        time.sleep(blind_data.rot_time)
-
-        self.set_bit(blind_data.shift_plus,  0)
-        self.set_bit(blind_data.shift_minus, 0)
-
-        WorkRegistr.write_data(self.current_state)
+        blind_data.close()
 
         return True
 
@@ -240,15 +175,15 @@ class Outputs(object):
         led_data = self.room_led_shifts.get(room_name)
 
         if to_state == self.ON:
-            self.set_bit(led_data, 1)
+            led_data.set_on()
 
         elif to_state == self.OFF:
-            self.set_bit(led_data, 0)
+            led_data.set_off()
 
         else:
             raise ValueError('Unknown action')
 
-        WorkRegistr.write_data(self.current_state)
+        led_data.apply_state()
 
         return True
 
@@ -262,36 +197,12 @@ class Outputs(object):
         cooler_data = self.coolers_shifts.get(cooler_id)
 
         if to_state == self.ON:
-            self.set_bit(cooler_data, 1)
+            cooler_data.set_on()
 
         elif to_state == self.OFF:
-            self.set_bit(cooler_data, 0)
+            cooler_data.set_off()
 
         else:
             raise ValueError('Unknown action')
 
-        WorkRegistr.write_data(self.current_state)
-
-    def set_bit(self, bit_num, value):
-        if bit_num < 0:
-            raise ValueError('Bit number must be positive or zero')
-
-        if value != 0 and value != 1:
-            raise ValueError('Value must be 1 or zero, True or False')
-
-        if value == 0:
-            self.current_state &= ~(1 << bit_num)
-        else:
-            self.current_state |= (1 << bit_num)
-        return
-
-    def check_bit(self, bit_num):
-        if bit_num < 0:
-            raise ValueError('Bit number must be positive or zero')
-        copy_current_state = self.current_state
-
-        if (copy_current_state >> bit_num) & 1:
-            return 1
-        else:
-            return 0
-
+        cooler_data.apply_state()
