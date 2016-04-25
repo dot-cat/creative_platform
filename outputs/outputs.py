@@ -24,50 +24,50 @@ class Outputs(object):
 
         self.shift_reg = ShiftRegWrapper(si, sck, rck, sclr, 2)
 
-        self.door_1_plus  = 0
-        self.door_1_minus = 1
-        self.door_2_plus  = 2
-        self.door_2_minus = 3
-        self.diode_1 = 4
-        self.diode_2 = 5
-        self.door_3_plus  = 6
-        self.door_3_minus = 7
-        self.blind_1_plus  = 8
-        self.blind_1_minus = 9
-        self.blind_2_plus  = 10
-        self.blind_2_minus = 11
-        self.diode_3 = 12
-        self.diode_4 = 13
-        self.blind_3_plus  = 14
-        self.blind_3_minus = 15
-        self.blind_4_plus  = 16
-        self.blind_4_minus = 17
-        self.diode_5 = 18
-        self.diode_6 = 19
-        self.cooler  = 20
+        door_1_plus  = 0
+        door_1_minus = 1
+        door_2_plus  = 2
+        door_2_minus = 3
+        diode_1 = 4
+        diode_2 = 5
+        door_3_plus  = 6
+        door_3_minus = 7
+        blind_1_plus  = 8
+        blind_1_minus = 9
+        blind_2_plus  = 10
+        blind_2_minus = 11
+        diode_3 = 12
+        diode_4 = 13
+        blind_3_plus  = 14
+        blind_3_minus = 15
+        blind_4_plus  = 16
+        blind_4_minus = 17
+        diode_5 = 18
+        diode_6 = 19
+        cooler  = 20
 
         self.door_shifts = {
-                              'First door':   Door(self.shift_reg, self.door_1_plus, self.door_1_minus),
-                              'Second door':  Door(self.shift_reg, self.door_2_plus, self.door_2_minus),
-                              'Third door':   Door(self.shift_reg, self.door_3_plus, self.door_3_minus)
+                              'First door':   Door(self.shift_reg, door_1_plus, door_1_minus),
+                              'Second door':  Door(self.shift_reg, door_2_plus, door_2_minus),
+                              'Third door':   Door(self.shift_reg, door_3_plus, door_3_minus)
                             }
 
         self.room_led_shifts = {
-                                'room 1':  Light(self.shift_reg, self.diode_1),
-                                'room 2':  Light(self.shift_reg, self.diode_2),
-                                'room 3':  Light(self.shift_reg, self.diode_3),
-                                'room 4':  Light(self.shift_reg, self.diode_4),
-                                'room 5':  Light(self.shift_reg, self.diode_5),
-                                'room 6':  Light(self.shift_reg, self.diode_6)
+                                'room 1':  Light(self.shift_reg, diode_1),
+                                'room 2':  Light(self.shift_reg, diode_2),
+                                'room 3':  Light(self.shift_reg, diode_3),
+                                'room 4':  Light(self.shift_reg, diode_4),
+                                'room 5':  Light(self.shift_reg, diode_5),
+                                'room 6':  Light(self.shift_reg, diode_6)
                                }
 
-        self.coolers_shifts = {'cooler':  Cooler(self.shift_reg, self.cooler)}
+        self.coolers_shifts = {'cooler':  Cooler(self.shift_reg, cooler)}
 
         self.blind_shifts = {
-                               'First blind':  Blinds(self.shift_reg, self.blind_1_plus, self.blind_1_minus),
-                               'Second blind': Blinds(self.shift_reg, self.blind_2_plus, self.blind_2_minus),
-                               'Third blind':  Blinds(self.shift_reg, self.blind_3_plus, self.blind_3_minus),
-                               'Fourth blind': Blinds(self.shift_reg, self.blind_4_plus, self.blind_4_minus)
+                               'First blind':  Blinds(self.shift_reg, blind_1_plus, blind_1_minus),
+                               'Second blind': Blinds(self.shift_reg, blind_2_plus, blind_2_minus),
+                               'Third blind':  Blinds(self.shift_reg, blind_3_plus, blind_3_minus),
+                               'Fourth blind': Blinds(self.shift_reg, blind_4_plus, blind_4_minus)
                             }
 
     def __del__(self):
