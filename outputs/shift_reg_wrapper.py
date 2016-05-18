@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from shift_reg_lib import ShiftRegister
+import threading
 
 
 class ShiftRegWrapper(ShiftRegister):
@@ -54,7 +55,9 @@ class ShiftRegWrapper(ShiftRegister):
         Записать текущее содержимое буфера в регистр
         :return: none
         """
-        ShiftRegister.write_data(self, self.buffer)
+        lock = threading.Lock()
+        with lock:
+            ShiftRegister.write_data(self, self.buffer)
 
     def get_buffer(self):
         """
