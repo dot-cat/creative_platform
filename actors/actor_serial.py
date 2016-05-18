@@ -55,12 +55,15 @@ class ActorSerial(object):
 
         if   event == b'B1\r\n':
             self.controlling.toggle_door('to office')
+            print('triggered to office')
 
         elif event == b'B2\r\n':
             self.controlling.toggle_door('to bedroom')
+            print('triggered to bedroom')
 
         elif event == b'B3\r\n':
             self.controlling.toggle_door('to office')
+            print('triggered to office')
 
         else:
             print('Warning: Unknown event: {0}'.format(event))

@@ -5,8 +5,8 @@ if __name__ == "__main__":
     controller = Controller()
 
     while(True):
-        sleep(1)
-        print('test')
+        sleep(100000)
+        #print('test')
 
-    print('test')
+    print('Exited')
     pass

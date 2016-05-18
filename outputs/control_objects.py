@@ -36,6 +36,7 @@ class Trigger(object):
 
         self.shift_reg = shift_reg
         self.bit_pos = bit_pos
+        self.set_off()
 
     def get_state(self):
         """
@@ -125,6 +126,7 @@ class Slider(object):
         self.bit_plus = bit_plus
         self.bit_minus = bit_minus
         self.switch_time = switch_time
+        self.__set_state(self.States.closed)
 
     def get_state(self):
         return self.States(

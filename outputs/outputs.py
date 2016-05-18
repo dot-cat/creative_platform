@@ -47,27 +47,27 @@ class Outputs(object):
         cooler  = 20
 
         self.door_shifts = {
-                              'First door':   Door(self.shift_reg, door_1_plus, door_1_minus),
-                              'Second door':  Door(self.shift_reg, door_2_plus, door_2_minus),
-                              'Third door':   Door(self.shift_reg, door_3_plus, door_3_minus)
+                              'Entrance door':   Door(self.shift_reg, door_1_plus, door_1_minus),
+                              'Bedroom door':  Door(self.shift_reg, door_2_plus, door_2_minus),
+                              'Office door':   Door(self.shift_reg, door_3_plus, door_3_minus)
                             }
 
         self.room_led_shifts = {
-                                'room 1':  Light(self.shift_reg, diode_1),
-                                'room 2':  Light(self.shift_reg, diode_2),
-                                'room 3':  Light(self.shift_reg, diode_3),
-                                'room 4':  Light(self.shift_reg, diode_4),
-                                'room 5':  Light(self.shift_reg, diode_5),
-                                'room 6':  Light(self.shift_reg, diode_6)
+                                'Corridor':  Light(self.shift_reg, diode_1),
+                                'Kitchen':  Light(self.shift_reg, diode_2),
+                                'Bathroom':  Light(self.shift_reg, diode_3),
+                                'Bedroom':  Light(self.shift_reg, diode_4),
+                                'Office':  Light(self.shift_reg, diode_5),
+                                'Living Room':  Light(self.shift_reg, diode_6)
                                }
 
         self.coolers_shifts = {'cooler':  Cooler(self.shift_reg, cooler)}
 
         self.blind_shifts = {
-                               'First blind':  Blinds(self.shift_reg, blind_1_plus, blind_1_minus),
-                               'Second blind': Blinds(self.shift_reg, blind_2_plus, blind_2_minus),
-                               'Third blind':  Blinds(self.shift_reg, blind_3_plus, blind_3_minus),
-                               'Fourth blind': Blinds(self.shift_reg, blind_4_plus, blind_4_minus)
+                               'Kitchen':  Blinds(self.shift_reg, blind_1_plus, blind_1_minus),
+                               'Bedroom': Blinds(self.shift_reg, blind_2_plus, blind_2_minus),
+                               'Office':  Blinds(self.shift_reg, blind_3_plus, blind_3_minus),
+                               'Living Room': Blinds(self.shift_reg, blind_4_plus, blind_4_minus)
                             }
 
     def __del__(self):
@@ -139,7 +139,7 @@ class Outputs(object):
         return True
 
     def toggle_cooler(self, cooler_id):
-        if cooler_id != str:
+        if type(cooler_id) != str:
             raise ValueError('Value must be a string literal')
 
         if cooler_id not in self.coolers_shifts:
