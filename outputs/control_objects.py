@@ -75,6 +75,17 @@ class Trigger(object):
         self.__set_state(self.States.off)
         return
 
+    def toggle(self):
+        if self.get_state() == self.States.on:  # если переключатель выключен
+            # включаем его
+            self.set_off()
+            self.apply_state()
+
+        else:  # если переключатель включен...
+            # выключаем его
+            self.set_on()
+            self.apply_state()
+
     def apply_state(self):
         """
         Принудительная запись содержимого буфера в регистр
@@ -161,6 +172,19 @@ class Slider(object):
         self.__set_state(self.States.closed)
 
         self.__apply_state()
+
+    def toggle(self):
+        if self.get_state() == self.States.opening:  # Если слайдер открывается...
+            self.__set_state(self.States.opened)     # останавливаем по повторному нажатию кнопки
+
+        elif self.get_state() == self.States.closing:  # Если слайдер закрывается...
+            self.__set_state(self.States.closed)       # останаваливаем по повторному нажатию
+
+        elif self.get_state() == self.States.closed:  # Если слайдер закрыт...
+            self.open()  # открываем слайдер
+
+        else:  # Если слайдер открыт...
+            self.close()  # закрываем слайдер
 
 
 class Door(Slider):
