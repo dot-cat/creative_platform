@@ -1,13 +1,7 @@
-from outputs_dummy.outputs import Outputs
-import serial
+from outputs.outputs import Outputs
+from actors.actor_serial import ActorSerial
+import RPi.GPIO as GPIO
 
-
-def input_watcher():
-    """
-    Метод, ждет события на некотором пине, считывает значения, запускает реакцию
-    :return: none
-    """
-    
 
 class Controller(object):
     def __init__(self):
@@ -15,12 +9,14 @@ class Controller(object):
         Конструктор, выполняет инициализацию и запуск всего и вся
         :return: none
         """
+        GPIO.setmode(GPIO.BOARD)
+
         self.outputs = Outputs()
-        self.serial = serial.Serial('/dev/ttyUSB0')
+        self.actor_serial = ActorSerial(self.outputs, '/dev/main_ard_tty', 9600)
 
     def __del__(self):
         """
         Конструктор, выполняет освобождение и остановку всего и вся
         :return: none
         """
-        self.serial.close()
+        pass

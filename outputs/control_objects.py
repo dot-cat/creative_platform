@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from shift_reg_wrapper import ShiftRegWrapper
+from .shift_reg_wrapper import ShiftRegWrapper
 from enum import Enum
 import time
 

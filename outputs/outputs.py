@@ -1,8 +1,8 @@
 import RPi.GPIO as GPIO
 import time
 
-from shift_reg_wrapper import ShiftRegWrapper
-from control_objects import *
+from .shift_reg_wrapper import ShiftRegWrapper
+from .control_objects import *
 
 
 class Outputs(object):
