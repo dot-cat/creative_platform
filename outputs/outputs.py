@@ -84,9 +84,9 @@ class Outputs(object):
     def get_state(self):
         return self.shift_reg.get_buffer()
 
-    def open_door(self, door_id):
+    def toggle_door(self, door_id):
         """
-        Функция для открытия двери
+        Функция для переключения шторы в противоположное состояние
         :param door_id: идентификатор двери (строка либо число, выбери сам)
         :return: True - успешно, False - неуспешно
         """
@@ -98,49 +98,13 @@ class Outputs(object):
 
         door_data = self.door_shifts.get(door_id)
 
-        door_data.open()
+        door_data.toggle()
 
         return True
 
-    def close_door(self, door_id):
+    def toggle_blind(self, blind_id):
         """
-        Функция для открытия двери
-        :param door_id: идентификатор двери (строка либо число, выбери сам)
-        :return: True - успешно, False - неуспешно
-        """
-        if type(door_id) != str:
-            raise ValueError('Value must be a string literal')
-
-        if door_id not in self.door_shifts:
-            raise ValueError('id not found')
-
-        door_data = self.door_shifts.get(door_id)
-
-        door_data.close()
-
-        return True
-
-    def open_blind(self, blind_id):
-        """
-        Функция для открытия шторы
-        :param blind_id: идентификатор шторки
-        :return: True - успешно, False - неуспешно
-        """
-        if type(blind_id) != str:
-            raise ValueError('Value must be a string literal')
-
-        if blind_id not in self.blind_shifts:
-            raise ValueError('id not found')
-        
-        blind_data = self.blind_shifts.get(blind_id)
-
-        blind_data.open()
-
-        return True
-
-    def close_blind(self, blind_id):
-        """
-        Функция для закрытия шторы
+        Функция для переключения шторы в противоположное состояние
         :param blind_id: идентификатор шторки
         :return: True - успешно, False - неуспешно
         """
@@ -152,15 +116,14 @@ class Outputs(object):
 
         blind_data = self.blind_shifts.get(blind_id)
 
-        blind_data.close()
+        blind_data.toggle()
 
         return True
 
-    def turn_light(self, room_name, to_state):
+    def toggle_light(self, room_name):
         """
-        Включение или выключение света
+        Переключение света
         :param room_name: имя комнаты, строка
-        :param to_state: включить либо выключить свет
         :return: True - успешно, False - неуспешно
         """
         if type(room_name) != str:
@@ -169,25 +132,13 @@ class Outputs(object):
         elif room_name not in self.room_led_shifts:
             raise ValueError('unable to find the room with such name')
 
-        elif to_state not in self.STATES:
-            raise ValueError('wrong action with lights')
-
         led_data = self.room_led_shifts.get(room_name)
 
-        if to_state == self.ON:
-            led_data.set_on()
-
-        elif to_state == self.OFF:
-            led_data.set_off()
-
-        else:
-            raise ValueError('Unknown action')
-
-        led_data.apply_state()
+        led_data.toggle()
 
         return True
 
-    def turn_cooler(self, cooler_id, to_state):
+    def toggle_cooler(self, cooler_id):
         if cooler_id != str:
             raise ValueError('Value must be a string literal')
 
@@ -196,13 +147,6 @@ class Outputs(object):
 
         cooler_data = self.coolers_shifts.get(cooler_id)
 
-        if to_state == self.ON:
-            cooler_data.set_on()
+        cooler_data.toggle()
 
-        elif to_state == self.OFF:
-            cooler_data.set_off()
-
-        else:
-            raise ValueError('Unknown action')
-
-        cooler_data.apply_state()
+        return True
