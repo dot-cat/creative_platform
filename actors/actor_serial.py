@@ -62,5 +62,14 @@ class ActorSerial(object):
         elif event == b'B3\r\n':
             self.controlling.toggle_door('Office door')
 
+        elif event == b'B4\r\n':
+            self.controlling.toggle_door('Bedroom door')
+
+        elif event == b'B5\r\n':
+            self.controlling.toggle_blind('Bedroom')
+
+        elif event == b'B6\r\n':
+            self.controlling.toggle_blind('Living Room')
+
         else:
             print('Warning: Unknown event: {0}'.format(event))
