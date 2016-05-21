@@ -47,28 +47,30 @@ class Outputs(object):
         cooler  = 20
 
         self.door_shifts = {
-                              'Entrance door':   Door(self.shift_reg, door_1_plus, door_1_minus),
-                              'Bedroom door':  Door(self.shift_reg, door_2_plus, door_2_minus),
-                              'Office door':   Door(self.shift_reg, door_3_plus, door_3_minus)
-                            }
+            'Entrance door':    Door(self.shift_reg, door_1_plus, door_1_minus),
+            'Bedroom door':     Door(self.shift_reg, door_2_plus, door_2_minus),
+            'Office door':      Door(self.shift_reg, door_3_plus, door_3_minus)
+        }
 
         self.room_led_shifts = {
-                                'Corridor':  Light(self.shift_reg, diode_1),
-                                'Kitchen':  Light(self.shift_reg, diode_2),
-                                'Bathroom':  Light(self.shift_reg, diode_3),
-                                'Bedroom':  Light(self.shift_reg, diode_4),
-                                'Office':  Light(self.shift_reg, diode_5),
-                                'Living Room':  Light(self.shift_reg, diode_6)
-                               }
+            'Corridor':     Light(self.shift_reg, diode_1),
+            'Kitchen':      Light(self.shift_reg, diode_2),
+            'Bathroom':     Light(self.shift_reg, diode_3),
+            'Bedroom':      Light(self.shift_reg, diode_4),
+            'Office':       Light(self.shift_reg, diode_5),
+            'Living Room':  Light(self.shift_reg, diode_6)
+        }
 
-        self.coolers_shifts = {'cooler':  Cooler(self.shift_reg, cooler)}
+        self.coolers_shifts = {
+            'cooler':       Cooler(self.shift_reg, cooler)
+        }
 
         self.blind_shifts = {
-                               'Kitchen':  Blinds(self.shift_reg, blind_1_plus, blind_1_minus),
-                               'Bedroom': Blinds(self.shift_reg, blind_2_plus, blind_2_minus),
-                               'Office':  Blinds(self.shift_reg, blind_3_plus, blind_3_minus),
-                               'Living Room': Blinds(self.shift_reg, blind_4_plus, blind_4_minus)
-                            }
+            'Kitchen':      Blinds(self.shift_reg, blind_1_plus, blind_1_minus),
+            'Bedroom':      Blinds(self.shift_reg, blind_2_plus, blind_2_minus),
+            'Office':       Blinds(self.shift_reg, blind_3_plus, blind_3_minus),
+            'Living Room':  Blinds(self.shift_reg, blind_4_plus, blind_4_minus)
+        }
 
     def __del__(self):
         """
