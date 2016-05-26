@@ -1,7 +1,3 @@
-/*
-Materials are took from "Exploring Arduino"
-*/
-
 //LCD text with incrementing number
 //Include the library code:
 
@@ -17,7 +13,7 @@ const uint8_t l_EntranceToOffice = 0; //  Entrance to office
 const uint8_t l_EntranceToBedroom = 1; //  Entrance to bedroom
 const uint8_t l_ExitFromOffice = 2; //  Exit from office
 const uint8_t l_ExitFromBedroom = 3; //  Exit from bedroom
-//  Предназначения этих аналоговых входов пока что не определены
+//  Still free ports
 const uint8_t LIGHT4 = 4;
 const uint8_t LIGHT5 = 5;
 
@@ -56,7 +52,6 @@ char buf[4];
 /*--------------------------------------------------------------------*/
 
 // Variables for buttons
-
 
 //  Buttons ports
 const uint8_t button[6] = {
@@ -119,6 +114,7 @@ void PrintByIndex(int _place, const char * _value) {
 
 void setup()
 {
+  //  Setting baud_rate - speed of UART synchronization/
   Serial.begin(9600);
   for (USHORT i = 0; i < 6; ++i) {
     pinMode(button[i], INPUT);
@@ -149,12 +145,14 @@ void loop()
   //  Опрос кнопок с использованием антидребезговой системы
   for (USHORT i = 0; i < 6; ++i) {
     current_state[i] = debounce(current_state[i], last_state[i], button[i]);
+    //  If button was really pressed
+    //  then send string
     if (last_state[i] == LOW && current_state[i] == HIGH)
       Serial.print(buttonString[i]);
   }
   
   /*---------------------------------------------------------------------------------------*/
-  // Реализация опроса фотосенсоров
+  // Realization of sensors listening
 
   v_ToOffice = analogRead(l_EntranceToOffice);  
   v_ToBedroom = analogRead(l_EntranceToBedroom);
@@ -163,7 +161,7 @@ void loop()
   value4 = analogRead(LIGHT4);
   value5 = analogRead(LIGHT5);
 
-  //  Обработка полученных данных с фотосенсоров
+  //  Processing data from photoresistors
   if (abs(v_ToOffice - v_old_ToOffice) > DIFFERENCE) {
     if (v_ToOffice < THRESHOLD) {
       if (!isSending0) {
@@ -252,14 +250,16 @@ void loop()
       isSending5 = false;
     }
   }
-  
-  v_ToOffice = v_old_ToOffice;
+
+  //  Write current analog values to additional variables
+  //  to detect its changing during next iterations
+  v_old_ToOffice = v_ToOffice;
   v_old_ToBedroom = v_ToBedroom;
   v_old_FromOffice = v_FromOffice;
   v_old_FromBedroom = v_FromBedroom;
   old_value4 = value4;
   old_value5 = value5;
 
-  //  Ask sensors every 100 miliseconds
+  //  Listen inputs every 100 miliseconds
   delay(100);
 }
