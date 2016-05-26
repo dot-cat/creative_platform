@@ -51,9 +51,6 @@ class Trigger(object):
         :param state: желаемое состояние
         :return: None
         """
-        assert self.States.on.value == True and self.States.off.value == False,\
-            'state code changed, update this function before usage'
-
         if type(state) != self.States:
             raise ValueError('Type of state argument must be a Trigger.State')
 

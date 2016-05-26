@@ -1,9 +1,9 @@
 import serial
-from outputs.outputs import Outputs
+from control_objects.control_objects import ControlObjects
 from threading import Thread, Event
 
 
-class ActorSerial(object):
+class ListenerSerial(object):
     def __init__(self, controlling, tty, baudrate):
         """
         Конструктор. Запускает процесс-слушатель на порту tty
@@ -11,7 +11,7 @@ class ActorSerial(object):
         :param tty: UART-устройство
         :param baudrate: скорость порта
         """
-        if type(controlling) != Outputs:
+        if type(controlling) != ControlObjects:
             raise ValueError('wrong type of controllable object')
 
         if type(tty) != str:
@@ -24,7 +24,7 @@ class ActorSerial(object):
         self.serial = serial.Serial(tty)
         self.serial.baudrate = baudrate
         self.controlling = controlling
-        self.listener_thread = Thread(target=self._listener, daemon=True)
+        self.listener_thread = Thread(target=self.__data_waiter, daemon=True)
         self.listener_thread.start()
 
     def __del__(self):
@@ -35,17 +35,17 @@ class ActorSerial(object):
         self.stop_event.set()
         self.serial.close()
 
-    def _listener(self):
+    def __data_waiter(self):
         """
         Слушатель. Ждет события в консоли и запускает его обработчик
         :return: None
         """
         while not self.stop_event.is_set():
             data = self.serial.readline()
-            thread = Thread(target=self._handler, args=(data,), daemon=True)
+            thread = Thread(target=self.__handler, args=(data,), daemon=True)
             thread.start()  # запускаем дочерний поток
 
-    def _handler(self, event):
+    def __handler(self, event):
         """
         Обработчик событий
         :param event: событие, строка

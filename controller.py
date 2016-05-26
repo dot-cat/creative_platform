@@ -1,5 +1,5 @@
-from outputs.outputs import Outputs
-from actors.actor_serial import ActorSerial
+from control_objects.control_objects import ControlObjects
+from listeners.listener_serial import ListenerSerial
 import RPi.GPIO as GPIO
 
 
@@ -11,8 +11,8 @@ class Controller(object):
         """
         GPIO.setmode(GPIO.BOARD)
 
-        self.outputs = Outputs()
-        self.actor_serial = ActorSerial(self.outputs, '/dev/main_ard_tty', 9600)
+        self.to_control = ControlObjects()
+        self.listener_serial = ListenerSerial(self.to_control, '/dev/main_ard_tty', 9600)
 
     def __del__(self):
         """

@@ -2,14 +2,10 @@ import RPi.GPIO as GPIO
 import time
 
 from .shift_reg_wrapper import ShiftRegWrapper
-from .control_objects import *
+from .object_list import *
 
 
-class Outputs(object):
-    # Константы:
-    ON  = True
-    OFF = False
-    STATES = [ON, OFF]
+class ControlObjects(object):
 
     def __init__(self):
         """
@@ -83,7 +79,7 @@ class Outputs(object):
         self.blind_shifts.clear()
         return
 
-    def get_state(self):
+    def __get_state(self):
         return self.shift_reg.get_buffer()
 
     def toggle_door(self, door_id):
