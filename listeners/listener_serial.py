@@ -71,5 +71,8 @@ class ListenerSerial(object):
         elif event == b'B6\r\n':
             self.controlling.toggle_blind('Living Room')
 
+        elif event == b'B8\r\n':
+            self.controlling.toggle_door('Entrance door')
+
         else:
             print('Warning: Unknown event: {0}'.format(event))
