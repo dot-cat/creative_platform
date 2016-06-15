@@ -1,6 +1,7 @@
 import serial
 from control_objects.control_objects import ControlObjects
 from threading import Thread, Event
+# from .listener import Listener
 
 
 class ListenerSerial(object):
@@ -11,6 +12,8 @@ class ListenerSerial(object):
         :param tty: UART-устройство
         :param baudrate: скорость порта
         """
+        # Listener.__init__(self)
+
         if type(controlling) != ControlObjects:
             raise ValueError('wrong type of controllable object')
 

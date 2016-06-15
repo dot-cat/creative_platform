@@ -1,15 +1,12 @@
-
-from abc import ABCMeta, abstractmethod
-
 class Listener(object):
-    __metaclass__ = ABCMeta
+    def __init__(self):
+        pass
 
-    @abstractmethod
+    def __del__(self):
+        raise NotImplementedError
 
-    def __init__ (self, controlling, tty, baudrate): pass
+    def __data_waiter(self):
+        raise NotImplementedError
 
-    def __del__(self): pass
-
-    def __data_waiter(self): pass
-
-    def __handler(self, event): pass
+    def __handler(self, event):
+        raise NotImplementedError
