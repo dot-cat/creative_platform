@@ -3,7 +3,8 @@ import time
 
 GPIO.setmode(GPIO.BOARD)
 
-from shift_reg_lib import ShiftRegister
+from libs.shift_reg import ShiftRegister
+
 
 # устанавливаем пины
 si = 37    # пин для входных данных

@@ -1,6 +1,7 @@
 import serial
-from control_objects.control_objects import ControlObjects
 from threading import Thread, Event
+
+from control_objects.control_objects import ControlObjects
 # from .listener import Listener
 
 

@@ -1,9 +1,7 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
-from .shift_reg_wrapper import ShiftRegWrapper
-from enum import Enum
 import time
+from enum import Enum
+
+from libs.shift_reg_wrapper import ShiftRegWrapper
 
 
 def check_shift_reg_type(shift_reg):

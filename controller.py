@@ -1,7 +1,8 @@
+import RPi.GPIO as GPIO
+
 from control_objects.control_objects import ControlObjects
 from listeners.listener_serial import ListenerSerial
 from listeners.listener_cli import ListenerCli
-import RPi.GPIO as GPIO
 
 
 class Controller(object):

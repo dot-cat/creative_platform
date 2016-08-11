@@ -1,8 +1,4 @@
-import RPi.GPIO as GPIO
-import time
-
-from .shift_reg_wrapper import ShiftRegWrapper
-from .object_list import *
+from control_objects.object_list import *
 
 
 class ControlObjects(object):
