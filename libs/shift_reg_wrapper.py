@@ -1,4 +1,5 @@
 import threading
+import logging
 
 from libs.shift_reg import ShiftRegister
 
@@ -10,7 +11,8 @@ class ShiftRegWrapper(ShiftRegister):
     """
     def __init__(self, si, sck, rck, sclr, num_of_slaves=0):
         ShiftRegister.__init__(self, si, sck, rck, sclr, num_of_slaves)
-        self.buffer = 0x0
+        self.buffer = 0x0  # Начальное состояние буфера
+        self.lock_write = threading.Lock()  # Блокировка для записи из других потоков
         return
 
     def get_buf_bit(self, bit_num):
@@ -53,9 +55,12 @@ class ShiftRegWrapper(ShiftRegister):
         Записать текущее содержимое буфера в регистр
         :return: none
         """
-        lock = threading.Lock()
-        with lock:
+        logging.debug("{0}: write planned. Data: {1}".format(self, bin(self.buffer)))
+
+        with self.lock_write:  # Блокируем запись из других потоков
             ShiftRegister.write_data(self, self.buffer)
+
+        logging.debug("{0}: write finished".format(self))
 
     def get_buffer(self):
         """

@@ -1,5 +1,7 @@
 from control_objects.object_list import *
 
+import logging
+
 
 class ControlObjects(object):
 
@@ -8,6 +10,8 @@ class ControlObjects(object):
         Конструктор, производит иницализацию всех компонентов, необходимых для вывода
         :return: none
         """
+        logging.debug("{0} init started".format(self))
+
         # устанавливаем пины
         si = 37    # пин для входных данных
         rck = 33   # пин для сдвига регистров хранения
@@ -64,15 +68,23 @@ class ControlObjects(object):
             'Living Room':  Blinds(self.shift_reg, blind_4_plus, blind_4_minus)
         }
 
+        logging.debug("{0} init finished".format(self))
+
     def __del__(self):
         """
         Деструктор, проивзодит установку всех компонентов в начальное состояние
         :return: none
         """
+        logging.debug("{0} destruction started".format(self))
+
         self.door_shifts.clear()
         self.room_led_shifts.clear()
         self.coolers_shifts.clear()
         self.blind_shifts.clear()
+
+        del self.shift_reg
+
+        logging.debug("{0} destruction finished".format(self))
         return
 
     def __get_state(self):

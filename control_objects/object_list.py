@@ -1,11 +1,12 @@
 import time
 from enum import Enum
+import logging
 
 from libs.shift_reg_wrapper import ShiftRegWrapper
 
 
 def check_shift_reg_type(shift_reg):
-    if type(shift_reg) != ShiftRegWrapper:
+    if not isinstance(shift_reg, ShiftRegWrapper):
         raise ValueError('type of shift_reg value must be a ShiftRegWrapper')
 
 
@@ -35,6 +36,13 @@ class Trigger(object):
         self.shift_reg = shift_reg
         self.bit_pos = bit_pos
         self.set_off()
+
+    def __del__(self):
+        logging.debug("{0} destruction started".format(self))
+
+        del self.shift_reg  # Освобождаем сдвиговый регистр, удаляем ссылку
+
+        logging.debug("{0} destruction finished".format(self))
 
     def get_state(self):
         """
@@ -122,6 +130,13 @@ class Slider(object):
         self.bit_minus = bit_minus
         self.switch_time = switch_time
         self.__set_state(self.States.closed)
+
+    def __del__(self):
+        logging.debug("{0} destruction started".format(self))
+
+        del self.shift_reg  # Освобождаем сдвиговый регистр, удаляем ссылку
+
+        logging.debug("{0} destruction finished".format(self))
 
     def get_state(self):
         return self.States(

@@ -1,5 +1,6 @@
 import RPi.GPIO as GPIO
 import time
+import logging
 
 
 class ShiftRegister(object):
@@ -17,6 +18,8 @@ class ShiftRegister(object):
         if type(si) != int or type(sck) != int or type(rck) != int or type(sclr) != int:
             raise ValueError('All arguments (port numbers) must be integers')
 
+        logging.debug("{0} init started".format(self))
+
         self.si = si      # инициализация поля
         self.clk = sck    # инициализация поля
         self.rck = rck    # инициализация поля
@@ -27,6 +30,9 @@ class ShiftRegister(object):
         GPIO.setup(self.rck, GPIO.OUT)   # Установка пина сдвига на выход
         GPIO.setup(self.clk, GPIO.OUT)   # Установка пина синхросигнала на выход
         GPIO.setup(self.sclr, GPIO.OUT)  # Установка пина очистки на выход
+
+        logging.debug("{0} init finished".format(self))
+
         return
 
     def __del__(self):
@@ -34,10 +40,14 @@ class ShiftRegister(object):
         Деструктор объекта: освобождение занятых ресурсов
         :return:
         """
+        logging.debug("{0} destruction started".format(self))
+
         self.clear()          # Очищаем содержимое регистра
         self.pulse(self.rck)  # Обновляем содержимое регистров хранения, выставлем все порты регистра в ноль
         self.set_zero()       # подаем на все пины нули
         GPIO.cleanup()        # освобождаем порты
+
+        logging.debug("{0} destruction finished".format(self))
         return
 
     def set_zero(self):

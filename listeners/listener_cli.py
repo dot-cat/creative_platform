@@ -1,4 +1,6 @@
 from threading import Thread, Event
+import logging
+import weakref
 
 from control_objects.control_objects import ControlObjects
 # from .listener import Listener
@@ -11,12 +13,13 @@ class ListenerCli(object):
         """
         # Listener.__init__(self)
 
-        if type(controlling) != ControlObjects:
+        if not isinstance(controlling, ControlObjects):
             raise ValueError('wrong type of controllable object')
 
-        self.stop_event = Event()
+        # Не удерживаем обьекты контроля от удаления - используем "слабую ссылку"
+        self.controlling = weakref.proxy(controlling)
 
-        self.controlling = controlling
+        self.stop_event = Event()
         self.listener_thread = Thread(target=self.__data_waiter, daemon=True)
         self.listener_thread.start()
 
@@ -25,7 +28,10 @@ class ListenerCli(object):
         Деструктор. Останавливает процессы
         :return: None
         """
+        logging.debug("{0} destruction started".format(self))
         self.stop_event.set()
+
+        logging.debug("{0} destruction finished".format(self))
 
     def __data_waiter(self):
         """
@@ -33,7 +39,10 @@ class ListenerCli(object):
         :return: None
         """
         while not self.stop_event.is_set():
+            # Будет ждать, пока пользователь что-то не введет.
+            # Даже если self.stop_event.is_set() == True
             data = input()
+
             thread = Thread(target=self.__handler, args=(data,), daemon=True)
             thread.start()  # запускаем дочерний поток
 

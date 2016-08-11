@@ -1,15 +1,22 @@
 #!/usr/bin/env python
 
-from controller import Controller
 from time import sleep
+import logging
 
+from controller import Controller
+
+
+logging.basicConfig(level=logging.DEBUG)
 
 if __name__ == "__main__":
     controller = Controller()
 
-    while(True):
-        sleep(100000)
-        #print('test')
+    try:
+        while(True):
+            sleep(10)
+            #print('test')
+    except KeyboardInterrupt:
+        pass
 
     print('Exited')
     pass
