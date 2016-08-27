@@ -1,7 +1,7 @@
 import threading
 import logging
 
-from libs.shift_reg import ShiftRegister
+from connections.shift_reg import ShiftRegister
 
 
 class ShiftRegWrapper(ShiftRegister):
@@ -10,44 +10,49 @@ class ShiftRegWrapper(ShiftRegister):
     Содержит дополнительный буфер содержимого и дополнительные методы для работы с ним
     """
     def __init__(self, si, sck, rck, sclr, num_of_slaves=0):
-        ShiftRegister.__init__(self, si, sck, rck, sclr, num_of_slaves)
+        super().__init__(si, sck, rck, sclr, num_of_slaves)
         self.buffer = 0x0  # Начальное состояние буфера
         self.lock_write = threading.Lock()  # Блокировка для записи из других потоков
-        return
 
-    def get_buf_bit(self, bit_num):
+    def check_bit_pos(self, bit_pos):
+        if not isinstance(bit_pos, int):
+            raise ValueError('Bit number must be an integer')
+
+        if bit_pos < 0:
+            raise ValueError('Bit number must be positive or zero')
+
+        capacity = self.get_capacity()
+
+        if bit_pos >= capacity:
+            raise ValueError('Bit position can\'t be bigger than '
+                             'register capacity ({0})'.format(capacity))
+
+    def get_buf_bit(self, bit_pos):
         """
         Считывание значения бита из буфера
-        :param bit_num: номер бита, значение которого необхожимо считать
+        :param bit_pos: номер бита, значение которого необхожимо считать
         :return: none
         """
-        if bit_num < 0:
-            raise ValueError('Bit number must be positive or zero')
-        copy_current_state = self.buffer
+        self.check_bit_pos(bit_pos)
 
-        if (copy_current_state >> bit_num) & 1:
-            return 1
-        else:
-            return 0
+        return (self.buffer >> bit_pos) & 1
 
-    def set_buf_bit(self, bit_num, value):
+    def set_buf_bit(self, bit_pos, value):
         """
         Установка значения бита в буфере.
         Требует выполнения write_current_state для применения изменений
-        :param bit_num: номер (позиция) бита
+        :param bit_pos: номер (позиция) бита
         :param value: значение бита в позиции bit_num
         :return: none
         """
-        if bit_num < 0:
-            raise ValueError('Bit number must be positive or zero')
-
-        if value != 0 and value != 1:
-            raise ValueError('Value must be 1 or zero, True or False')
+        self.check_bit_pos(bit_pos)
 
         if value == 0:
-            self.buffer &= ~(1 << bit_num)
+            self.buffer &= ~(1 << bit_pos)
+        elif value == 1:
+            self.buffer |= (1 << bit_pos)
         else:
-            self.buffer |= (1 << bit_num)
+            raise ValueError('Value must be 1 or zero, True or False')
         return
 
     def write_buffer(self):

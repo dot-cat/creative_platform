@@ -1,25 +1,19 @@
-import serial
-from threading import Thread, Event
 import logging
-import weakref
+import serial
 
-from control_objects.control_objects import ControlObjects
-# from .listener import Listener
+from listeners.listener import Listener
+from controllable_objects.control_objects import ControlObjects
 
 
-class ListenerSerial(object):
-    def __init__(self, controlling, tty, baudrate):
+class ListenerSerial(Listener):
+    def __init__(self, feedback, tty, baudrate):
         """
         Конструктор. Запускает процесс-слушатель на порту tty
-        :param controlling: объект управления
+        :param feedback: объект управления
         :param tty: UART-устройство
         :param baudrate: скорость порта
         """
-        logging.debug("{0} init started".format(self))
-
-        # Listener.__init__(self)
-
-        if not isinstance(controlling, ControlObjects):
+        if not isinstance(feedback, ControlObjects):
             raise ValueError('wrong type of controllable object')
 
         if type(tty) != str:
@@ -28,67 +22,55 @@ class ListenerSerial(object):
         if type(baudrate) != int or baudrate <= 0:
             raise ValueError('baud-rate value must be positive')
 
-        # Не удерживаем обьекты контроля от удаления - используем "слабую ссылку"
-        self.controlling = weakref.proxy(controlling)
-
-        self.stop_event = Event()
         self.serial = serial.Serial(tty)
         self.serial.baudrate = baudrate
-        self.listener_thread = Thread(target=self.__data_waiter, daemon=True)
-        self.listener_thread.start()
 
-        logging.debug("{0} init finished".format(self))
+        super().__init__(feedback)
 
     def __del__(self):
         """
         Деструктор. Освобождает занятые порты, останавливает процессы
         :return: None
         """
-        logging.debug("{0} destruction started".format(self))
+        super().__del__()
 
-        self.stop_event.set()
         self.serial.close()
 
-        logging.debug("{0} destruction finished".format(self))
-
-    def __data_waiter(self):
+    def get_data(self):
         """
-        Слушатель. Ждет события в консоли и запускает его обработчик
+        Считываем очередную строку из tty-устройства
+        :return: считанная строка
+        """
+        return self.serial.readline()
+
+    def process_data(self, raw_data):
+        """
+        Обработчик считанных данных
+        :param raw_data: данные, строка
         :return: None
         """
-        while not self.stop_event.is_set():
-            data = self.serial.readline()
-            thread = Thread(target=self.__handler, args=(data,), daemon=True)
-            thread.start()  # запускаем дочерний поток
+        logging.debug('Data read: {0}'.format(raw_data))
 
-    def __handler(self, event):
-        """
-        Обработчик событий
-        :param event: событие, строка
-        :return: None
-        """
-        print('event: {0}'.format(event))
+        if   raw_data == b'B1\r\n':
+            self.feedback.toggle_door('Office door')
 
-        if   event == b'B1\r\n':
-            self.controlling.toggle_door('Office door')
+        elif raw_data == b'B2\r\n':
+            self.feedback.toggle_door('Bedroom door')
 
-        elif event == b'B2\r\n':
-            self.controlling.toggle_door('Bedroom door')
+        elif raw_data == b'B3\r\n':
+            self.feedback.toggle_door('Office door')
 
-        elif event == b'B3\r\n':
-            self.controlling.toggle_door('Office door')
+        elif raw_data == b'B4\r\n':
+            self.feedback.toggle_door('Bedroom door')
 
-        elif event == b'B4\r\n':
-            self.controlling.toggle_door('Bedroom door')
+        elif raw_data == b'B5\r\n':
+            self.feedback.toggle_blind('Bedroom')
 
-        elif event == b'B5\r\n':
-            self.controlling.toggle_blind('Bedroom')
+        elif raw_data == b'B6\r\n':
+            self.feedback.toggle_blind('Living Room')
 
-        elif event == b'B6\r\n':
-            self.controlling.toggle_blind('Living Room')
-
-        elif event == b'B8\r\n':
-            self.controlling.toggle_door('Entrance door')
+        elif raw_data == b'B8\r\n':
+            self.feedback.toggle_door('Entrance door')
 
         else:
-            print('Warning: Unknown event: {0}'.format(event))
+            print('Warning: Unknown message: {0}'.format(raw_data))
