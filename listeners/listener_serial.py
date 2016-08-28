@@ -32,9 +32,9 @@ class ListenerSerial(Listener):
         Деструктор. Освобождает занятые порты, останавливает процессы
         :return: None
         """
-        super().__del__()
 
-        self.serial.close()
+        # FIXME: Зачем эта строка?
+        super().__del__()
 
     def get_data(self):
         """
