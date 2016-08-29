@@ -6,44 +6,27 @@ from controllable_objects.control_objects import ControlObjects
 
 
 class ListenerSerial(Listener):
-    def __init__(self, feedback, tty, baudrate):
+    def __init__(self, feedback, con_instance: serial.Serial, con_params=None):
         """
         Конструктор. Запускает процесс-слушатель на порту tty
         :param feedback: объект управления
-        :param tty: UART-устройство
-        :param baudrate: скорость порта
+        :param con_instance: объект-подключение типа serial.Serial
+        :param con_params: настройки доступа к подключению, не используется
         """
         if not isinstance(feedback, ControlObjects):
             raise ValueError('wrong type of controllable object')
 
-        if type(tty) != str:
-            raise ValueError('tty must be a string')
+        if not isinstance(con_instance, serial.Serial):
+            raise ValueError('con_instance must be an instance of serial.Serial type')
 
-        if type(baudrate) != int or baudrate <= 0:
-            raise ValueError('baud-rate value must be positive')
-
-        self.serial = serial.Serial(tty)
-        self.serial.baudrate = baudrate
-
-        super().__init__(feedback)
-
-        # another test here
-
-    def __del__(self):
-        """
-        Деструктор. Освобождает занятые порты, останавливает процессы
-        :return: None
-        """
-
-        # FIXME: Зачем эта строка?
-        super().__del__()
+        super().__init__(feedback, con_instance, con_params)
 
     def get_data(self):
         """
         Считываем очередную строку из tty-устройства
         :return: считанная строка
         """
-        return self.serial.readline()
+        return self.con_instance.readline()
 
     def process_data(self, raw_data):
         """

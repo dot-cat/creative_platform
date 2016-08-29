@@ -5,14 +5,17 @@ from controllable_objects.control_objects import ControlObjects
 
 
 class ListenerCli(Listener):
-    def __init__(self, feedback):
+    def __init__(self, feedback, con_instance=None, con_params=None):
         """
         Конструктор. Запускает процесс-слушатель консоли
+        :param feedback: объект для обратной связи, ControlObjects
+        :param con_instance: объект-соединение, не используется
+        :param con_params: параметры доступа к соединению, не используется
         """
         if not isinstance(feedback, ControlObjects):
             raise ValueError('wrong type of controllable object')
 
-        super().__init__(feedback)
+        super().__init__(feedback, con_instance, con_params)
 
     def get_data(self):
         """

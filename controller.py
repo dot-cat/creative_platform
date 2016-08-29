@@ -1,6 +1,7 @@
 import RPi.GPIO as GPIO
 import logging
 import os.path
+import serial
 
 from controllable_objects.control_objects import ControlObjects
 from listeners.listener_serial import ListenerSerial
@@ -19,7 +20,8 @@ class Controller(object):
         listener_serial = None  # Устанавливаем возращаемое значение по умолчанию
 
         if os.path.exists(device):  # Если путь к устройству верный...
-            listener_serial = ListenerSerial(self.to_control, device, speed)  # ...иницализируем слушателя
+            serial_con = serial.Serial(device, speed)  # ...открываем последовательное соединение...
+            listener_serial = ListenerSerial(self.to_control, serial_con)  # ...иницализируем слушателя
             listener_serial.start()  # ...запускаем слушателя
 
         else:  # Иначе...
@@ -39,7 +41,7 @@ class Controller(object):
 
         self.to_control = ControlObjects()
 
-        self.listener_serial = self.start_serial_listener('/dev/main_ard_tty', 9600)
+        self.listener_serial = self.start_serial_listener('/dev/ttyUSB0', 9600)
 
         self.listener_cli = ListenerCli(self.to_control)
         self.listener_cli.start()
@@ -60,9 +62,6 @@ class Controller(object):
         del self.listener_serial
         del self.listener_cli
         del self.to_control
-
-        # Fixme: Consider deletion of the bottom line
-        GPIO.cleanup()  # Освобождаем порты GPIO
 
         logging.debug("{0} destruction finished".format(self))
 

@@ -22,16 +22,21 @@ class Listener(object):
     считывают и обрабатывают их, а затем выполняют некоторые действия.
     """
 
-    def __init__(self, feedback):
+    def __init__(self, feedback, con_instance, con_params):
         """
         Инициализация слушателя
         :param feedback: Объект для обратной связи
+        :param con_instance: экземпляр connection'а (соединения)
+        :param con_params: параметры доступа к соединению
         """
         logging.debug("{0} init started".format(self))
 
         self.feedback = weakref.proxy(feedback)  # FIXME: DH1
         self.stop_event = Event()
         self.listener_thread = Thread(target=self.__waiter_loop, daemon=True)
+
+        self.con_instance = con_instance
+        self.con_params = con_params
 
         logging.debug("{0} init finished".format(self))
 
