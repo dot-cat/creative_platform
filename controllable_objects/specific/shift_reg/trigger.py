@@ -45,19 +45,7 @@ class Trigger(AbsTrigger):
         """
         self.set_state_buffer(target_state)
 
-    def set_on(self):
-        # FIXME: DH2
-        """
-        Немедленно устанавливает триггер в состояние "включено"
-        """
-        self.set_state(self.States.on)
-
-    def set_off(self):
-        # FIXME: DH2
-        """
-        Немедленно устанавливает триггер в состояние "выключено"
-        """
-        self.set_state(self.States.off)
+        self.apply_buffer_state()
 
     def set_state_buffer(self, target_state):
         # FIXME: DH2

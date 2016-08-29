@@ -27,6 +27,8 @@ class ListenerSerial(Listener):
 
         super().__init__(feedback)
 
+        # another test here
+
     def __del__(self):
         """
         Деструктор. Освобождает занятые порты, останавливает процессы

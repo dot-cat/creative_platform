@@ -61,6 +61,7 @@ class Controller(object):
         del self.listener_cli
         del self.to_control
 
+        # Fixme: Consider deletion of the bottom line
         GPIO.cleanup()  # Освобождаем порты GPIO
 
         logging.debug("{0} destruction finished".format(self))

@@ -44,6 +44,7 @@ class ControlObjects(object):
         diode_6 = 19
         cooler  = 20
 
+        # FIXME: Not shifts
         self.door_shifts = {
             'Entrance door':    Slider(self.shift_reg, Slider.PinStruct(door_1_plus, door_1_minus)),
             'Bedroom door':     Slider(self.shift_reg, Slider.PinStruct(door_2_plus, door_2_minus)),
@@ -74,7 +75,7 @@ class ControlObjects(object):
 
     def __del__(self):
         """
-        Деструктор, проивзодит установку всех компонентов в начальное состояние
+        Деструктор, производит установку всех компонентов в начальное состояние
         :return: none
         """
         logging.debug("{0} destruction started".format(self))
@@ -84,7 +85,7 @@ class ControlObjects(object):
         self.coolers_shifts.clear()
         self.blind_shifts.clear()
 
-        del self.shift_reg
+        del self.shift_reg  # FIXME: Consider deletion
 
         logging.debug("{0} destruction finished".format(self))
         return
