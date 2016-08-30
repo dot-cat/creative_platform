@@ -1,0 +1,62 @@
+[
+  {
+    "id": "Li1",
+    "type": "lighting",
+    "room": "Corridor",
+    "description": "",
+    "con_id": "SR1",
+    "con_params": {
+      "sr_pin": 4
+    }
+  },
+  {
+    "id": "Li2",
+    "type": "lighting",
+    "room": "Kitchen",
+    "description": "",
+    "con_id": "SR1",
+    "con_params": {
+      "sr_pin": 4
+    }
+  },
+  {
+    "id": "Li3",
+    "type": "lighting",
+    "room": "Bathroom",
+    "description": "",
+    "con_id": "SR1",
+    "con_params": {
+      "sr_pin": 12
+    }
+  },
+  {
+    "id": "Li4",
+    "type": "lighting",
+    "room": "Bedroom",
+    "description": "",
+    "con_id": "SR1",
+    "con_params": {
+      "sr_pin": 13
+    }
+  },
+  {
+    "id": "Li5",
+    "type": "lighting",
+    "room": "Office",
+    "description": "",
+    "con_id": "SR1",
+    "con_params": {
+      "sr_pin": 18
+    }
+  },
+  {
+    "id": "Li6",
+    "type": "lighting",
+    "room": "Living Room",
+    "description": "",
+    "con_id": "SR1",
+    "con_params": {
+      "sr_pin": 19
+    }
+  }
+]
