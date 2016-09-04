@@ -24,6 +24,7 @@ class AbsSlider(AbsControllable):
         closing = [0, 1]
         opening = [1, 0]
         opened  = [1, 1]
+        undefined = None
 
     def __init__(self, con_instance, con_params):
         """
