@@ -4,6 +4,7 @@ import tempfile
 from model import Model
 
 
+import os
 temp_dir = tempfile.TemporaryDirectory()
 temp_dir_path = temp_dir.name
 
@@ -25,3 +26,7 @@ class TestModelInit(unittest.TestCase):
 
         with self.assertRaisesRegex(ValueError, "specified path does not exist"):
             Model(non_existent_path)
+
+    def test_normal_init(self):
+        obj = Model("/home/alarm/code/shp_platform/configs/".format(os.getcwd()))
+        obj.read_configs()
