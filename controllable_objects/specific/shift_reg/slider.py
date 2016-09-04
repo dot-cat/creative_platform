@@ -27,37 +27,40 @@ class Slider(AbsSlider):
     Объект с четырьмя состояниями: закрыто, открывается, открыто, открывается.
     connections'ом выступает сдвиговый регистр
     """
-    class PinStruct(object):
+    class ConParams(object):
         """
-        Структура (почти), содержит информацию о выводах сдвигового регистра,
-        которые отвечают за положительный и отрицательный выводы двигателя.
+        Структура (почти), содержит информацию, необходимую для работы со сдвиговым регистром.
         """
-        def __init__(self, pos, neg):
-            if pos == neg:
+        def __init__(self, pin_pos, pin_neg, transition_time=1):
+            """
+            Конструктор
+            :param pin_pos: положительный пин на сдвиговом регистре
+            :param pin_neg: отрицательный пин на сдвиговом регистре
+            :param transition_time: время переключения между состояниями в секундах
+            """
+            if pin_pos == pin_neg:
                 raise ValueError('pos and neg pins can\'t be the same')
 
-            self.pos = pos
-            self.neg = neg
+            if transition_time <= 0:
+                raise ValueError('transition_time must be bigger than zero')
 
-    def __init__(self, con_instance, con_params, transition_time=1):
+            self.pos = pin_pos
+            self.neg = pin_neg
+            self.transition_time = transition_time  # Fixme: CC5
+
+    def __init__(self, con_instance, con_params: ConParams):
         """
         Конструктор
         :param con_instance: экземпляр сдвигового регистра
-        :param con_params: заполненная структура self.PinStruct, информация о выводах регистра и двигателя
-        :param transition_time: время переключения между двумя состояниями в секундах  #CC5
+        :param con_params: заполненная структура self.ConParams, информация о подключении
         """
         check_shift_reg_type(con_instance)
 
-        if not isinstance(con_params, self.PinStruct):  # Fixme: CC4
-            raise ValueError('con_params must be an instance of Slider.PinStruct class')
-
-        if transition_time <= 0:
-            raise ValueError('transition_time must be bigger than zero')
+        if not isinstance(con_params, self.ConParams):  # Fixme: CC4
+            raise ValueError('con_params must be an instance of Slider.ConParams class')
 
         con_instance.check_bit_pos(con_params.pos)  # Fixme: CC3
         con_instance.check_bit_pos(con_params.neg)  # Fixme: CC3
-
-        self.transition_time = transition_time  # Fixme CC5
 
         super().__init__(con_instance, con_params)
 
@@ -147,11 +150,11 @@ class Slider(AbsSlider):
         Блокирующая функция, ожидает окончания закрытия двери
         :return: None
         """
-        time.sleep(self.transition_time)
+        time.sleep(self.con_params.transition_time)  # Fixme: CC5
 
     def __wait_open(self):
         """
         Блокирующая функция, ожидает окончания открытия двери
         :return: None
         """
-        time.sleep(self.transition_time)
+        time.sleep(self.con_params.transition_time)  # Fixme: CC5

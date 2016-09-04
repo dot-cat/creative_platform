@@ -48,6 +48,8 @@ class Model(object):
 
         self.conf_data = dict()
 
+        self.read_configs()
+
     def read_configs(self):
         conf_structure = get_dir_structure(self.conf_dir)
 

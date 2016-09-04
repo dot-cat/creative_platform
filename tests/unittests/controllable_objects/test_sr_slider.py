@@ -30,30 +30,30 @@ sl_bit_pos = 0
 sl_bit_neg = 1
 transition_time = 0.1
 
-sl_pinstruct = Slider.PinStruct(sl_bit_pos, sl_bit_neg)
-sl_common_params = (sr, sl_pinstruct, transition_time)
+sl_pinstruct = Slider.ConParams(sl_bit_pos, sl_bit_neg, transition_time)
+sl_common_params = (sr, sl_pinstruct)
 
 logging.debug('test_sr_slider: {0}'.format(sr))
 
 
 class TestSliderInit(unittest.TestCase):
     def test_init_normal(self):
-        Slider(sr, sl_pinstruct, transition_time)
+        Slider(sr, sl_pinstruct)
 
     def test_init_invalid_switch_time(self):
         with self.assertRaisesRegex(ValueError, 'transition_time must be bigger than zero'):
-            Slider(sr, sl_pinstruct, transition_time=0)
+            Slider.ConParams(sl_bit_pos, sl_bit_neg, 0)
 
         with self.assertRaisesRegex(ValueError, 'transition_time must be bigger than zero'):
-            Slider(sr, sl_pinstruct, transition_time=-1)
+            Slider.ConParams(sl_bit_pos, sl_bit_neg, -1)
 
     def test_init_invalid_connection_type(self):
         with self.assertRaisesRegex(ValueError, 'type of con_instance value must be a ShiftRegWrapper'):
-            Slider('str', sl_pinstruct, transition_time)
+            Slider('str', sl_pinstruct)
 
     def test_init_invalid_connection_params(self):
-        with self.assertRaisesRegex(ValueError, 'con_params must be an instance of Slider.PinStruct class'):
-            Slider(sr, 'str', transition_time)
+        with self.assertRaisesRegex(ValueError, 'con_params must be an instance of Slider.ConParams class'):
+            Slider(sr, 'str')
 
 
 class TestSliderMethods(unittest.TestCase):

@@ -19,15 +19,19 @@ class ControlObjects(object):
 
         model_ins = Model("./configs")
 
-        model_ins.read_configs()
-
         model_data = model_ins.get_config_data()
+
+        # -------------------------------------------------
 
         self.all_connections = dict()
 
-        for item in model_data["connections"]:
+        con_data_list = model_data["connections"]
+
+        for item in con_data_list:
             if item["con_type"] == "shiftreg":
                 self.all_connections[item["id"]] = ShiftRegWrapper(**item["con_params"])
+
+        # -------------------------------------------------
 
         self.all_controllables = dict()
 
@@ -48,11 +52,13 @@ class ControlObjects(object):
             if item["type"] == "door" or item["type"] == "sunblind":
                 self.all_controllables[item["id"]] = SliderType(
                     target_connection,
-                    SRSlider.PinStruct(con_params["pin_pos"], con_params["pin_neg"]),
+                    SRSlider.ConParams(con_params["pin_pos"], con_params["pin_neg"]),
                     con_params["transition_time"]
                 )
             elif item["type"] == "lighting" or item["type"] == "fan":
                 self.all_controllables[item["id"]] = TriggerType(target_connection, con_params["sr_pin"])
+
+        # -------------------------------------------------
 
         logging.debug("{0} init finished".format(self))
 
