@@ -2,7 +2,6 @@
   {
     "id": "SB1",
     "type": "sunblind",
-    "room": "Kitchen",
     "description": "",
     "con_id": "SR1",
     "con_params": {
@@ -14,7 +13,6 @@
   {
     "id": "SB2",
     "type": "sunblind",
-    "room": "Kitchen",
     "description": "",
     "con_id": "SR1",
     "con_params": {
@@ -26,7 +24,6 @@
   {
     "id": "SB3",
     "type": "sunblind",
-    "room": "Kitchen",
     "description": "",
     "con_id": "SR1",
     "con_params": {
@@ -38,7 +35,6 @@
   {
     "id": "SB4",
     "type": "sunblind",
-    "room": "Kitchen",
     "description": "",
     "con_id": "SR1",
     "con_params": {

@@ -2,7 +2,6 @@
   {
     "id": "D1",
     "type": "door",
-    "room": "Corridor",
     "description": "",
     "con_id": "SR1",
     "con_params": {
@@ -14,7 +13,6 @@
   {
     "id": "D2",
     "type": "door",
-    "room": "Bedroom",
     "description": "",
     "con_id": "SR1",
     "con_params": {
@@ -26,7 +24,6 @@
   {
     "id": "D3",
     "type": "door",
-    "room": "Office",
     "description": "",
     "con_id": "SR1",
     "con_params": {
