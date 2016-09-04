@@ -32,6 +32,6 @@ class AbsTrigger(AbsControllable):
             # выключаем его
             self.set_off()
 
-        else:  # если переключатель выключен...
+        elif self.get_state() == self.States.off:  # если переключатель выключен...
             # включаем его
             self.set_on()
