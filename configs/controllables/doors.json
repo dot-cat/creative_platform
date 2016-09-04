@@ -2,7 +2,7 @@
   {
     "id": "D1",
     "type": "door",
-    "description": "",
+    "description": "Entrance door",
     "con_id": "SR1",
     "con_params": {
       "pin_pos": 0,
@@ -13,7 +13,7 @@
   {
     "id": "D2",
     "type": "door",
-    "description": "",
+    "description": "to bedroom",
     "con_id": "SR1",
     "con_params": {
       "pin_pos": 2,
@@ -24,7 +24,7 @@
   {
     "id": "D3",
     "type": "door",
-    "description": "",
+    "description": "to office",
     "con_id": "SR1",
     "con_params": {
       "pin_pos": 6,

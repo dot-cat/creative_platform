@@ -54,25 +54,25 @@ class ListenerSerial(Listener):
         logging.debug('Data read: {0}'.format(raw_data))
 
         if   raw_data == b'B1\r\n':
-            self.feedback.toggle_door('Office door')
+            self.feedback.toggle_controllable("D3")
 
         elif raw_data == b'B2\r\n':
-            self.feedback.toggle_door('Bedroom door')
+            self.feedback.toggle_controllable("D2")
 
         elif raw_data == b'B3\r\n':
-            self.feedback.toggle_door('Office door')
+            self.feedback.toggle_controllable("D3")
 
         elif raw_data == b'B4\r\n':
-            self.feedback.toggle_door('Bedroom door')
+            self.feedback.toggle_controllable("D2")
 
         elif raw_data == b'B5\r\n':
-            self.feedback.toggle_blind('Bedroom')
+            self.feedback.toggle_controllable("SB2")
 
         elif raw_data == b'B6\r\n':
-            self.feedback.toggle_blind('Living Room')
+            self.feedback.toggle_controllable("SB4")
 
         elif raw_data == b'B8\r\n':
-            self.feedback.toggle_door('Entrance door')
+            self.feedback.toggle_controllable("D1")
 
         else:
             print('Warning: Unknown message: {0}'.format(raw_data))

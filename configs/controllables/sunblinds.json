@@ -2,7 +2,7 @@
   {
     "id": "SB1",
     "type": "sunblind",
-    "description": "",
+    "description": "Kitchen",
     "con_id": "SR1",
     "con_params": {
       "pin_pos": 8,
@@ -13,7 +13,7 @@
   {
     "id": "SB2",
     "type": "sunblind",
-    "description": "",
+    "description": "Bedroom",
     "con_id": "SR1",
     "con_params": {
       "pin_pos": 10,
@@ -24,7 +24,7 @@
   {
     "id": "SB3",
     "type": "sunblind",
-    "description": "",
+    "description": "Office",
     "con_id": "SR1",
     "con_params": {
       "pin_pos": 14,
@@ -35,7 +35,7 @@
   {
     "id": "SB4",
     "type": "sunblind",
-    "description": "",
+    "description": "Living Room",
     "con_id": "SR1",
     "con_params": {
       "pin_pos": 16,

@@ -31,7 +31,7 @@ class ListenerCli(Listener):
 
         if raw_data[0:11] == 'toggle door':
             logging.debug(raw_data[12:])
-            self.feedback.toggle_door(raw_data[12:])
+            self.feedback.toggle_controllable(raw_data[12:])
 
         elif raw_data[0:12] == 'toggle light':
             logging.debug(raw_data[13:])

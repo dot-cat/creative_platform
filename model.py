@@ -1,6 +1,5 @@
 import os
 import json
-from pprint import pprint
 
 
 def check_dir_path(dir_path: str) -> None:
@@ -54,10 +53,11 @@ class Model(object):
 
         for group in conf_structure:
             self.conf_data[group] = list()
-            contr_alias = self.conf_data[group]
+            group_elements = self.conf_data[group]
 
             for file_path in conf_structure[group]:
                 with open(file_path) as file:
-                    contr_alias.extend(json.load(file))
+                    group_elements.extend(json.load(file))
 
-        pprint(self.conf_data)
+    def get_config_data(self):
+        return self.conf_data
