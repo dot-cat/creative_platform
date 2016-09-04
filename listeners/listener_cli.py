@@ -35,15 +35,15 @@ class ListenerCli(Listener):
 
         elif raw_data[0:12] == 'toggle light':
             logging.debug(raw_data[13:])
-            self.feedback.toggle_light(raw_data[13:])
+            self.feedback.toggle_controllable(raw_data[13:])
 
         elif raw_data[0:13] == 'toggle cooler':
             logging.debug(raw_data[14:])
-            self.feedback.toggle_cooler(raw_data[14:])
+            self.feedback.toggle_controllable(raw_data[14:])
 
         elif raw_data[0:12] == 'toggle blind':
             logging.debug(raw_data[13:])
-            self.feedback.toggle_blind(raw_data[13:])
+            self.feedback.toggle_controllable(raw_data[13:])
 
         else:
             print('Warning: Unknown command: {0}'.format(raw_data))
