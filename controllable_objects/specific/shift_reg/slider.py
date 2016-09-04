@@ -48,16 +48,25 @@ class Slider(AbsSlider):
             self.neg = pin_neg
             self.transition_time = transition_time  # Fixme: CC5
 
-    def __init__(self, con_instance, con_params: ConParams):
+    def __init__(self, con_instance, con_params: ConParams or dict):
         """
         Конструктор
         :param con_instance: экземпляр сдвигового регистра
-        :param con_params: заполненная структура self.ConParams, информация о подключении
+        :param con_params: заполненная структура self.ConParams, информация о подключении.
+               Или словарь, на основе которого такую структуру можно создать.
         """
         check_shift_reg_type(con_instance)
 
+        con_params_error = ValueError('con_params must be an instance of Slider.ConParams class or a compatible dict')
+
         if not isinstance(con_params, self.ConParams):  # Fixme: CC4
-            raise ValueError('con_params must be an instance of Slider.ConParams class')
+            if isinstance(con_params, dict):
+                try:
+                    con_params = self.ConParams(**con_params)
+                except TypeError:
+                    raise con_params_error
+            else:
+                raise con_params_error
 
         con_instance.check_bit_pos(con_params.pos)  # Fixme: CC3
         con_instance.check_bit_pos(con_params.neg)  # Fixme: CC3

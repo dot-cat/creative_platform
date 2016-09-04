@@ -1,7 +1,7 @@
-from controllable_objects.specific.shift_reg.slider import Slider as SRSlider
-from controllable_objects.specific.shift_reg.trigger import Trigger as SRTrigger
-
 from connections.shift_reg_wrapper import ShiftRegWrapper
+
+from controllable_objects.factories.slider_factory import get_slider_by_params
+from controllable_objects.factories.trigger_factory import get_trigger_by_params
 
 from model import Model
 
@@ -36,27 +36,14 @@ class ControlObjects(object):
         self.all_controllables = dict()
 
         for item in model_data["controllables"]:
-            target_connection = self.all_connections[item["con_id"]]
-
-            if isinstance(target_connection, ShiftRegWrapper):
-                TriggerType = SRTrigger
-                SliderType = SRSlider
-            else:
-                logging.warning("Unknown {0} item connection type: {1}. Ignoring".format(
-                    item["id"], type(target_connection)
-                ))
-                continue
-
+            con_instance = self.all_connections[item["con_id"]]
             con_params = item["con_params"]
 
             if item["type"] == "door" or item["type"] == "sunblind":
-                self.all_controllables[item["id"]] = SliderType(
-                    target_connection,
-                    SRSlider.ConParams(con_params["pin_pos"], con_params["pin_neg"]),
-                    con_params["transition_time"]
-                )
+                self.all_controllables[item["id"]] = get_slider_by_params(con_instance, con_params)
+
             elif item["type"] == "lighting" or item["type"] == "fan":
-                self.all_controllables[item["id"]] = TriggerType(target_connection, con_params["sr_pin"])
+                self.all_controllables[item["id"]] = get_trigger_by_params(con_instance, con_params["sr_pin"])
 
         # -------------------------------------------------
 

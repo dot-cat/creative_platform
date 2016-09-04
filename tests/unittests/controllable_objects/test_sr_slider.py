@@ -52,8 +52,16 @@ class TestSliderInit(unittest.TestCase):
             Slider('str', sl_pinstruct)
 
     def test_init_invalid_connection_params(self):
-        with self.assertRaisesRegex(ValueError, 'con_params must be an instance of Slider.ConParams class'):
+        with self.assertRaisesRegex(ValueError, 'con_params must be an instance of Slider.ConParams class*'):
             Slider(sr, 'str')
+
+    def test_init_with_dict(self):
+        Slider(sr, {"pin_pos": sl_bit_pos, "pin_neg": sl_bit_neg, "transition_time": transition_time})
+
+    def test_init_with_invalid_dict(self):
+        with self.assertRaisesRegex(ValueError, "con_params must be an instance of Slider.ConParams class or "
+                                                "a compatible dict"):
+            Slider(sr, {"bla": sl_bit_pos, "pin_neg": sl_bit_neg, "transition_time": transition_time})
 
 
 class TestSliderMethods(unittest.TestCase):

@@ -44,7 +44,7 @@ class Controller(object):
         pass
 
     def __start_all_listeners(self):
-        self.listener_serial = self.__start_serial_listener('/dev/main_ard_tty', 9600)
+        self.listener_serial = self.__start_serial_listener('/dev/ttyUSB0', 9600)
 
         self.listener_cli = ListenerCli(self.to_control)
         self.listener_cli.start()
