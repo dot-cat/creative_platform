@@ -1,11 +1,12 @@
-import RPi.GPIO as GPIO
 import logging
 import os.path
 
-from controllable_objects.control_objects import ControlObjects
-from listeners.listener_serial import ListenerSerial
-from listeners.listener_cli import ListenerCli
+import RPi.GPIO as GPIO
+
 import utils.debug_refs as debug_refs
+from controllable_objects.control_objects import ControlObjects
+from listeners.listener_cli import ListenerCli
+from listeners.listener_serial import ListenerSerial
 
 
 class Controller(object):
