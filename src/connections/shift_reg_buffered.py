@@ -1,18 +1,24 @@
 import threading
 import logging
 
-from connections.shift_reg import ShiftRegister
+from connections.abs_shift_reg import AbsShiftRegister
 
 
-class ShiftRegWrapper(ShiftRegister):
+class ShiftRegBuffered(AbsShiftRegister):
     """
-    ShiftRegWrapper - оболочка для сдвиговорого регистра.
+    ShiftRegBuffered - декоратор для сдвиговорого регистра.
     Содержит дополнительный буфер содержимого и дополнительные методы для работы с ним
     """
-    def __init__(self, si, sck, rck, sclr, num_of_slaves=0):
-        super().__init__(si, sck, rck, sclr, num_of_slaves)
+    def __init__(self, shift_reg_instance: AbsShiftRegister):
+        super().__init__()
         self.buffer = 0x0  # Начальное состояние буфера
         self.lock_write = threading.Lock()  # Блокировка для записи из других потоков
+
+        if not isinstance(shift_reg_instance, AbsShiftRegister):
+            raise ValueError("shift_reg_instance must be an instance of AbsShiftRegister"
+                             "or derived class")
+
+        self.shift_reg = shift_reg_instance
 
     def check_bit_pos(self, bit_pos):
         if not isinstance(bit_pos, int):
@@ -63,7 +69,7 @@ class ShiftRegWrapper(ShiftRegister):
         logging.debug("{0}: write planned. Data: {1}".format(self, bin(self.buffer)))
 
         with self.lock_write:  # Блокируем запись из других потоков
-            ShiftRegister.write_data(self, self.buffer)
+            self.shift_reg.write_data(self.buffer)
 
         logging.debug("{0}: write finished".format(self))
 
@@ -82,3 +88,13 @@ class ShiftRegWrapper(ShiftRegister):
         """
         self.buffer = data
         self.write_buffer()
+
+    def get_capacity(self):
+        return self.shift_reg.get_capacity()
+
+    def clear(self):
+        """
+        Очистка содержимого регистра
+        :return: none
+        """
+        return self.shift_reg.clear()

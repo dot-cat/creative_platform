@@ -1,4 +1,5 @@
-from connections.shift_reg_wrapper import ShiftRegWrapper
+from connections.shift_reg_buffered import ShiftRegBuffered
+from connections.shift_reg_gpio import ShiftRegGPIO
 
 from controllable_objects.factories.slider_factory import get_slider_by_params
 from controllable_objects.factories.trigger_factory import get_trigger_by_params
@@ -46,7 +47,10 @@ class ControlObjects(object):
 
         for item in con_data_list:
             if item["con_type"] == "shiftreg":
-                self.all_connections[item["id"]] = ShiftRegWrapper(**item["con_params"])
+                self.all_connections[item["id"]] = \
+                    ShiftRegBuffered(
+                        ShiftRegGPIO(**item["con_params"])
+                    )
 
         # -------------------------------------------------
 

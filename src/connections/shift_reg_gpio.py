@@ -3,8 +3,10 @@ import time
 import logging
 from collections import namedtuple
 
+from connections.abs_shift_reg import AbsShiftRegister
 
-class ShiftRegister(object):
+
+class ShiftRegGPIO(AbsShiftRegister):
     def __setup_ports(self):
         """
         Установка всех портов на запись с обработкой ошибок
@@ -32,6 +34,8 @@ class ShiftRegister(object):
         :param num_of_slaves: количество зависимых сдвиговых регистров
         :return: None
         """
+        super().__init__()
+
         # Контроль успешности выполнения конструктора. Зачем он нужен: http://bit.ly/2blHSL2
         self.__construction_finished = False
 

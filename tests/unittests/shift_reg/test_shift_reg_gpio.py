@@ -1,7 +1,7 @@
 import RPi.GPIO as GPIO
 import unittest
 
-from connections.shift_reg import ShiftRegister
+from connections.shift_reg_gpio import ShiftRegGPIO
 
 
 GPIO.setmode(GPIO.BOARD)
@@ -22,7 +22,7 @@ class TestShiftRegConstructor(unittest.TestCase):
             args_copy[i] = invalid_arg
 
             with self.assertRaisesRegex(error_type, error_msg):
-                ShiftRegister(*args_copy)
+                ShiftRegGPIO(*args_copy)
 
     def test_invalid_arg_type(self):
         self.__common_arg_test_part('str', ValueError, 'Channel must be an integer or list/tuple of integers')
@@ -37,14 +37,14 @@ class TestShiftRegConstructor(unittest.TestCase):
 class TestShiftRegCapacity(unittest.TestCase):
     def test_invalid_capacity_type(self):
         with self.assertRaisesRegex(ValueError, 'num_of_slaves must be an integer'):
-            ShiftRegister(*common_args, 'str')
+            ShiftRegGPIO(*common_args, 'str')
 
     def test_invalid_capacity_value(self):
         with self.assertRaisesRegex(ValueError, 'num_of_slaves can\'t be negative'):
-            ShiftRegister(*common_args, -1)
+            ShiftRegGPIO(*common_args, -1)
 
     def test_check_single_capacity(self):
-        sr = ShiftRegister(*common_args, 0)
+        sr = ShiftRegGPIO(*common_args, 0)
 
         self.assertEqual(sr.get_capacity(), 8)
 
@@ -52,14 +52,14 @@ class TestShiftRegCapacity(unittest.TestCase):
         nslaves = 2
         ntotal = nslaves + 1
 
-        sr = ShiftRegister(*common_args, nslaves)
+        sr = ShiftRegGPIO(*common_args, nslaves)
 
         self.assertEqual(sr.get_capacity(), ntotal*8)
 
 
 class TestShiftRegWrite(unittest.TestCase):
     def test_too_big_value(self):
-        sr = ShiftRegister(*common_args)
+        sr = ShiftRegGPIO(*common_args)
 
         with self.assertRaisesRegex(ValueError, 'Number of bits in data can\'t '
                                                 'exceed {0} bits'.format(sr.get_capacity())):

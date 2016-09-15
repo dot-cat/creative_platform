@@ -1,7 +1,5 @@
 ##############################################################################################
 # FIXME List:
-# CC4 - Consider Change 4
-#   Описание CC4 см. в test_sr_trigger
 # DH3 - Dirty Hack 3
 #   По-хорошему нужно проверять не только конечные состояния (opened, closed), но и
 #   промежуточные (opening, closing). Но для этого нужно или использовать Mock'и, или
@@ -9,23 +7,18 @@
 #   Связано с задачей: T70.
 ##############################################################################################
 
-import RPi.GPIO as GPIO
 import unittest
 import logging
+from unittest.mock import Mock
 
-from controllable_objects.specific.shift_reg.slider import Slider, ShiftRegWrapper
+from controllable_objects.specific.shift_reg.slider import Slider, ShiftRegBuffered
+from connections.abs_shift_reg import AbsShiftRegister
 
+sr_base = Mock(spec_set=AbsShiftRegister)
+sr_base.get_capacity.return_value = 8
 
-GPIO.setmode(GPIO.BOARD)
+sr = ShiftRegBuffered(sr_base)
 
-si = 37  # пин для входных данных
-rck = 33  # пин для сдвига регистров хранения
-sck = 35  # пин для синхросигнала и сдвига
-sclr = 40  # пин для очистки
-
-sr_args = (si, rck, sck, sclr)
-
-sr = ShiftRegWrapper(*sr_args)
 sl_bit_pos = 0
 sl_bit_neg = 1
 transition_time = 0.1
@@ -48,7 +41,7 @@ class TestSliderInit(unittest.TestCase):
             Slider.ConParams(sl_bit_pos, sl_bit_neg, -1)
 
     def test_init_invalid_connection_type(self):
-        with self.assertRaisesRegex(ValueError, 'type of con_instance value must be a ShiftRegWrapper'):
+        with self.assertRaisesRegex(ValueError, 'type of con_instance value must be a ShiftRegBuffered'):
             Slider('str', sl_pinstruct)
 
     def test_init_invalid_connection_params(self):

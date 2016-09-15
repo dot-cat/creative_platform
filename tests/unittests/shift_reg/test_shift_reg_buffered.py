@@ -1,27 +1,22 @@
-import RPi.GPIO as GPIO
 import unittest
+from unittest.mock import Mock
 
-from connections.shift_reg_wrapper import ShiftRegWrapper
+from connections.shift_reg_buffered import ShiftRegBuffered
+from connections.abs_shift_reg import AbsShiftRegister
 
 
-GPIO.setmode(GPIO.BOARD)
-
-si = 37  # пин для входных данных
-rck = 33  # пин для сдвига регистров хранения
-sck = 35  # пин для синхросигнала и сдвига
-sclr = 40  # пин для очистки
-
-common_args = [si, rck, sck, sclr]
+sr_base = Mock(spec_set=AbsShiftRegister)
+sr_base.get_capacity.return_value = 8
 
 
 class TestSRBuffer(unittest.TestCase):
     def test_init_state(self):
-        sr = ShiftRegWrapper(*common_args)
+        sr = ShiftRegBuffered(sr_base)
 
         self.assertEqual(sr.get_buffer(), 0b0)
 
     def test_set_invalid_value(self):
-        sr = ShiftRegWrapper(*common_args)
+        sr = ShiftRegBuffered(sr_base)
 
         with self.assertRaisesRegex(ValueError, 'Value must be 1 or zero, True or False'):
             sr.set_buf_bit(0, 'str')
@@ -33,7 +28,7 @@ class TestSRBuffer(unittest.TestCase):
             sr.set_buf_bit(0, -1)
 
     def test_set_invalid_position(self):
-        sr = ShiftRegWrapper(*common_args)
+        sr = ShiftRegBuffered(sr_base)
 
         with self.assertRaisesRegex(ValueError, 'Bit number must be an integer'):
             sr.set_buf_bit('str', 1)
@@ -50,14 +45,14 @@ class TestSRBuffer(unittest.TestCase):
             sr.set_buf_bit(sr.get_capacity() + 1, 1)
 
     def test_set_first_buf_bit(self):
-        sr = ShiftRegWrapper(*common_args)
+        sr = ShiftRegBuffered(sr_base)
 
         sr.set_buf_bit(0, True)
 
         self.assertEqual(sr.get_buffer(), 0b1)
 
     def test_set_last_buf_bit(self):
-        sr = ShiftRegWrapper(*common_args)
+        sr = ShiftRegBuffered(sr_base)
 
         max_bit_pos = 7
         expected = 1 << max_bit_pos  # 0b10000000
@@ -67,7 +62,7 @@ class TestSRBuffer(unittest.TestCase):
         self.assertEqual(sr.get_buffer(), expected)
 
     def test_set_bits_successively(self):
-        sr = ShiftRegWrapper(*common_args)
+        sr = ShiftRegBuffered(sr_base)
 
         max_bit_pos = 7
         expected = (1 << max_bit_pos) | 1  # 0b10000001
@@ -78,7 +73,7 @@ class TestSRBuffer(unittest.TestCase):
         self.assertEqual(sr.get_buffer(), expected)
 
     def test_set_same_bit_successively(self):
-        sr = ShiftRegWrapper(*common_args)
+        sr = ShiftRegBuffered(sr_base)
 
         sr.set_buf_bit(0, True)
         sr.set_buf_bit(0, False)
@@ -91,7 +86,7 @@ class TestSRBuffer(unittest.TestCase):
         self.assertEqual(sr.get_buffer(), 0b1)
 
     def test_get_bit_value(self):
-        sr = ShiftRegWrapper(*common_args)
+        sr = ShiftRegBuffered(sr_base)
 
         bit_pos = 1
 
@@ -106,7 +101,7 @@ class TestSRBuffer(unittest.TestCase):
 
 class TestSRWrite(unittest.TestCase):
     def test_buffer_state_after_write(self):
-        sr = ShiftRegWrapper(*common_args)
+        sr = ShiftRegBuffered(sr_base)
 
         test_data = 0b1100
 

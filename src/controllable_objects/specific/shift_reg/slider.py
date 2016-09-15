@@ -12,14 +12,14 @@
 ##############################################################################################
 
 from controllable_objects.abstract.abs_slider import AbsSlider
-from connections.shift_reg_wrapper import ShiftRegWrapper
+from connections.shift_reg_buffered import ShiftRegBuffered
 
 import time
 
 
 def check_shift_reg_type(test_obj):
-    if not isinstance(test_obj, ShiftRegWrapper):
-        raise ValueError('type of con_instance value must be a ShiftRegWrapper')
+    if not isinstance(test_obj, ShiftRegBuffered):
+        raise ValueError('type of con_instance value must be a ShiftRegBuffered')
 
 
 class Slider(AbsSlider):
