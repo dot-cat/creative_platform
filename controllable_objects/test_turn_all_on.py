@@ -3,7 +3,7 @@
 import RPi.GPIO as GPIO
 import time
 
-from connections.shift_reg import ShiftRegister
+from connections.shift_reg_gpio import ShiftRegGPIO
 
 
 GPIO.setmode(GPIO.BOARD)
@@ -16,7 +16,7 @@ sck = 35   # пин для синхросигнала и сдвига
 sclr = 40  # пин для очистки
 temp = 16
 
-WorkRegistr = ShiftRegister(si, sck, rck, sclr, 2)
+WorkRegistr = ShiftRegGPIO(si, sck, rck, sclr, 2)
 
 #while 1:
 WorkRegistr.write_data(0b11111111111111111111111)

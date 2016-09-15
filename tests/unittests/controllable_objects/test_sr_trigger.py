@@ -1,31 +1,15 @@
-##############################################################################################
-# FIXME List:
-# CC4 - Consider Change 4
-#   В python есть такая замечательная штука, как unittest.mock. Она позволяет заменить реальные
-#   объекты на заглушки, тестировать вызов функций и переданные при этом аргументы и т.д.
-#   Как результат - мы убираем привязку к зависимостям при тестировании и можем, например,
-#   тестировать сдвиговый регистр на ноуте, без RPi.GPIO. Или использовать CI-сервисы
-#   (например Travis, Jenkins и др.)
-#   Задача (T70): разобраться с mock'ами, убрать привязку к сдвиговику и GPIO в тестах.
-##############################################################################################
-
-import RPi.GPIO as GPIO
 import unittest
 import logging
+from unittest.mock import Mock
 
-from controllable_objects.specific.shift_reg.trigger import Trigger, ShiftRegWrapper
+from controllable_objects.specific.shift_reg.trigger import Trigger, ShiftRegBuffered
+from connections.abs_shift_reg import AbsShiftRegister
 
+sr_base = Mock(spec_set=AbsShiftRegister)
+sr_base.get_capacity.return_value = 8
 
-GPIO.setmode(GPIO.BOARD)
+sr = ShiftRegBuffered(sr_base)
 
-si = 37  # пин для входных данных
-rck = 33  # пин для сдвига регистров хранения
-sck = 35  # пин для синхросигнала и сдвига
-sclr = 40  # пин для очистки
-
-sr_args = [si, rck, sck, sclr]
-
-sr = ShiftRegWrapper(*sr_args)
 tr_bit_pos = 0
 
 logging.debug('test_sr_trigger: {0}'.format(sr))
@@ -36,7 +20,7 @@ class TestTriggerInit(unittest.TestCase):
         Trigger(sr, tr_bit_pos)
 
     def test_init_invalid_connection_type(self):
-        with self.assertRaisesRegex(ValueError, 'type of con_instance value must be a ShiftRegWrapper'):
+        with self.assertRaisesRegex(ValueError, 'type of con_instance value must be a ShiftRegBuffered'):
             Trigger('str', tr_bit_pos)
 
     def test_init_invalid_pin(self):
