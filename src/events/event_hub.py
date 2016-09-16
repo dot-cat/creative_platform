@@ -54,7 +54,7 @@ class EventHub(object):
 
         handlers_available = events_available.get(message.event)
 
-        if events_available is None:
+        if handlers_available is None:
             return
 
         for handler in handlers_available:
