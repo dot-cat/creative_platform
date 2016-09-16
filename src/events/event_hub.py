@@ -1,4 +1,7 @@
+from copy import copy
+
 from handlers.abs_handler import AbsHandler
+from events.abs_message import Message
 
 
 class EventHub(object):
@@ -37,24 +40,29 @@ class EventHub(object):
         # сохраняем новый словарь источников
         types_available[message_pattern.type] = sources_available
 
-    def remove_handler(self, handler):
+    def remove_handler(self, handler: AbsHandler):
         pass
 
-    def accept_event(self, message):
+    def accept_event(self, message: Message):
         types_available = self.handler_resolver
 
-        sources_available = types_available.get(message.type)
-        if sources_available is None:
+        # FIXME: Копируются только ключи и ссылки. Но все равно топортно
+        sources_available = copy(types_available.get(message.type, {}))
+        sources_available.update(types_available.get("all", {}))
+
+        if not sources_available:
             return
 
-        events_available = sources_available.get(message.source)
+        events_available = copy(sources_available.get(message.source, {}))
+        events_available.update(sources_available.get("all", {}))
 
-        if events_available is None:
+        if not events_available:
             return
 
-        handlers_available = events_available.get(message.event)
+        handlers_available = copy(events_available.get(message.event, []))
+        handlers_available.extend(events_available.get("all", []))
 
-        if handlers_available is None:
+        if not handlers_available:
             return
 
         for handler in handlers_available:

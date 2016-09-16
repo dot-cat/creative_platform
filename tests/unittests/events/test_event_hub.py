@@ -20,7 +20,10 @@ msg_pattern_player = MessagePattern(
 )
 
 
-def generate_pattern_modification(msg_pattern: MessagePattern, sources=None, events=None):
+def generate_pattern_modification(msg_pattern: MessagePattern, type=None, sources=None, events=None):
+    if type is None:
+        type = msg_pattern.type
+
     if sources is None:
         sources = msg_pattern.sources
 
@@ -28,7 +31,7 @@ def generate_pattern_modification(msg_pattern: MessagePattern, sources=None, eve
         events = msg_pattern.events
 
     subpattern = MessagePattern(
-        msg_pattern.type,
+        type,
         sources,
         events
     )
@@ -194,3 +197,50 @@ class TestEventHubAcceptEventSeveralHandlers(unittest.TestCase):
 
         handler_all_players.handle.assert_called_once_with(msg_sample_player)
         handler_first_player.handle.assert_called_once_with(msg_sample_player)
+
+
+class TestEventHubAcceptEventAllHandler(unittest.TestCase):
+    def test_handled_all_types(self):
+        handler_all_objects = generate_test_handler(
+            generate_pattern_modification(
+                msg_pattern_player, type="all"
+            )
+        )
+
+        msg_unknown_type = generate_sample_msg(msg_pattern_player)
+        msg_unknown_type.type = "unknown type"
+
+        eh = EventHub()
+        eh.add_handler(handler_all_objects)
+
+        eh.accept_event(msg_unknown_type)
+
+        handler_all_objects.handle.assert_called_once_with(msg_unknown_type)
+
+        eh.accept_event(msg_sample_button)
+
+        handler_all_objects.handle.assert_called_with(msg_sample_button)
+
+    def test_handled_all_sources(self):
+        handler_all_players = generate_test_handler(
+            generate_pattern_modification(
+                msg_pattern_player, sources=["all"]
+            )
+        )
+
+        msg_unknown_player = generate_sample_msg(msg_pattern_player)
+        msg_unknown_player.source = "PLAY_unknown"
+
+        msg_known_player = generate_sample_msg(msg_pattern_player)
+
+        eh = EventHub()
+        eh.add_handler(handler_all_players)
+
+        eh.accept_event(msg_unknown_player)
+
+        handler_all_players.handle.assert_called_once_with(msg_unknown_player)
+
+        eh.accept_event(msg_known_player)
+
+        handler_all_players.handle.assert_called_with(msg_known_player)
+
