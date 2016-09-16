@@ -1,70 +1,70 @@
 [
   {
     "type": "button",
-    "which": "B1",
-    "what": "pressed",
-    "time": 1474008371,
+    "source": "B1",
+    "event": "pressed",
+    "timestamp": 1474008371,
     "body": {}
   },
   {
     "type": "sensor",
-    "which": "TEMP1",
-    "what": "value_changed",
-    "time": 1474008300,
+    "source": "TEMP1",
+    "event": "value_changed",
+    "timestamp": 1474008300,
     "body": {
       "new_value": 36.6
     }
   },
   {
     "type": "sensor",
-    "which": "TEMP1",
-    "what": "threshold_exceeded",
-    "time": 1474008300,
+    "source": "TEMP1",
+    "event": "threshold_exceeded",
+    "timestamp": 1474008300,
     "body": {
       "new_value": 36.6
     }
   },
   {
     "type": "threshold",
-    "which": "TH1",
-    "what": "exceeded",
-    "time": 1474008736,
+    "source": "TH1",
+    "event": "exceeded",
+    "timestamp": 1474008736,
     "body": {
       "new_value": 36.7
     }
   },
   {
     "type": "player",
-    "which": "PLAY1",
-    "what": "paused",
-    "time": 1474008508,
+    "source": "PLAY1",
+    "event": "paused",
+    "timestamp": 1474008508,
     "body": {
       "current_track": ".CAT - 2. Modular Model Modelum"
     }
   },
   {
     "type": "player",
-    "which": "PLAY1",
-    "what": "resumed",
-    "time": 1474008558,
+    "source": "PLAY1",
+    "event": "resumed",
+    "timestamp": 1474008558,
     "body": {
       "current_track": ".CAT - 2. Modular Model Modelum"
     }
   },
   {
     "type": "camera",
-    "which": "CAM1",
-    "what": "motion_started",
-    "time": 1474009058,
+    "source": "CAM1",
+    "event": "motion_started",
+    "timestamp": 1474009058,
     "body": {
       "camera_uri": "http://localhost:8080/cam1"
     }
   },
   {
     "type": "camera",
-    "which": "CAM1",
-    "what": "motion_stopped",
-    "time": 1474009158,
+    "source": "CAM1",
+    "event": "motion_stopped",
+    "timestamp": 1474009158,
     "body": {
       "recorded": "file:///srv/motion/cam1/event_x.mp4"
     }

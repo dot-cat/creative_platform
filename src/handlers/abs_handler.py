@@ -13,8 +13,7 @@ class AbsHandler(object):
         self.message_pattern = message_pattern
         self.to_control = to_control
 
-    @staticmethod
-    def handle(message):
+    def handle(self, message):
         print(message)
 
     def get_sensitivity_list(self) -> MessagePattern:
