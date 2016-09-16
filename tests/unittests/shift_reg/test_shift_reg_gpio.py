@@ -1,4 +1,4 @@
-import connections.gpio_dummy as GPIO
+import RPi.GPIO as GPIO
 import unittest
 
 from connections.shift_reg_gpio import ShiftRegGPIO

@@ -1,4 +1,4 @@
-import connections.gpio_dummy as GPIO
+import RPi.GPIO as GPIO
 import logging
 import os.path
 
