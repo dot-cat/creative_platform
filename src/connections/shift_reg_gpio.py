@@ -1,4 +1,4 @@
-import RPi.GPIO as GPIO
+import connections.gpio_dummy as GPIO
 import time
 import logging
 from collections import namedtuple

@@ -1,0 +1,62 @@
+[
+  {
+    "id": "H1",
+    "if": {
+      "type": "button",
+      "which": ["B1", "B3"],
+      "action": "pressed"
+    },
+    "then": {
+      "do": "toggle",
+      "object": "D3"
+    }
+  },
+  {
+    "id": "H2",
+    "if": {
+      "type": "button",
+      "which": ["B2", "B4"],
+      "action": "pressed"
+    },
+    "then": {
+      "do": "toggle",
+      "object": "D2"
+    }
+  },
+  {
+    "id": "H3",
+    "if": {
+      "type": "button",
+      "which": "B5",
+      "action": "pressed"
+    },
+    "then": {
+      "do": "toggle",
+      "object": "SB2"
+    }
+  },
+  {
+    "id": "H4",
+    "if": {
+      "type": "button",
+      "which": "B6",
+      "action": "pressed"
+    },
+    "then": {
+      "do": "toggle",
+      "object": "SB4"
+    }
+  },
+  {
+    "id": "H5",
+    "if": {
+      "type": "button",
+      "which": "B8",
+      "action": "pressed"
+    },
+    "then": {
+      "do": "toggle",
+      "object": "D1"
+    }
+  }
+]
