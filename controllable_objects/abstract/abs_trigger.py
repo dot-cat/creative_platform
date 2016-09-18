@@ -1,3 +1,9 @@
+##############################################################################################
+# FIXME List:
+# CC10 - Consider Change 10
+#   Нет проверки текущего состояния: можно "включить" или "выключить" триггер дважды.
+##############################################################################################
+
 from controllable_objects.abstract.abs_controllable import AbsControllable
 
 
@@ -16,13 +22,13 @@ class AbsTrigger(AbsControllable):
         """
         Немедленно устанавливает триггер в состояние "включено"
         """
-        self.set_state(self.States.on)
+        self.set_state(self.States.on)  # CC10
 
     def set_off(self):
         """
         Немедленно устанавливает триггер в состояние "выключено"
         """
-        self.set_state(self.States.off)
+        self.set_state(self.States.off)  # CC10
 
     def toggle(self):
         """
