@@ -3,6 +3,12 @@ from collections.abc import Iterable
 
 class MessagePattern(object):
     def __init__(self, type, source_list: Iterable, event_list: Iterable):
+        """
+        Шаблон выборки сообщений - структура, которая содержит:
+        :param type: тип сообщения
+        :param source_list: список идентификаторов источников
+        :param event_list: список идентификаторов событий
+        """
         if not isinstance(source_list, Iterable):
             raise ValueError("source_list must be iterable")
 
@@ -21,4 +27,8 @@ class MessagePattern(object):
         self.events = event_list
 
     def dump_dict(self):
+        """
+        Вернуть словарь, содержащий все возможные значения всех атрибутов сообщения
+        :return: словарь
+        """
         return dict(self.__dict__)
