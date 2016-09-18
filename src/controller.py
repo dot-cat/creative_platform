@@ -161,7 +161,7 @@ class Controller(object):
 
     def check_action_permitted(self, obj_id: str, action: str, action_params):
         # FIXME: TD2, Проверка прав на выполнение действия
-        logging.WARNING("Permission checking is not implemented")
+        logging.warning("Permission checking is not implemented")
         pass
 
     def do_action(self, obj_id: str, action: str, action_params=()):
@@ -173,7 +173,7 @@ class Controller(object):
         :return: None  # CC7
         """
         # FIXME: TD1
-        #self.check_action_permitted(obj_id, action, action_params)
+        self.check_action_permitted(obj_id, action, action_params)
 
         obj_alias = self.__resolve_obj_by_id(obj_id)
 
