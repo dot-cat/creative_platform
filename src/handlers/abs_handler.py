@@ -19,6 +19,9 @@ class AbsHandler(object):
         :param message_pattern: шаблон выборки сообщений
         :param to_control: объект, над которым будут выполняться действия в методе handle
         """
+        if not isinstance(message_pattern, MessagePattern):
+            raise ValueError("message_pattern must be an instance of MessagePattern type")
+
         self.message_pattern = message_pattern
         self.to_control = to_control
 
