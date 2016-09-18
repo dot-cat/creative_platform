@@ -27,8 +27,6 @@ from events.event_hub import EventHub
 # CC8 - Consider Change 8
 #   Сейчас действия выполняются только над controllable'ами. Может разрешить выполнение
 #   действий и над другими объектами? Но тогда нужно реализовать TD2
-# TD1 - To Do 1
-#   Сделать полноценную реализацию метода do_action.
 # TD2 - To Do 2
 #   Сделать полноценную реализацию проверки разрешений на выполнение действия.
 ##############################################################################################
@@ -84,7 +82,7 @@ class Controller(object):
     def __start_all_listeners(self):
         self.listener_serial = self.__start_serial_listener('/dev/ttyUSB0', 9600)
 
-        self.listener_cli = ListenerCli(self)
+        self.listener_cli = ListenerCli(self.event_hub)
         self.listener_cli.start()
 
     def __start_serial_listener(self, device, speed):

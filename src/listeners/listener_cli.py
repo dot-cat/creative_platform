@@ -1,7 +1,8 @@
 import logging
 
 from listeners.listener import Listener
-#from controller import Controller
+from events.event_hub import EventHub
+from events.abs_message import Message, time
 
 
 class ListenerCli(Listener):
@@ -9,8 +10,8 @@ class ListenerCli(Listener):
         """
         Конструктор. Запускает процесс-слушатель консоли
         """
-        #if not isinstance(feedback, Controller):
-        #    raise ValueError('wrong type of controllable object')
+        if not isinstance(feedback, EventHub):
+            raise ValueError('wrong type of feedback object')
 
         super().__init__(feedback)
 
@@ -43,6 +44,18 @@ class ListenerCli(Listener):
         else:
             cmd_params = tuple()
 
-        self.feedback.do_action(obj_id, command, cmd_params)
+        msg = Message(
+            "user_request",
+            "cli",
+            "action_requested",
+            time.time(),
+            {
+                "obj_id": obj_id,
+                "action": command,
+                "action_params": cmd_params
+            }
+        )
+
+        self.feedback.accept_event(msg)
 
         print('command "{0}" executed'.format(raw_data))

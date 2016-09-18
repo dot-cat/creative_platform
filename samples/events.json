@@ -68,5 +68,16 @@
     "body": {
       "recorded": "file:///srv/motion/cam1/event_x.mp4"
     }
+  },
+  {
+    "type": "user_request",
+    "source": "cli",
+    "event": "action_requested",
+    "timestamp": 1474219208,
+    "body": {
+      "action": "open",
+      "obj_id": "D1",
+      "action_params": {}
+    }
   }
 ]
