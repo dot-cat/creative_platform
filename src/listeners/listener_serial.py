@@ -3,6 +3,8 @@ import serial
 
 from listeners.listener import Listener
 from controllable_objects.control_objects import ControlObjects
+from events.abs_message import Message, time
+from events.event_hub import EventHub
 
 
 class ListenerSerial(Listener):
@@ -45,7 +47,7 @@ class ListenerSerial(Listener):
         """
         return self.serial.readline()
 
-    def process_data(self, raw_data):
+    def process_data(self, raw_data: bytes):
         """
         Обработчик считанных данных
         :param raw_data: данные, строка
@@ -53,26 +55,7 @@ class ListenerSerial(Listener):
         """
         logging.debug('Data read: {0}'.format(raw_data))
 
-        if   raw_data == b'B1\r\n':
-            self.feedback.toggle_controllable("D3")
+        id = raw_data.strip("\r\n")
+        msg = Message("button", id, "pressed", time.time(), None)
 
-        elif raw_data == b'B2\r\n':
-            self.feedback.toggle_controllable("D2")
-
-        elif raw_data == b'B3\r\n':
-            self.feedback.toggle_controllable("D3")
-
-        elif raw_data == b'B4\r\n':
-            self.feedback.toggle_controllable("D2")
-
-        elif raw_data == b'B5\r\n':
-            self.feedback.toggle_controllable("SB2")
-
-        elif raw_data == b'B6\r\n':
-            self.feedback.toggle_controllable("SB4")
-
-        elif raw_data == b'B8\r\n':
-            self.feedback.toggle_controllable("D1")
-
-        else:
-            print('Warning: Unknown message: {0}'.format(raw_data))
+        self.feedback.accept_event(msg)
