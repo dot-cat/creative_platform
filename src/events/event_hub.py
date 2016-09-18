@@ -12,30 +12,21 @@ class EventHub(object):
         # получаем список зарегистрированых типов событий в системе
         sources_by_type = self.handler_resolver
 
-        # получаем список источников сообщений некоторого типа
-        events_by_source = sources_by_type.get(sens_pattern.type, dict())
+        # получаем список источников сообщений некоторого типа, существующий или новый
+        events_by_source = sources_by_type.setdefault(sens_pattern.type, dict())
 
         # для каждого источника сообщений...
         for source in sens_pattern.sources:
-            # получаем список событий, которые с ним могут произойти
-            handlers_by_event = events_by_source.get(source, dict())
+            # получаем список событий, которые с ним могут произойти, существующий или новый
+            handlers_by_event = events_by_source.setdefault(source, dict())
 
             # для каждого события...
             for event in sens_pattern.events:
-                # получаем список его обработчиков
-                handlers_available = handlers_by_event.get(event, set())
+                # получаем список его обработчиков, существующий или новый
+                handlers_available = handlers_by_event.setdefault(event, set())
 
                 # добавляем обработчик для нашего изменения
                 handlers_available.add(handler)
-
-                # сохраняем новое множество обработчиков
-                handlers_by_event[event] = handlers_available
-
-            # сохраняем новый словарь событий
-            events_by_source[source] = handlers_by_event
-
-        # сохраняем новый словарь источников
-        sources_by_type[sens_pattern.type] = events_by_source
 
     def remove_handler(self, handler: AbsHandler):
         # получаем список чувствительности
