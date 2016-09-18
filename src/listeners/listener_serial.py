@@ -2,7 +2,6 @@ import logging
 import serial
 
 from listeners.listener import Listener
-from controllable_objects.control_objects import ControlObjects
 from events.abs_message import Message, time
 from events.event_hub import EventHub
 
@@ -15,8 +14,8 @@ class ListenerSerial(Listener):
         :param tty: UART-устройство
         :param baudrate: скорость порта
         """
-        if not isinstance(feedback, ControlObjects):
-            raise ValueError('wrong type of controllable object')
+        if not isinstance(feedback, EventHub):
+            raise ValueError('wrong type of feedback object')
 
         if type(tty) != str:
             raise ValueError('tty must be a string')
@@ -55,7 +54,7 @@ class ListenerSerial(Listener):
         """
         logging.debug('Data read: {0}'.format(raw_data))
 
-        id = raw_data.strip("\r\n")
+        id = raw_data.strip(b"\r\n").decode()
         msg = Message("button", id, "pressed", time.time(), None)
 
         self.feedback.accept_event(msg)

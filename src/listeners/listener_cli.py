@@ -1,7 +1,7 @@
 import logging
 
 from listeners.listener import Listener
-from controllable_objects.control_objects import ControlObjects
+#from controller import Controller
 
 
 class ListenerCli(Listener):
@@ -9,8 +9,8 @@ class ListenerCli(Listener):
         """
         Конструктор. Запускает процесс-слушатель консоли
         """
-        if not isinstance(feedback, ControlObjects):
-            raise ValueError('wrong type of controllable object')
+        #if not isinstance(feedback, Controller):
+        #    raise ValueError('wrong type of controllable object')
 
         super().__init__(feedback)
 
@@ -21,7 +21,7 @@ class ListenerCli(Listener):
         """
         return input()
 
-    def process_data(self, raw_data):
+    def process_data(self, raw_data: str):
         """
         Обработчик считанных данных
         :param raw_data: данные, строка
@@ -29,23 +29,20 @@ class ListenerCli(Listener):
         """
         logging.debug('Data read: {0}'.format(raw_data))
 
-        if raw_data[0:11] == 'toggle door':
-            logging.debug(raw_data[12:])
-            self.feedback.toggle_controllable(raw_data[12:])
+        tokenized_data = raw_data.split(" ", maxsplit=3)
 
-        elif raw_data[0:12] == 'toggle light':
-            logging.debug(raw_data[13:])
-            self.feedback.toggle_controllable(raw_data[13:])
-
-        elif raw_data[0:13] == 'toggle cooler':
-            logging.debug(raw_data[14:])
-            self.feedback.toggle_controllable(raw_data[14:])
-
-        elif raw_data[0:12] == 'toggle blind':
-            logging.debug(raw_data[13:])
-            self.feedback.toggle_controllable(raw_data[13:])
-
-        else:
+        if len(tokenized_data) < 2:
             print('Warning: Unknown command: {0}'.format(raw_data))
+            return
+
+        command = tokenized_data[0]
+        obj_id = tokenized_data[1]
+
+        if len(tokenized_data) > 2:
+            cmd_params = tokenized_data[2]
+        else:
+            cmd_params = tuple()
+
+        self.feedback.do_action(obj_id, command, cmd_params)
 
         print('command "{0}" executed'.format(raw_data))
