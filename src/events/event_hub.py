@@ -1,7 +1,8 @@
 from enum import Enum
+from pprint import pprint
 
 from handlers.abs_handler import AbsHandler
-
+from events.abs_message import Message
 
 class Operation(Enum):
     remove = 0
@@ -44,20 +45,20 @@ class EventHub(object):
     def remove_handler(self, handler: AbsHandler):
         self.__process_handler(handler, Operation.remove)
 
-    def accept_event(self, message):
+    def __get_handlers_recursive(self, container: dict, msg_property_iter):
+        nested = container.get(next(msg_property_iter))
+
+        if not isinstance(nested, dict):
+            return nested
+        else:
+            return self.__get_handlers_recursive(nested, msg_property_iter)
+
+    def accept_event(self, message: Message):
         types_available = self.handler_resolver
 
-        sources_available = types_available.get(message.type)
+        msg_property_iter = iter(message.get_attributes())
 
-        if sources_available is None:
-            return
-
-        events_available = sources_available.get(message.source)
-
-        if events_available is None:
-            return
-
-        handlers_available = events_available.get(message.event)
+        handlers_available = self.__get_handlers_recursive(types_available, msg_property_iter)
 
         if handlers_available is None:
             return

@@ -22,3 +22,10 @@ class MessagePattern(object):
 
     def dump_dict(self):
         return dict(self.__dict__)
+
+    def get_attributes(self) -> tuple:
+        """
+        Вернуть кортеж атрибутов в порядке уменьшения важности
+        :return: tuple, кортеж атрибутов объекта
+        """
+        return self.type, self.sources, self.events
