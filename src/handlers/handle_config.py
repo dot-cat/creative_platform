@@ -11,7 +11,7 @@ class HandleConfig(object):
         """
         self.obj_actions = list()
 
-    def add_action(self, obj_id, obj_action: str, action_args) -> None:
+    def add_action(self, obj_id, obj_action: str, action_args=()) -> None:
         """
         Добавление действия над объектом
         :param obj_id: идентификатор объекта, над которым производится действие
@@ -21,5 +21,5 @@ class HandleConfig(object):
         """
         self.obj_actions.append(ActionItem(obj_id, obj_action, action_args))
 
-    def get_actions(self) -> list(ActionItem):
+    def get_actions(self) -> list:
         return self.obj_actions

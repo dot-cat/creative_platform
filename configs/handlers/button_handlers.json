@@ -3,60 +3,60 @@
     "id": "H1",
     "if": {
       "type": "button",
-      "which": ["B1", "B3"],
-      "action": "pressed"
+      "source_list": ["B1", "B3"],
+      "event_list": ["pressed"]
     },
     "then": {
-      "do": "toggle",
-      "object": "D3"
+      "obj_action": "toggle",
+      "obj_id": "D3"
     }
   },
   {
     "id": "H2",
     "if": {
       "type": "button",
-      "which": ["B2", "B4"],
-      "action": "pressed"
+      "source_list": ["B2", "B4"],
+      "event_list": ["pressed"]
     },
     "then": {
-      "do": "toggle",
-      "object": "D2"
+      "obj_action": "toggle",
+      "obj_id": "D2"
     }
   },
   {
     "id": "H3",
     "if": {
       "type": "button",
-      "which": "B5",
-      "action": "pressed"
+      "source_list": ["B5"],
+      "event_list": ["pressed"]
     },
     "then": {
-      "do": "toggle",
-      "object": "SB2"
+      "obj_action": "toggle",
+      "obj_id": "SB2"
     }
   },
   {
     "id": "H4",
     "if": {
       "type": "button",
-      "which": "B6",
-      "action": "pressed"
+      "source_list": ["B6"],
+      "event_list": ["pressed"]
     },
     "then": {
-      "do": "toggle",
-      "object": "SB4"
+      "obj_action": "toggle",
+      "obj_id": "SB4"
     }
   },
   {
     "id": "H5",
     "if": {
       "type": "button",
-      "which": "B8",
-      "action": "pressed"
+      "source_list": ["B8"],
+      "event_list": ["pressed"]
     },
     "then": {
-      "do": "toggle",
-      "object": "D1"
+      "obj_action": "toggle",
+      "obj_id": "D1"
     }
   }
 ]

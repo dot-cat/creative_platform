@@ -1,10 +1,9 @@
 from handlers.abs_handler import AbsHandler, Message, MessagePattern
 from handlers.handle_config import HandleConfig, ActionItem
-from controllable_objects.control_objects import ControlObjects
 
 
 class ConfHandler(AbsHandler):
-    def __init__(self, handle_config: HandleConfig, message_pattern: MessagePattern, to_control: ControlObjects):
+    def __init__(self, handle_config: HandleConfig, message_pattern: MessagePattern, to_control):
         """
         Настраиваемый Handler. Позволяет указать логику работы метода handle()
         с помощью конфига

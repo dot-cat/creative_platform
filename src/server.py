@@ -12,9 +12,7 @@ if __name__ == "__main__":
     controller = Controller()
 
     try:
-        while(True):
-            sleep(10)
-            #print('test')
+        controller.listener_cli.listener_thread.join()
     except KeyboardInterrupt:
         pass
 

@@ -15,7 +15,8 @@ from controllable_objects.factories.trigger_factory import get_trigger_by_params
 from model import Model
 
 from events.event_hub import EventHub
-
+from handlers.conf_handler import ConfHandler, HandleConfig, Message, MessagePattern
+from handlers.user_request_handler import UserRequestHandler
 
 ##############################################################################################
 # FIXME List:
@@ -42,11 +43,14 @@ class Controller(object):
 
         logging.debug("{0} init started".format(self))
 
+        self.model = Model("./configs")
+        self.model_data = self.model.get_config_data()
+
+        self.__init_all_connections()
         self.__init_all_controllables()
         self.__init_handlers()
         self.__init_event_hub()
         self.__start_all_listeners()
-
 
         logging.debug("{0} init finished".format(self))
 
@@ -73,10 +77,27 @@ class Controller(object):
     def __init_handlers(self):
         self.all_handlers = dict()
 
+        handler_data_list = self.model_data["handlers"]
+
+        for item in handler_data_list:
+            id = item["id"]
+            pattern = MessagePattern(**item["if"])
+
+            if pattern.type == "user_request":
+                self.all_handlers[id] = UserRequestHandler(
+                    pattern, self
+                )
+            else:
+                hconfig = HandleConfig()
+                hconfig.add_action(**item["then"])
+                self.all_handlers[id] = ConfHandler(
+                    hconfig, pattern, self
+                )
+
     def __init_event_hub(self):
         self.event_hub = EventHub()
 
-        for handler in self.all_handlers:
+        for handler in self.all_handlers.values():
             self.event_hub.add_handler(handler)
 
     def __start_all_listeners(self):
@@ -104,16 +125,10 @@ class Controller(object):
 
         return listener_serial
 
-    def __init_all_controllables(self):
-        model_ins = Model("./configs")
-
-        model_data = model_ins.get_config_data()
-
-        # -------------------------------------------------
-
+    def __init_all_connections(self):
         self.all_connections = dict()
 
-        con_data_list = model_data["connections"]
+        con_data_list = self.model_data["connections"]
 
         for item in con_data_list:
             if item["con_type"] == "shiftreg":
@@ -122,11 +137,10 @@ class Controller(object):
                         ShiftRegGPIO(**item["con_params"])
                     )
 
-        # -------------------------------------------------
-
+    def __init_all_controllables(self):
         self.all_controllables = dict()
 
-        for item in model_data["controllables"]:
+        for item in self.model_data["controllables"]:
             con_instance = self.all_connections[item["con_id"]]
             con_params = item["con_params"]
 

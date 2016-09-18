@@ -15,8 +15,8 @@ user_request_pattern = MessagePattern(
 
 
 class UserRequestHandler(AbsHandler):
-    def __init__(self, to_control):
-        super().__init__(user_request_pattern, to_control)
+    def __init__(self, message_pattern, to_control):
+        super().__init__(message_pattern, to_control)
 
     def handle(self, message: Message):
         self.to_control.do_action(**message.body)  # CC11

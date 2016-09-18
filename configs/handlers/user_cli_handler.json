@@ -1,0 +1,10 @@
+[
+  {
+    "id": "HU1",
+    "if": {
+      "type": "user_request",
+      "source_list": ["cli"],
+      "event_list": ["action_requested"]
+    }
+  }
+]
