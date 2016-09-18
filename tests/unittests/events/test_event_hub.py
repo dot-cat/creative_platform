@@ -194,3 +194,23 @@ class TestEventHubAcceptEventSeveralHandlers(unittest.TestCase):
 
         handler_all_players.handle.assert_called_once_with(msg_sample_player)
         handler_first_player.handle.assert_called_once_with(msg_sample_player)
+
+
+class TestEventHubRemoveHandler(unittest.TestCase):
+    def test_remove_existing_handler(self):
+        handler_button = generate_test_handler(msg_pattern_button)
+
+        eh = EventHub()
+        eh.add_handler(handler_button)
+
+        eh.accept_event(msg_sample_button)
+
+        handler_button.handle.assert_called_once_with(msg_sample_button)
+
+        handler_button.handle.reset_mock()
+
+        eh.remove_handler(handler_button)
+
+        eh.accept_event(msg_sample_button)
+
+        handler_button.handle.assert_not_called()

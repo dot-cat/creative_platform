@@ -4,6 +4,7 @@
 #   Возвращать не копию, а ссылку.
 ##############################################################################################
 
+from events.abs_message import Message
 from events.message_pattern import MessagePattern
 from copy import copy
 
@@ -13,7 +14,7 @@ class AbsHandler(object):
         self.message_pattern = message_pattern
         self.to_control = to_control
 
-    def handle(self, message):
+    def handle(self, message: Message):
         print(message)
 
     def get_sensitivity_list(self) -> MessagePattern:
