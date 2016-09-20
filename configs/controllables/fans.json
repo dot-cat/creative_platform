@@ -1,0 +1,11 @@
+[
+  {
+    "id": "F1",
+    "type": "fan",
+    "description": "",
+    "con_id": "SR1",
+    "con_params": {
+      "sr_pin": 20
+    }
+  }
+]

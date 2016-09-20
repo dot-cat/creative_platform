@@ -1,0 +1,35 @@
+[
+  {
+    "id": "D1",
+    "type": "door",
+    "description": "Entrance door",
+    "con_id": "SR1",
+    "con_params": {
+      "pin_pos": 0,
+      "pin_neg": 1,
+      "transition_time": 1
+    }
+  },
+  {
+    "id": "D2",
+    "type": "door",
+    "description": "to bedroom",
+    "con_id": "SR1",
+    "con_params": {
+      "pin_pos": 2,
+      "pin_neg": 3,
+      "transition_time": 1
+    }
+  },
+  {
+    "id": "D3",
+    "type": "door",
+    "description": "to office",
+    "con_id": "SR1",
+    "con_params": {
+      "pin_pos": 6,
+      "pin_neg": 7,
+      "transition_time": 1
+    }
+  }
+]

@@ -1,0 +1,46 @@
+[
+  {
+    "id": "SB1",
+    "type": "sunblind",
+    "description": "Kitchen",
+    "con_id": "SR1",
+    "con_params": {
+      "pin_pos": 8,
+      "pin_neg": 9,
+      "transition_time": 1
+    }
+  },
+  {
+    "id": "SB2",
+    "type": "sunblind",
+    "description": "Bedroom",
+    "con_id": "SR1",
+    "con_params": {
+      "pin_pos": 10,
+      "pin_neg": 11,
+      "transition_time": 1
+    }
+  },
+  {
+    "id": "SB3",
+    "type": "sunblind",
+    "description": "Office",
+    "con_id": "SR1",
+    "con_params": {
+      "pin_pos": 14,
+      "pin_neg": 15,
+      "transition_time": 1
+    }
+  },
+  {
+    "id": "SB4",
+    "type": "sunblind",
+    "description": "Living Room",
+    "con_id": "SR1",
+    "con_params": {
+      "pin_pos": 16,
+      "pin_neg": 17,
+      "transition_time": 1
+    }
+  }
+]
