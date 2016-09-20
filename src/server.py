@@ -12,7 +12,8 @@ if __name__ == "__main__":
     controller = Controller()
 
     try:
-        controller.listener_cli.listener_thread.join()
+        # TODO: Сделать тут что-то более красивое, не лезть внуть контроллера
+        controller.listeners.listener_cli.listener_thread.join()
     except KeyboardInterrupt:
         pass
 
