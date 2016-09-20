@@ -6,6 +6,19 @@ from collections import namedtuple
 from connections.abs_shift_reg import AbsShiftRegister
 
 
+def pulse(pin):
+    """
+    Дергаем пин: подаем сначала ноль, потом - единицу, потом опять ноль
+    :param pin: пин, который мы дергаем
+    :return: none
+    """
+    GPIO.output(pin, GPIO.LOW)  # подаем на пин логичиеский 0
+    time.sleep(0.01)
+    GPIO.output(pin, GPIO.HIGH)  # подаем на пин логичискую 1
+    time.sleep(0.01)
+    GPIO.output(pin, GPIO.LOW)  # подаем на пин логичиеский 0
+
+
 class ShiftRegGPIO(AbsShiftRegister):
     def __setup_ports(self):
         """
@@ -78,7 +91,7 @@ class ShiftRegGPIO(AbsShiftRegister):
             self.clear()          # Очищаем содержимое регистра
 
             # Обновляем содержимое регистров хранения, выставлем все порты регистра в ноль
-            self.pulse(self.ports.rck)
+            pulse(self.ports.rck)
             self.set_zero()       # подаем на все пины нули
 
             # Освобождаем все занятые порты
@@ -96,19 +109,6 @@ class ShiftRegGPIO(AbsShiftRegister):
         :return: none
         """
         GPIO.output(self.ports, GPIO.LOW)  # Устанавливаем все пины в логический ноль
-        return
-
-    def pulse(self, pin):
-        """
-        Дергаем пин: подаем сначала ноль, потом - единицу, потом опять ноль
-        :param pin: пин, который мы дергаем
-        :return: none
-        """
-        GPIO.output(pin, GPIO.LOW)   # подаем на пин логичиеский 0
-        time.sleep(0.01)
-        GPIO.output(pin, GPIO.HIGH)  # подаем на пин логичискую 1
-        time.sleep(0.01)
-        GPIO.output(pin, GPIO.LOW)   # подаем на пин логичиеский 0
         return
 
     def clear(self):
@@ -148,9 +148,9 @@ class ShiftRegGPIO(AbsShiftRegister):
             else:
                 GPIO.output(self.ports.si, GPIO.LOW)   # ...иначе отправляем ноль
 
-            self.pulse(self.ports.clk)  # Выполняем сдвиг содержимого регистра
+            pulse(self.ports.clk)  # Выполняем сдвиг содержимого регистра
 
             data <<= 1  # Сдвигаем данные влево на один разряд
 
-        self.pulse(self.ports.rck)  # Фиксируем значения
+        pulse(self.ports.rck)  # Фиксируем значения
         return
