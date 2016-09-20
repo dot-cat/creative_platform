@@ -1,0 +1,62 @@
+[
+  {
+    "id": "H1",
+    "if": {
+      "type": "button",
+      "source_list": ["B1", "B3"],
+      "event_list": ["pressed"]
+    },
+    "then": {
+      "obj_action": "toggle",
+      "obj_id": "D3"
+    }
+  },
+  {
+    "id": "H2",
+    "if": {
+      "type": "button",
+      "source_list": ["B2", "B4"],
+      "event_list": ["pressed"]
+    },
+    "then": {
+      "obj_action": "toggle",
+      "obj_id": "D2"
+    }
+  },
+  {
+    "id": "H3",
+    "if": {
+      "type": "button",
+      "source_list": ["B5"],
+      "event_list": ["pressed"]
+    },
+    "then": {
+      "obj_action": "toggle",
+      "obj_id": "SB2"
+    }
+  },
+  {
+    "id": "H4",
+    "if": {
+      "type": "button",
+      "source_list": ["B6"],
+      "event_list": ["pressed"]
+    },
+    "then": {
+      "obj_action": "toggle",
+      "obj_id": "SB4"
+    }
+  },
+  {
+    "id": "H5",
+    "if": {
+      "type": "button",
+      "source_list": ["B8"],
+      "event_list": ["pressed"]
+    },
+    "then": {
+      "obj_action": "toggle",
+      "obj_id": "D1"
+    }
+  }
+]

@@ -3,7 +3,7 @@ import time
 
 from utils.get_user_answer import get_user_answer
 
-from connections.shift_reg import ShiftRegister
+from connections.shift_reg_gpio import ShiftRegGPIO
 
 
 def test_forward(register):
@@ -30,7 +30,7 @@ if __name__ == '__main__':
     sck = 35  # пин для синхросигнала и сдвига
     sclr = 40  # пин для очистки
 
-    reg = ShiftRegister(si, sck, rck, sclr, 2)
+    reg = ShiftRegGPIO(si, sck, rck, sclr, 2)
 
     test_forward(reg)
     test_backward(reg)
