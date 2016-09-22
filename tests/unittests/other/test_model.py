@@ -28,5 +28,8 @@ class TestModelInit(unittest.TestCase):
             Model(non_existent_path)
 
     def test_normal_init(self):
-        obj = Model("/home/alarm/code/shp_platform/configs/".format(os.getcwd()))
+        obj = Model("{0}/configs".format(os.getcwd()))
         obj.read_configs()
+
+if __name__ == '__main__':
+    unittest.main()

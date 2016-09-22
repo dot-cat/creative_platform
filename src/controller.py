@@ -1,15 +1,13 @@
-import RPi.GPIO as GPIO
 import logging
+import connections.gpio_dummy as GPIO
 
 import utils.debug_refs as debug_refs
-
+from messages.message_hub import MessageHub
+from model import Model
 from subsystems.controller_controllables import ControllerControllables
 from subsystems.controller_handlers import ControllerHandlers
 from subsystems.controller_listeners import ControllerListeners
 
-from model import Model
-
-from events.event_hub import EventHub
 
 ##############################################################################################
 # FIXME List:
@@ -41,8 +39,8 @@ class Controller(object):
 
         self.controllables = ControllerControllables(self.model_data)
         self.handlers = ControllerHandlers(self.model_data, self.controllables)
-        self.__init_event_hub()
-        self.listeners = ControllerListeners(self.event_hub)
+        self.__init_msg_hub()
+        self.listeners = ControllerListeners(self.msg_hub)
 
         logging.debug("{0} init finished".format(self))
 
@@ -54,18 +52,18 @@ class Controller(object):
         logging.debug("{0} destruction started".format(self))
 
         debug_refs.print_referrers(self.listeners)
-        debug_refs.print_referrers(self.event_hub)
+        debug_refs.print_referrers(self.msg_hub)
         debug_refs.print_referrers(self.handlers)
         debug_refs.print_referrers(self.controllables)
 
         del self.listeners
-        del self.event_hub
+        del self.msg_hub
         del self.handlers
         del self.controllables
 
         logging.debug("{0} destruction finished".format(self))
 
-    def __init_event_hub(self):
-        self.event_hub = EventHub()
+    def __init_msg_hub(self):
+        self.msg_hub = MessageHub()
 
-        self.handlers.register_all_handlers(self.event_hub)
+        self.handlers.register_all_handlers(self.msg_hub)

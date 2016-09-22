@@ -1,6 +1,6 @@
 from handlers.conf_handler import ConfHandler, HandleConfig, Message, MessagePattern
 from handlers.user_request_handler import UserRequestHandler
-from events.event_hub import EventHub
+from messages.message_hub import MessageHub
 
 
 class ControllerHandlers(object):
@@ -32,6 +32,6 @@ class ControllerHandlers(object):
                     hconfig, pattern, controllables
                 )
 
-    def register_all_handlers(self, event_hub: EventHub):
+    def register_all_handlers(self, msg_hub: MessageHub):
         for handler in self.all_handlers.values():
-            event_hub.add_handler(handler)
+            msg_hub.add_handler(handler)

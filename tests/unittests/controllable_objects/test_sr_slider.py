@@ -128,3 +128,6 @@ class TestSliderMethods(unittest.TestCase):
 
         self.assertEqual(sr.get_buf_bit(sl_bit_pos), 0)
         self.assertEqual(sr.get_buf_bit(sl_bit_neg), 0)
+
+if __name__ == '__main__':
+    unittest.main()

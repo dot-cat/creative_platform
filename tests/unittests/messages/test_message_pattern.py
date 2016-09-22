@@ -1,7 +1,7 @@
 import unittest
 from copy import copy
 
-from events.message_pattern import MessagePattern
+from messages.message_pattern import MessagePattern
 
 valid_message_pattern_params = {
     "type": "button",
@@ -55,3 +55,6 @@ class TestMessagePatternInit(unittest.TestCase):
             mp = MessagePattern(
                 **invalid_params
             )
+
+if __name__ == '__main__':
+    unittest.main()

@@ -21,7 +21,7 @@ class Operation(Enum):
     add = 1
 
 
-class EventHub(object):
+class MessageHub(object):
     def __init__(self):
         self.handler_resolver = dict()
 
@@ -57,8 +57,8 @@ class EventHub(object):
     def remove_handler(self, handler: AbsHandler):
         self.__process_handler(handler, Operation.remove)
 
-    def accept_event(self, message):
-        logging.debug("Accepted event: {0}".format(message))
+    def accept_msg(self, message):
+        logging.debug("Accepted message: {0}".format(message))
         logging.debug("{0}".format(message.dump_dict()))
 
         types_available = self.handler_resolver

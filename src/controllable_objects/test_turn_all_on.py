@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import RPi.GPIO as GPIO
+import connections.gpio_dummy as GPIO
 import time
 
 from connections.shift_reg_gpio import ShiftRegGPIO

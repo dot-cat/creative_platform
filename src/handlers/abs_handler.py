@@ -4,8 +4,8 @@
 #   Возвращать не копию, а ссылку.
 ##############################################################################################
 
-from events.abs_message import Message
-from events.message_pattern import MessagePattern
+from messages.abs_message import Message
+from messages.message_pattern import MessagePattern
 from copy import copy
 
 

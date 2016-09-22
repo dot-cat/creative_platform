@@ -2,8 +2,8 @@ import logging
 import serial
 
 from listeners.listener import Listener
-from events.abs_message import Message, time
-from events.event_hub import EventHub
+from messages.abs_message import Message, time
+from messages.message_hub import MessageHub
 
 
 class ListenerSerial(Listener):
@@ -14,7 +14,7 @@ class ListenerSerial(Listener):
         :param tty: UART-устройство
         :param baudrate: скорость порта
         """
-        if not isinstance(feedback, EventHub):
+        if not isinstance(feedback, MessageHub):
             raise ValueError('wrong type of feedback object')
 
         if type(tty) != str:
@@ -57,4 +57,4 @@ class ListenerSerial(Listener):
         id = raw_data.strip(b"\r\n").decode()
         msg = Message("button", id, "pressed", time.time(), None)
 
-        self.feedback.accept_event(msg)
+        self.feedback.accept_msg(msg)

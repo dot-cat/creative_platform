@@ -1,8 +1,8 @@
 import logging
 
 from listeners.listener import Listener
-from events.event_hub import EventHub
-from events.abs_message import Message, time
+from messages.message_hub import MessageHub
+from messages.abs_message import Message, time
 
 
 class ListenerCli(Listener):
@@ -10,7 +10,7 @@ class ListenerCli(Listener):
         """
         Конструктор. Запускает процесс-слушатель консоли
         """
-        if not isinstance(feedback, EventHub):
+        if not isinstance(feedback, MessageHub):
             raise ValueError('wrong type of feedback object')
 
         super().__init__(feedback)
@@ -56,6 +56,6 @@ class ListenerCli(Listener):
             }
         )
 
-        self.feedback.accept_event(msg)
+        self.feedback.accept_msg(msg)
 
         print('command "{0}" executed'.format(raw_data))

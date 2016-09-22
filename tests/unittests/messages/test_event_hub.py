@@ -2,10 +2,10 @@ import unittest
 from unittest.mock import Mock
 from copy import copy
 
-from events.event_hub import EventHub
+from messages.message_hub import MessageHub
 from handlers.abs_handler import AbsHandler
-from events.message_pattern import MessagePattern
-from events.abs_message import Message, time
+from messages.message_pattern import MessagePattern
+from messages.abs_message import Message, time
 
 msg_pattern_button = MessagePattern(
     "button",
@@ -57,26 +57,26 @@ def generate_test_handler(msg_pattern: MessagePattern):
 msg_sample_button = generate_sample_msg(msg_pattern_button)
 
 
-class TestEventHubInit(unittest.TestCase):
-    def test_event_hub_init(self):
-        eh = EventHub()
-        self.assertEquals(eh.handler_resolver, dict())
+class TestMessageHubInit(unittest.TestCase):
+    def test_msg_hub_init(self):
+        mh = MessageHub()
+        self.assertEquals(mh.handler_resolver, dict())
 
 
-class TestEventHubAcceptEventOneHandler(unittest.TestCase):
+class TestMessageHubAcceptEventOneHandler(unittest.TestCase):
     def test_handled_one_source(self):
-        eh = EventHub()
+        mh = MessageHub()
         handler = generate_test_handler(msg_pattern_button)
-        eh.add_handler(handler)
+        mh.add_handler(handler)
 
-        eh.accept_event(msg_sample_button)
+        mh.accept_msg(msg_sample_button)
 
         handler.handle.assert_called_once_with(msg_sample_button)
 
     def test_handled_different_sources(self):
-        eh = EventHub()
+        mh = MessageHub()
         handler = generate_test_handler(msg_pattern_button)
-        eh.add_handler(handler)
+        mh.add_handler(handler)
 
         for source in msg_pattern_button.sources:
             msg = Message(
@@ -87,13 +87,13 @@ class TestEventHubAcceptEventOneHandler(unittest.TestCase):
                 None
             )
 
-            eh.accept_event(msg)
+            mh.accept_msg(msg)
             handler.handle.assert_called_with(msg)
 
     def test_handled_different_events(self):
-        eh = EventHub()
+        mh = MessageHub()
         handler = generate_test_handler(msg_pattern_button)
-        eh.add_handler(handler)
+        mh.add_handler(handler)
 
         for event in msg_pattern_button.events:
             msg = Message(
@@ -104,58 +104,58 @@ class TestEventHubAcceptEventOneHandler(unittest.TestCase):
                 None
             )
 
-            eh.accept_event(msg)
+            mh.accept_msg(msg)
             handler.handle.assert_called_with(msg)
 
     def test_not_handled_other_type(self):
-        eh = EventHub()
+        mh = MessageHub()
 
         handler = generate_test_handler(msg_pattern_button)
 
-        eh.add_handler(handler)
+        mh.add_handler(handler)
 
         msg_changed = copy(msg_sample_button)
         msg_changed.type = "unknown type"
 
-        eh.accept_event(msg_changed)
+        mh.accept_msg(msg_changed)
 
         handler.handle.assert_not_called()
 
     def test_not_handled_other_source(self):
-        eh = EventHub()
+        mh = MessageHub()
         handler = generate_test_handler(msg_pattern_button)
-        eh.add_handler(handler)
+        mh.add_handler(handler)
 
         msg_changed = copy(msg_sample_button)
         msg_changed.source = "B1000000"
 
-        eh.accept_event(msg_changed)
+        mh.accept_msg(msg_changed)
 
         handler.handle.assert_not_called()
 
     def test_not_handled_other_event(self):
-        eh = EventHub()
+        mh = MessageHub()
         handler = generate_test_handler(msg_pattern_button)
-        eh.add_handler(handler)
+        mh.add_handler(handler)
 
         msg_changed = copy(msg_sample_button)
         msg_changed.event = "unknown event"
 
-        eh.accept_event(msg_changed)
+        mh.accept_msg(msg_changed)
 
         handler.handle.assert_not_called()
 
 
-class TestEventHubAcceptEventSeveralHandlers(unittest.TestCase):
+class TestMessageHubAcceptEventSeveralHandlers(unittest.TestCase):
     def test_handled_by_one_handler(self):
         handler_player = generate_test_handler(msg_pattern_player)
         handler_button = generate_test_handler(msg_pattern_button)
 
-        eh = EventHub()
-        eh.add_handler(handler_player)
-        eh.add_handler(handler_button)
+        mh = MessageHub()
+        mh.add_handler(handler_player)
+        mh.add_handler(handler_button)
 
-        eh.accept_event(msg_sample_button)
+        mh.accept_msg(msg_sample_button)
 
         handler_button.handle.assert_called_once_with(msg_sample_button)
         handler_player.assert_not_called()
@@ -166,11 +166,11 @@ class TestEventHubAcceptEventSeveralHandlers(unittest.TestCase):
 
         msg_sample_player = generate_sample_msg(msg_pattern_player)
 
-        eh = EventHub()
-        eh.add_handler(handler_player)
-        eh.add_handler(handler_button)
+        mh = MessageHub()
+        mh.add_handler(handler_player)
+        mh.add_handler(handler_button)
 
-        eh.accept_event(msg_sample_player)
+        mh.accept_msg(msg_sample_player)
 
         handler_button.assert_not_called()
         handler_player.handle.assert_called_once_with(msg_sample_player)
@@ -186,31 +186,34 @@ class TestEventHubAcceptEventSeveralHandlers(unittest.TestCase):
 
         msg_sample_player = generate_sample_msg(msg_pattern_player)
 
-        eh = EventHub()
-        eh.add_handler(handler_first_player)
-        eh.add_handler(handler_all_players)
+        mh = MessageHub()
+        mh.add_handler(handler_first_player)
+        mh.add_handler(handler_all_players)
 
-        eh.accept_event(msg_sample_player)
+        mh.accept_msg(msg_sample_player)
 
         handler_all_players.handle.assert_called_once_with(msg_sample_player)
         handler_first_player.handle.assert_called_once_with(msg_sample_player)
 
 
-class TestEventHubRemoveHandler(unittest.TestCase):
+class TestMessageHubRemoveHandler(unittest.TestCase):
     def test_remove_existing_handler(self):
         handler_button = generate_test_handler(msg_pattern_button)
 
-        eh = EventHub()
-        eh.add_handler(handler_button)
+        mh = MessageHub()
+        mh.add_handler(handler_button)
 
-        eh.accept_event(msg_sample_button)
+        mh.accept_msg(msg_sample_button)
 
         handler_button.handle.assert_called_once_with(msg_sample_button)
 
         handler_button.handle.reset_mock()
 
-        eh.remove_handler(handler_button)
+        mh.remove_handler(handler_button)
 
-        eh.accept_event(msg_sample_button)
+        mh.accept_msg(msg_sample_button)
 
         handler_button.handle.assert_not_called()
+
+if __name__ == '__main__':
+    unittest.main()
