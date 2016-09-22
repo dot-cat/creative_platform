@@ -3,8 +3,8 @@ index ddfb4d9..4b3e0e5 100644
 --- a/src/connections/shift_reg_gpio.py
 +++ b/src/connections/shift_reg_gpio.py
 @@ -1,4 +1,4 @@
--import RPi.GPIO as GPIO
-+import connections.gpio_dummy as GPIO
+-from connections.gpio_chooser import GPIO
++from connections.gpio_chooser import GPIO
  import time
  import logging
  from collections import namedtuple
@@ -15,8 +15,8 @@ index a51acb8..6e62d88 100644
 @@ -1,6 +1,6 @@
  #!/usr/bin/env python
  
--import RPi.GPIO as GPIO
-+import connections.gpio_dummy as GPIO
+-from connections.gpio_chooser import GPIO
++from connections.gpio_chooser import GPIO
  import time
  
  from connections.shift_reg_gpio import ShiftRegGPIO
@@ -25,8 +25,8 @@ index 353bf9b..f53f35f 100644
 --- a/src/controller.py
 +++ b/src/controller.py
 @@ -1,4 +1,4 @@
--import RPi.GPIO as GPIO
-+import connections.gpio_dummy as GPIO
+-from connections.gpio_chooser import GPIO
++from connections.gpio_chooser import GPIO
  import logging
  import os.path
  
@@ -35,8 +35,8 @@ index 8c50732..1d879c7 100644
 --- a/tests/manual/shift_reg/test_pins_manual.py
 +++ b/tests/manual/shift_reg/test_pins_manual.py
 @@ -1,4 +1,4 @@
--import RPi.GPIO as GPIO
-+import connections.gpio_dummy as GPIO
+-from connections.gpio_chooser import GPIO
++from connections.gpio_chooser import GPIO
  import time
  
  from utils.get_user_answer import get_user_answer
@@ -45,8 +45,8 @@ index 916b111..0076231 100644
 --- a/tests/unittests/shift_reg/test_shift_reg_gpio.py
 +++ b/tests/unittests/shift_reg/test_shift_reg_gpio.py
 @@ -1,4 +1,4 @@
--import RPi.GPIO as GPIO
-+import connections.gpio_dummy as GPIO
+-from connections.gpio_chooser import GPIO
++from connections.gpio_chooser import GPIO
  import unittest
  
  from connections.shift_reg_gpio import ShiftRegGPIO

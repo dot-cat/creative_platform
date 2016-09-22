@@ -1,5 +1,5 @@
 import logging
-import connections.gpio_dummy as GPIO
+from connections.gpio_chooser import GPIO
 
 import utils.debug_refs as debug_refs
 from messages.message_hub import MessageHub

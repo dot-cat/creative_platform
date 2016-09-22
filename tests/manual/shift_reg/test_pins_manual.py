@@ -1,4 +1,4 @@
-import connections.gpio_dummy as GPIO
+from connections.gpio_chooser import GPIO
 import time
 
 from utils.get_user_answer import get_user_answer
