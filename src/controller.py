@@ -7,6 +7,7 @@ from model import Model
 from subsystems.controller_controllables import ControllerControllables
 from subsystems.controller_handlers import ControllerHandlers
 from subsystems.controller_listeners import ControllerListeners
+#import api
 
 
 ##############################################################################################
@@ -41,6 +42,9 @@ class Controller(object):
         self.handlers = ControllerHandlers(self.model_data, self.controllables)
         self.__init_msg_hub()
         self.listeners = ControllerListeners(self.msg_hub)
+        #api.init(self.model, self.controllables, self.msg_hub)
+
+        #api.run(debug=True, port=11800, use_reloader=False)
 
         logging.debug("{0} init finished".format(self))
 

@@ -63,3 +63,6 @@ class Model(object):
 
     def get_config_data(self):
         return self.conf_data
+
+    def get_category_config(self, category: str) -> dict:
+        return self.conf_data[category]

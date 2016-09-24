@@ -40,5 +40,11 @@
     "objects": [
       "SB4", "Li6"
     ]
+  },
+  {
+    "id": "R7",
+    "description": "New Room",
+    "objects": [
+    ]
   }
 ]

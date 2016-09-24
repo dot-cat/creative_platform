@@ -1,21 +1,24 @@
 #!/usr/bin/env python
 
-from time import sleep
+import signal
+import sys
 import logging
+import time
+
+logging.basicConfig(level=logging.DEBUG)
 
 from controller import Controller
 
 
-logging.basicConfig(level=logging.DEBUG)
+def signal_handler(signal, frame):
+    print('You pressed Ctrl+C - or killed me with -2')
+    sys.exit(0)
+
+signal.signal(signal.SIGINT, signal_handler)
+
 
 if __name__ == "__main__":
     controller = Controller()
 
-    try:
-        # TODO: Сделать тут что-то более красивое, не лезть внуть контроллера
-        controller.listeners.listener_cli.listener_thread.join()
-    except KeyboardInterrupt:
-        pass
-
-    print('Exited')
-    pass
+    time.sleep(100)
+    signal.pause()

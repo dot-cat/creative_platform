@@ -50,6 +50,9 @@ class ControllerControllables(object):
 
         return self.all_controllables[obj_id]
 
+    def __build_obj_info_cache(self):
+        pass
+
     def toggle_controllable(self, obj_id):
         """
         Функция для переключения объекта в противоположное состояние
@@ -85,3 +88,6 @@ class ControllerControllables(object):
             method_to_call(*action_params)
         except AttributeError:
             raise
+
+    def get_object_info(self, obj_id: str) -> dict:
+        pass
