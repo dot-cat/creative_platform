@@ -12,6 +12,7 @@
 
 from enum import Enum
 import logging
+from threading import Thread
 
 from handlers.abs_handler import AbsHandler
 
@@ -79,4 +80,5 @@ class MessageHub(object):
             return
 
         for handler in handlers_available:
-            handler.handle(message)
+            handler_thread = Thread(target=handler.handle, args=(message,))
+            handler_thread.run()
