@@ -142,12 +142,6 @@ def get_rooms():
     return jsonify({'rooms': model.get_category_config("rooms")})
 
 
-@app.route('/room_list/', methods=['GET'])
-def get_rooms_list():
-    print(request.headers)
-    return jsonify(model.get_category_config("rooms"))
-
-
 @app.route('/rooms/<string:room_id>', methods=['GET'])
 def get_room(room_id):
     room = list(filter(lambda t: t['id'] == room_id, model.get_category_config("rooms")))
