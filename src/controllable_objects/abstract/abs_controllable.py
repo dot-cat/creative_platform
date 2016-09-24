@@ -21,14 +21,16 @@ class AbsControllable(object):
         off = False
         undefined = None
 
-    def __init__(self, con_instance, con_params):
+    def __init__(self, con_instance, con_params, metadata=None):
         """
         Инициализация контроллируемого объекта
         :param con_instance: экземпляр connection'а
         :param con_params: параметры доступа к connection'у
+        :param metadata: метеданные (имя, описание, тип объекта)
         """
         self.con_instance = con_instance
         self.con_params = con_params
+        self.metadata = metadata
 
         # Строку ниже добавляйте сами, если connections не обеспечивает буффер
         # self.curr_state = self.States.undefined
@@ -65,3 +67,6 @@ class AbsControllable(object):
         Переключить из текущего состояния в противоположное
         """
         raise NotImplementedError
+
+    def get_metadata(self):
+        return self.metadata

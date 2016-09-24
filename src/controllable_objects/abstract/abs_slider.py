@@ -26,11 +26,12 @@ class AbsSlider(AbsControllable):
         opened  = [1, 1]
         undefined = None
 
-    def __init__(self, con_instance, con_params):
+    def __init__(self, con_instance, con_params, metadata=None):
         """
         Конструктор, копия конструктора из базового класса
+        :param metadata:
         """
-        super().__init__(con_instance, con_params)
+        super().__init__(con_instance, con_params, metadata)
 
     def open(self):
         """

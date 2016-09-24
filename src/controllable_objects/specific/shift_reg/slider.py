@@ -48,9 +48,10 @@ class Slider(AbsSlider):
             self.neg = pin_neg
             self.transition_time = transition_time  # Fixme: CC5
 
-    def __init__(self, con_instance, con_params: ConParams or dict):
+    def __init__(self, con_instance, con_params: ConParams or dict, metadata=None):
         """
         Конструктор
+        :param metadata:
         :param con_instance: экземпляр сдвигового регистра
         :param con_params: заполненная структура self.ConParams, информация о подключении.
                Или словарь, на основе которого такую структуру можно создать.
@@ -71,7 +72,7 @@ class Slider(AbsSlider):
         con_instance.check_bit_pos(con_params.pos)  # Fixme: CC3
         con_instance.check_bit_pos(con_params.neg)  # Fixme: CC3
 
-        super().__init__(con_instance, con_params)
+        super().__init__(con_instance, con_params, metadata)
 
         self.close()  # Закрываем дверь, если она была открыта
 

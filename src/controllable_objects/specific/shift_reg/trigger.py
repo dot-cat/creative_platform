@@ -25,9 +25,10 @@ class Trigger(AbsTrigger):
     connections'ом выступает сдвиговый регистр
     """
 
-    def __init__(self, con_instance, con_params):
+    def __init__(self, con_instance, con_params, metadata=None):
         """
         Конструктор
+        :param metadata:
         :param con_instance: экземпляр сдвигового регистра
         :param con_params: целое число, пин сдвигового регистра, на который подключен триггер
         """
@@ -35,7 +36,7 @@ class Trigger(AbsTrigger):
 
         con_instance.check_bit_pos(con_params)  # Fixme: CC3
 
-        super().__init__(con_instance, con_params)
+        super().__init__(con_instance, con_params, metadata)
 
     def set_state(self, target_state):
         # FIXME: DH2
