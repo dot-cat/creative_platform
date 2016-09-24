@@ -97,13 +97,6 @@ void loop() {
     }
     lastReadTime = millis();
   }
-  ////////////////////////////////////////////////////////////////////
-  
-  for (short int c = 0; c < SizeColumns; ++c) {
-    for (short int r = 0; r < SizeRows; ++r) {
-      
-    }
-  }
   
   
 }
