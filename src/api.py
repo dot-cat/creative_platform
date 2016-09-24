@@ -1,11 +1,15 @@
 #!flask/bin/python
 from flask import Flask, jsonify, abort, url_for, request
+import time
+import logging
 
 from subsystems.controller_controllables import ControllerControllables
 from messages.message_hub import MessageHub
+from messages.abs_message import Message
 from model import Model
 
 app = Flask(__name__)
+
 
 objects = [
     {
@@ -113,6 +117,12 @@ controllables = None
 message_hub = None
 
 
+def __print_headers():
+    logging.debug("Request headers:\n{0}".format(request.headers))
+
+app.before_request(__print_headers)
+
+
 def init(arg_model: Model, arg_controllables: ControllerControllables, arg_message_hub: MessageHub):
     global model, controllables, message_hub
     model = arg_model
@@ -133,12 +143,17 @@ def stop():
 
 @app.route('/', methods=['GET'])
 def get_structure():
-    return jsonify({'rooms': url_for('get_rooms'), 'objects': url_for('get_objects')})
+    return jsonify(
+        {
+            'rooms': url_for('get_rooms'),
+            'objects': url_for('get_objects'),
+            'messages': url_for('post_message')
+        }
+    )
 
 
 @app.route('/rooms/', methods=['GET'])
 def get_rooms():
-    print(request.headers)
     return jsonify({'rooms': model.get_category_config("rooms")})
 
 
@@ -148,22 +163,31 @@ def get_room(room_id):
     if len(room) == 0:
         abort(404)
 
-    print(request.headers)
     return jsonify({'room': room[0]})
 
 
 @app.route('/objects/', methods=['GET'])
 def get_objects():
-    print(request.headers)
-
     return jsonify({'objects': objects})
 
 
 @app.route('/messages/', methods=['POST'])
 def post_message():
-    print(request.headers)
-    print(request.get_data())
-    print(request.get_json())
+    logging.debug(request.get_data())
+
+    msg_raw = request.get_json()
+    if msg_raw is None:
+        return "Invalid JSON data", 400
+
+    logging.debug(msg_raw)
+    msg_raw["timestamp"] = time.time()
+
+    try:
+        msg = Message(**msg_raw)
+    except TypeError:
+        return "Invalid message format", 400
+
+    message_hub.accept_msg(msg)
     return "accepted", 202
 
 
@@ -173,5 +197,4 @@ def get_object(object_id):
     if len(object_item) == 0:
         abort(404)
 
-    print(request.headers)
     return jsonify({'object': object_item[0]})

@@ -1,5 +1,6 @@
 import logging
 from connections.gpio_chooser import GPIO
+import multiprocessing
 
 import utils.debug_refs as debug_refs
 from messages.message_hub import MessageHub
@@ -7,7 +8,7 @@ from model import Model
 from subsystems.controller_controllables import ControllerControllables
 from subsystems.controller_handlers import ControllerHandlers
 from subsystems.controller_listeners import ControllerListeners
-#import api
+import api
 
 
 ##############################################################################################
@@ -42,9 +43,10 @@ class Controller(object):
         self.handlers = ControllerHandlers(self.model_data, self.controllables)
         self.__init_msg_hub()
         self.listeners = ControllerListeners(self.msg_hub)
-        #api.init(self.model, self.controllables, self.msg_hub)
+        api.init(self.model, self.controllables, self.msg_hub)
 
-        #api.run(debug=True, port=11800, use_reloader=False)
+        self.run_process = multiprocessing.Process(target=api.run, kwargs={"debug": True, "port": 10800, "use_reloader": False})
+        self.run_process.run()
 
         logging.debug("{0} init finished".format(self))
 
@@ -71,3 +73,6 @@ class Controller(object):
         self.msg_hub = MessageHub()
 
         self.handlers.register_all_handlers(self.msg_hub)
+
+    def stop_api(self):
+        api.stop()

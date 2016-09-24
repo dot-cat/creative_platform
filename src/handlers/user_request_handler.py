@@ -6,16 +6,11 @@
 
 
 from handlers.abs_handler import AbsHandler, MessagePattern, Message
-
-user_request_pattern = MessagePattern(
-    "user_request",
-    ["cli"],
-    ["action_requested"]
-)
+from subsystems.controller_controllables import ControllerControllables
 
 
 class UserRequestHandler(AbsHandler):
-    def __init__(self, message_pattern, to_control):
+    def __init__(self, message_pattern: MessagePattern, to_control: ControllerControllables):
         super().__init__(message_pattern, to_control)
 
     def handle(self, message: Message):
