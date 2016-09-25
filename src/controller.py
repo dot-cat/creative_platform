@@ -49,9 +49,6 @@ class Controller(object):
         self.listeners = ControllerListeners(self.msg_hub)
         api.init(self.model, self.controllables, self.msg_hub)
 
-        self.api_thread = Thread(target=api.run, kwargs={"debug": True, "port": 10800, "use_reloader": False})
-        self.api_thread.start()
-
         logging.debug("{0} init finished".format(self))
 
     def __del__(self):
@@ -78,5 +75,5 @@ class Controller(object):
 
         self.handlers.register_all_handlers(self.msg_hub)
 
-    def stop_api(self):
-        api.stop()
+    def start_api(self):
+        api.run(debug=True, port=10800, use_reloader=False)

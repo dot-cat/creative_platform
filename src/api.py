@@ -2,9 +2,6 @@
 from flask import Flask, jsonify, abort, url_for, request
 import time
 import logging
-import requests
-import os
-import json
 import threading
 
 from subsystems.controller_controllables import ControllerControllables
@@ -14,8 +11,6 @@ from model import Model
 
 app = Flask(__name__)
 
-
-__secret = int.from_bytes(os.urandom(24), byteorder='big')
 
 
 model = None
@@ -40,24 +35,13 @@ def run(*args, **kwargs):
     app.run(*args, **kwargs)
 
 
-def stop():
-    requests.post("http://localhost:10800/shutdown", data=json.dumps({"secret": __secret}), headers={'Content-type': 'application/json'})
-
-
-def __stop():
-    func = request.environ.get('werkzeug.server.shutdown')
-    if func is None:
-        raise RuntimeError('Not running with the Werkzeug Server')
-    func()
-
-
 @app.route('/', methods=['GET'])
 def get_structure():
     return jsonify(
         {
             'rooms': url_for('get_rooms'),
             'objects': url_for('get_objects'),
-            'messages': url_for('post_message')
+            'messages': url_for('receive_message')
         }
     )
 
@@ -95,7 +79,7 @@ def get_object(object_id):
 
 
 @app.route('/messages/', methods=['POST'])
-def post_message():
+def receive_message():
     logging.debug(request.get_data())
 
     msg_raw = request.get_json()
@@ -112,12 +96,4 @@ def post_message():
 
     thread = threading.Thread(target=message_hub.accept_msg, args=(msg,))
     thread.start()
-    #message_hub.accept_msg(msg)
     return "accepted", 202
-
-
-@app.route('/shutdown', methods=['POST'])
-def shutdown():
-    if request.get_json()["secret"] == __secret:
-        __stop()
-        return 'Server shutting down...'
