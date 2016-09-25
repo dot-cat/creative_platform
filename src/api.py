@@ -84,7 +84,7 @@ def receive_message():
 
     msg_raw = request.get_json()
     if msg_raw is None:
-        return "Invalid JSON data", 400
+        return jsonify({"result": "Invalid JSON data"}), 400
 
     logging.debug(msg_raw)
     msg_raw["timestamp"] = time.time()
@@ -92,8 +92,8 @@ def receive_message():
     try:
         msg = Message(**msg_raw)
     except TypeError:
-        return "Invalid message format", 400
+        return jsonify({"result": "Invalid message format"}), 400
 
     thread = threading.Thread(target=message_hub.accept_msg, args=(msg,))
     thread.start()
-    return "accepted", 202
+    return jsonify({"result": "accepted"}), 202
