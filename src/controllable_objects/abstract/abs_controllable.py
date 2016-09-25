@@ -3,6 +3,8 @@
 # CC2 - Consider Change 2
 #   Методы не возвращают результат совего выполнения (успешно/неуспешно). Возможно, нужно 
 #   добавить индикацию статуса выполнения
+# CC12 - Consider Change 12
+#   Плохо переносится на код на С++
 ##############################################################################################
 
 from enum import Enum
@@ -55,12 +57,19 @@ class AbsControllable(object):
         """
         raise NotImplementedError
 
-    def get_state(self):
+    def get_state(self) -> States:
         """
         Вернуть свое состояние внешнему миру из буфера
         :return: значение типа self.States
         """
         raise NotImplementedError
+
+    def get_state_string(self) -> str:
+        """
+        Вернуть свое состояние внешнему миру из буфера. Состояние возращается в виде строки
+        :return: str, текущее состояние
+        """
+        return str(self.get_state().name)  # Fixme: CC12
 
     def toggle(self):
         """
