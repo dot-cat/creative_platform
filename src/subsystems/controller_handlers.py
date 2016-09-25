@@ -1,11 +1,12 @@
 from handlers.conf_handler import ConfHandler, HandleConfig, Message, MessagePattern
 from handlers.user_request_handler import UserRequestHandler
 from messages.message_hub import MessageHub
+from model import Model
 
 
 class ControllerHandlers(object):
-    def __init__(self, model_data, controllables):
-        self.model_data = model_data
+    def __init__(self, model: Model, controllables):
+        self.model = model
 
         self.__init_handlers(controllables)
 
@@ -15,7 +16,7 @@ class ControllerHandlers(object):
     def __init_handlers(self, controllables):
         self.all_handlers = dict()
 
-        handler_data_list = self.model_data["handlers"]
+        handler_data_list = self.model.get_category_config("handlers")
 
         for item in handler_data_list:
             id = item["id"]
