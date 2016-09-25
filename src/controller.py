@@ -1,6 +1,10 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 import logging
 from connections.gpio_chooser import GPIO
 import multiprocessing
+from threading import Thread
 
 import utils.debug_refs as debug_refs
 from messages.message_hub import MessageHub
@@ -39,14 +43,14 @@ class Controller(object):
         self.model = Model("./configs")
         self.model_data = self.model.get_config_data()
 
-        self.controllables = ControllerControllables(self.model_data)
-        self.handlers = ControllerHandlers(self.model_data, self.controllables)
+        self.controllables = ControllerControllables(self.model)
+        self.handlers = ControllerHandlers(self.model, self.controllables)
         self.__init_msg_hub()
         self.listeners = ControllerListeners(self.msg_hub)
         api.init(self.model, self.controllables, self.msg_hub)
 
-        self.run_process = multiprocessing.Process(target=api.run, kwargs={"debug": True, "port": 10800, "use_reloader": False})
-        self.run_process.run()
+        self.api_thread = Thread(target=api.run, kwargs={"debug": True, "port": 10800, "use_reloader": False})
+        self.api_thread.start()
 
         logging.debug("{0} init finished".format(self))
 

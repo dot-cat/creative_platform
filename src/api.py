@@ -2,6 +2,10 @@
 from flask import Flask, jsonify, abort, url_for, request
 import time
 import logging
+import requests
+import os
+import json
+import threading
 
 from subsystems.controller_controllables import ControllerControllables
 from messages.message_hub import MessageHub
@@ -11,106 +15,8 @@ from model import Model
 app = Flask(__name__)
 
 
-objects = [
-    {
-        "id": "D1",
-        "type": "door",
-        "actions": ["open", "close"],
-        "description": "Entrance door",
-        "status": "opened"
-    },
-    {
-        "id": "D2",
-        "type": "door",
-        "actions": ["open", "close"],
-        "description": "to bedroom",
-        "status": "opened"
-    },
-    {
-        "id": "D3",
-        "type": "door",
-        "actions": ["open", "close"],
-        "description": "to office",
-        "status": "opened"
-    },
-    {
-        "id": "F1",
-        "type": "fan",
-        "actions": ["on", "off"],
-        "description": "",
-        "status": "off"
-    },
-    {
-        "id": "Li1",
-        "type": "lighting",
-        "actions": ["on", "off"],
-        "description": "",
-        "status": "on"
-    },
-    {
-        "id": "Li2",
-        "type": "lighting",
-        "actions": ["on", "off"],
-        "description": "",
-        "status": "on"
-    },
-    {
-        "id": "Li3",
-        "type": "lighting",
-        "actions": ["on", "off"],
-        "description": "",
-        "status": "off"
-    },
-    {
-        "id": "Li4",
-        "type": "lighting",
-        "actions": ["on", "off"],
-        "description": "",
-        "status": "off"
-    },
-    {
-        "id": "Li5",
-        "type": "lighting",
-        "actions": ["on", "off"],
-        "description": "",
-        "status": "on"
-    },
-    {
-        "id": "Li6",
-        "type": "lighting",
-        "actions": ["on", "off"],
-        "description": "",
-        "status": "off"
-    },
-    {
-        "id": "SB1",
-        "type": "sunblind",
-        "actions": ["open", "close"],
-        "description": "Kitchen",
-        "status": "opened"
-    },
-    {
-        "id": "SB2",
-        "type": "sunblind",
-        "actions": ["open", "close"],
-        "description": "Bedroom",
-        "status": "opened"
-    },
-    {
-        "id": "SB3",
-        "type": "sunblind",
-        "actions": ["open", "close"],
-        "description": "Office",
-        "status": "opened"
-    },
-    {
-        "id": "SB4",
-        "type": "sunblind",
-        "actions": ["open", "close"],
-        "description": "Living Room",
-        "status": "opened"
-    }
-]
+__secret = int.from_bytes(os.urandom(24), byteorder='big')
+
 
 model = None
 controllables = None
@@ -135,6 +41,10 @@ def run(*args, **kwargs):
 
 
 def stop():
+    requests.post("http://localhost:10800/shutdown", data=json.dumps({"secret": __secret}), headers={'Content-type': 'application/json'})
+
+
+def __stop():
     func = request.environ.get('werkzeug.server.shutdown')
     if func is None:
         raise RuntimeError('Not running with the Werkzeug Server')
@@ -168,7 +78,20 @@ def get_room(room_id):
 
 @app.route('/objects/', methods=['GET'])
 def get_objects():
-    return jsonify({'objects': objects})
+    all_info = controllables.get_all_objects_info()
+    return jsonify({'objects': all_info})
+
+
+@app.route('/objects/<string:object_id>', methods=['GET'])
+def get_object(object_id):
+    object_item = None
+
+    try:
+        object_item = controllables.get_object_info(object_id)
+    except KeyError:
+        abort(404)
+
+    return jsonify({'object': object_item})
 
 
 @app.route('/messages/', methods=['POST'])
@@ -187,14 +110,14 @@ def post_message():
     except TypeError:
         return "Invalid message format", 400
 
-    message_hub.accept_msg(msg)
+    thread = threading.Thread(target=message_hub.accept_msg, args=(msg,))
+    thread.start()
+    #message_hub.accept_msg(msg)
     return "accepted", 202
 
 
-@app.route('/objects/<string:object_id>', methods=['GET'])
-def get_object(object_id):
-    object_item = list(filter(lambda t: t['id'] == object_id, objects))
-    if len(object_item) == 0:
-        abort(404)
-
-    return jsonify({'object': object_item[0]})
+@app.route('/shutdown', methods=['POST'])
+def shutdown():
+    if request.get_json()["secret"] == __secret:
+        __stop()
+        return 'Server shutting down...'

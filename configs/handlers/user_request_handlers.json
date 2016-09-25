@@ -1,0 +1,26 @@
+[
+  {
+    "id": "HU1",
+    "if": {
+      "type": "user_request",
+      "source_list": ["cli"],
+      "event_list": ["action_requested"]
+    }
+  },
+  {
+    "id": "HU2",
+    "if": {
+      "type": "user_request",
+      "source_list": ["android"],
+      "event_list": ["action_requested"]
+    }
+  },
+  {
+    "id": "HU3",
+    "if": {
+      "type": "user_request",
+      "source_list": ["web"],
+      "event_list": ["action_requested"]
+    }
+  }
+]
