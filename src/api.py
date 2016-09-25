@@ -57,7 +57,7 @@ def get_room(room_id):
     if len(room) == 0:
         abort(404)
 
-    return jsonify({'room': room[0]})
+    return jsonify(room[0])
 
 
 @app.route('/objects/', methods=['GET'])
@@ -75,7 +75,7 @@ def get_object(object_id):
     except KeyError:
         abort(404)
 
-    return jsonify({'object': object_item})
+    return jsonify(object_item)
 
 
 @app.route('/messages/', methods=['POST'])
