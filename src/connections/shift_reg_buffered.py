@@ -97,4 +97,5 @@ class ShiftRegBuffered(AbsShiftRegister):
         Очистка содержимого регистра
         :return: none
         """
+        self.buffer = 0
         return self.shift_reg.clear()
