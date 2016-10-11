@@ -11,8 +11,6 @@ from model import Model
 
 app = Flask(__name__)
 
-
-
 model = None
 controllables = None
 message_hub = None
@@ -76,6 +74,12 @@ def get_object(object_id):
         abort(404)
 
     return jsonify(object_item)
+
+
+@app.route('/messages/', methods=['OPTIONS'])
+def messages_options():
+    return  '', 204, \
+            {'Access-Control-Allow-Methods': 'POST, OPTIONS'}
 
 
 @app.route('/messages/', methods=['POST'])
