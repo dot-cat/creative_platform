@@ -5,7 +5,7 @@
     "description": "",
     "con_id": "SR1",
     "con_params": {
-      "sr_pin": 4
+      "sr_pin": 21
     }
   },
   {
@@ -14,7 +14,7 @@
     "description": "",
     "con_id": "SR1",
     "con_params": {
-      "sr_pin": 5
+      "sr_pin": 18
     }
   },
   {
@@ -23,7 +23,7 @@
     "description": "",
     "con_id": "SR1",
     "con_params": {
-      "sr_pin": 12
+      "sr_pin": 20
     }
   },
   {
@@ -32,7 +32,7 @@
     "description": "",
     "con_id": "SR1",
     "con_params": {
-      "sr_pin": 13
+      "sr_pin": 19
     }
   },
   {
@@ -41,7 +41,7 @@
     "description": "",
     "con_id": "SR1",
     "con_params": {
-      "sr_pin": 18
+      "sr_pin": 16
     }
   },
   {
@@ -50,7 +50,7 @@
     "description": "",
     "con_id": "SR1",
     "con_params": {
-      "sr_pin": 19
+      "sr_pin": 17
     }
   }
 ]

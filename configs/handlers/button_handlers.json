@@ -58,5 +58,17 @@
       "obj_action": "toggle",
       "obj_id": "D1"
     }
+  },
+  {
+    "id": "H6",
+    "if": {
+      "type": "button",
+      "source_list": ["B7"],
+      "event_list": ["pressed"]
+    },
+    "then": {
+      "obj_action": "toggle",
+      "obj_id": "SB1"
+    }
   }
 ]

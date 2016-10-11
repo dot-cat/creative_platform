@@ -5,7 +5,7 @@
     "description": "",
     "con_id": "SR1",
     "con_params": {
-      "sr_pin": 20
+      "sr_pin": 14
     }
   }
 ]

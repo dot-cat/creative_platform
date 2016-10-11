@@ -5,9 +5,9 @@
     "description": "Kitchen",
     "con_id": "SR1",
     "con_params": {
-      "pin_pos": 8,
-      "pin_neg": 9,
-      "transition_time": 1
+      "pin_pos": 11,
+      "pin_neg": 10,
+      "transition_time": 3
     }
   },
   {
@@ -16,9 +16,9 @@
     "description": "Bedroom",
     "con_id": "SR1",
     "con_params": {
-      "pin_pos": 10,
-      "pin_neg": 11,
-      "transition_time": 1
+      "pin_pos": 1,
+      "pin_neg": 0,
+      "transition_time": 3
     }
   },
   {
@@ -27,9 +27,9 @@
     "description": "Office",
     "con_id": "SR1",
     "con_params": {
-      "pin_pos": 14,
-      "pin_neg": 15,
-      "transition_time": 1
+      "pin_pos": 7,
+      "pin_neg": 6,
+      "transition_time": 3
     }
   },
   {
@@ -38,9 +38,9 @@
     "description": "Living Room",
     "con_id": "SR1",
     "con_params": {
-      "pin_pos": 16,
-      "pin_neg": 17,
-      "transition_time": 1
+      "pin_pos": 13,
+      "pin_neg": 12,
+      "transition_time": 3
     }
   }
 ]

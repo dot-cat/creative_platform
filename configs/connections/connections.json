@@ -3,10 +3,10 @@
     "id": "SR1",
     "con_type": "shiftreg",
     "con_params": {
-      "si": 37,
-      "sck": 33,
-      "rck": 35,
-      "sclr": 40,
+      "si": 31,
+      "sck": 35,
+      "rck": 37,
+      "sclr": 33,
       "num_of_slaves": 2
     }
   }
