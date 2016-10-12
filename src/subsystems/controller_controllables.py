@@ -3,6 +3,11 @@
 # TD3 - To Do 3
 #   Переписать метод get_permitted_actions, добавить проверку пользователя, обработку
 #   дополнительных условий.
+# CC7 - Consider Change 7
+#   Метод do_action() ничего не возвращает. Возможно, следует этот факт изменить. Варианты:
+#   * выкидывать наружу возращаемое значение вызванного метода;
+#   * возвращать 0 при успехе и другие значения при ошибке;
+#   * оставить как есть, ничего не возвращать, выбрасывать исключения в случае ошибки.
 # CC13 - Consider Change 13
 #   Кешировать информацию об объектах.
 ##############################################################################################
@@ -108,7 +113,7 @@ class ControllerControllables(object):
         :param obj_id: тип объекта
         :param action: действие, метод, который необходимо вызвать на объекте
         :param action_params: параметры вызова
-        :return: None  # CC7
+        :return: Результат выполнения действия на объекте. Может быть None  # CC7
         """
         # FIXME: TD1
         if action == "print":
@@ -121,7 +126,7 @@ class ControllerControllables(object):
 
         try:
             method_to_call = getattr(obj_alias, action)
-            method_to_call(*action_params)
+            return method_to_call(*action_params)
         except AttributeError:
             raise
 

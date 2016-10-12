@@ -38,7 +38,7 @@ class AbsPlayer(AbsControllable):
     def prev(self) -> None:
         raise NotImplementedError
 
-    def get_current_track(self) -> str:
+    def get_current_track(self) -> dict:
         raise NotImplementedError
 
     def toggle(self) -> None:

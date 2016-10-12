@@ -79,6 +79,23 @@ def get_object(object_id):
     return jsonify(object_item)
 
 
+@app.route('/objects/<string:object_id>/current_track', methods=['GET'])
+def get_current_track(object_id):
+    object_item = None
+
+    try:
+        object_item = controllables.do_action(object_id, "get_current_track")
+    except ValueError as e:
+        if e.args[0] == "id not found":
+            abort(404)
+        else:
+            raise
+    except AttributeError:
+        abort(404)
+
+    return jsonify(object_item)
+
+
 @app.route('/messages/', methods=['OPTIONS'])
 def messages_options():
     return  '', 204, \

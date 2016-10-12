@@ -5,6 +5,10 @@
 #   перехватывать?
 # CC16 - Consider Change 16
 #   Может возвращать None вместо "undefined"?
+# CC17 - Consider Change 17
+#   Отдавать только строку (атрибут "name") или полный словарь с информацией от текущем треке?
+# CC18 - Consider Change 18
+#   Отдавать только {"name": "name here"} или полный словарь ( с ключами file, id, name, pos)?
 ##############################################################################################
 
 
@@ -72,9 +76,11 @@ class MPDPlayer(AbsPlayer):
         with self.connection():
             self.con_instance.previous()
 
-    def get_current_track(self) -> str:  # CC16
+    def get_current_track(self) -> dict:  # CC16
         try:
             with self.connection():
-                return self.con_instance.currentsong()
+                return self.con_instance.currentsong()  # CC 17
         except ConnectionRefusedError:
-            return "undefined"
+            return {
+                "name": "undefined"
+            }  # CC 18
