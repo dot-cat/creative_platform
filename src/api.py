@@ -70,8 +70,11 @@ def get_object(object_id):
 
     try:
         object_item = controllables.get_object_info(object_id)
-    except KeyError:
-        abort(404)
+    except ValueError as e:
+        if e.args[0] == "id not found":
+            abort(404)
+        else:
+            raise
 
     return jsonify(object_item)
 
