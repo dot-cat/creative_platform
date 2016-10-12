@@ -1,3 +1,4 @@
 RPi.GPIO  # For shift_reg and other GPIO-based modules
 pyserial  # For listener_serial and other UART-based modules
 flask  # For REST API
+python-mpd2  # For controlling of MPD servers

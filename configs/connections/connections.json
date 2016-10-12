@@ -9,5 +9,14 @@
       "sclr": 33,
       "num_of_slaves": 2
     }
+  },
+  {
+    "id": "MPD1",
+    "con_type": "mpd_server",
+    "con_params": {
+      "host": "localhost",
+      "port": 6600,
+      "timeout": 10
+    }
   }
 ]

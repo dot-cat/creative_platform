@@ -11,9 +11,10 @@ import logging
 
 from model import Model
 
-from controllable_objects.abstract.abs_controllable import AbsControllable
-from controllable_objects.factories.slider_factory import get_slider_by_params, AbsSlider
-from controllable_objects.factories.trigger_factory import get_trigger_by_params, AbsTrigger
+from controllable_objects.factories.controllable_factory import get_controllable_by_params, AbsControllable
+from controllable_objects.abstract.abs_player import AbsPlayer
+from controllable_objects.abstract.abs_slider import AbsSlider
+from controllable_objects.abstract.abs_trigger import AbsTrigger
 from connections.factories import get_connection_by_config
 
 
@@ -34,23 +35,32 @@ class ControllerControllables(object):
         con_data_list = self.model.get_category_config("connections")
 
         for item in con_data_list:
-            if item["con_type"] == "shiftreg":
-                self.all_connections[item["id"]] = \
-                    get_connection_by_config(item)
+            new_conn = get_connection_by_config(item)
+
+            if new_conn is not None:
+                self.all_connections[item["id"]] = new_conn
 
     def __init_all_controllables(self):
         self.all_controllables = dict()
 
         for item in self.model.get_category_config("controllables"):
-            con_instance = self.all_connections[item["con_id"]]
-            con_params = item["con_params"]
+            item_id = item["id"]
+            con_id = item["con_id"]
+
+            try:
+                con_instance = self.all_connections[con_id]
+            except KeyError:
+                logging.warning("Unable to init component: {0}. Connection {1} is unavailable".format(
+                    item_id, con_id
+                ))
+                continue
+
             metadata = {"description": item["description"], "type": item["type"]}
 
-            if item["type"] == "door" or item["type"] == "sunblind":
-                self.all_controllables[item["id"]] = get_slider_by_params(con_instance, con_params, metadata)
+            new_object = get_controllable_by_params(con_instance, item["con_params"], metadata)
 
-            elif item["type"] == "lighting" or item["type"] == "fan":
-                self.all_controllables[item["id"]] = get_trigger_by_params(con_instance, con_params["sr_pin"], metadata)
+            if new_object is not None:
+                self.all_controllables[item_id] = new_object
 
     def __resolve_obj_by_id(self, obj_id: str) -> AbsControllable:
         if type(obj_id) != str:
@@ -80,6 +90,8 @@ class ControllerControllables(object):
             return ["open", "close", "toggle"]
         elif isinstance(obj_alias, AbsTrigger):
             return ["on", "off", "toggle"]
+        elif isinstance(obj_alias, AbsPlayer):
+            return ["play", "stop", "pause", "toggle", "prev", "next"]
         elif isinstance(obj_alias, AbsControllable):
             return ["toggle"]
         else:

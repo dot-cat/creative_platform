@@ -1,0 +1,9 @@
+[
+  {
+    "id": "PLAY1",
+    "type": "player",
+    "description": "Default player",
+    "con_id": "MPD1",
+    "con_params": {}
+  }
+]

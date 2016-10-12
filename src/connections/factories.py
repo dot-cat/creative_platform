@@ -2,6 +2,7 @@ import logging
 
 from connections.shift_reg_buffered import ShiftRegBuffered
 from connections.shift_reg_gpio import ShiftRegGPIO
+from connections.mpd_client import MPDClientConnection
 
 
 def get_connection_by_config(config) -> object:
@@ -12,6 +13,12 @@ def get_connection_by_config(config) -> object:
             ShiftRegBuffered(
                 ShiftRegGPIO(**config["con_params"])
             )
+    elif config["con_type"] == "mpd_server":
+        try:
+            connection = \
+                MPDClientConnection(**config["con_params"])
+        except ConnectionRefusedError:
+            logging.warning("Unable to connect to MPD server {0}".format(config["con_params"]))
     else:
         logging.warning("Unknown connection: {0}".format(config))
 
