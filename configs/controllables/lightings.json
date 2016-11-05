@@ -57,9 +57,9 @@
     "id": "Li7",
     "type": "lighting",
     "description": "",
-    "con_id": "SR1",
+    "con_id": "SER2",
     "con_params": {
-      "sr_pin": 22
+      "sr_pin": "None"
     }
   }
 ]
