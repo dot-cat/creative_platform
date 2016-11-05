@@ -52,5 +52,14 @@
     "con_params": {
       "sr_pin": 17
     }
+  },
+  {
+    "id": "Li7",
+    "type": "lighting",
+    "description": "",
+    "con_id": "SR1",
+    "con_params": {
+      "sr_pin": 22
+    }
   }
 ]
