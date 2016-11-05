@@ -1,4 +1,5 @@
 import logging
+import serial
 
 from connections.shift_reg_buffered import ShiftRegBuffered
 from connections.shift_reg_gpio import ShiftRegGPIO
@@ -19,6 +20,14 @@ def get_connection_by_config(config) -> object:
                 MPDClientConnection(**config["con_params"])
         except ConnectionRefusedError:
             logging.warning("Unable to connect to MPD server {0}".format(config["con_params"]))
+    elif config["con_type"] == "serial":
+        try:
+            tty = config["con_params"]["tty"]
+            connection = serial.Serial(tty)
+            connection.baudrate = config["con_params"]["baudrate"]
+        except serial.SerialException:
+            logging.warning("Unable to init {0} connection: {1} is disconnected".format(config["id"], tty))
+
     else:
         logging.warning("Unknown connection: {0}".format(config))
 

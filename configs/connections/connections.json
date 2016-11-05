@@ -18,5 +18,13 @@
       "port": 6600,
       "timeout": 10
     }
+  },
+  {
+    "id": "SER2",
+    "con_type": "serial",
+    "con_params": {
+      "tty": "/dev/rus_ard_tty",
+      "baudrate": 9600
+    }
   }
 ]
