@@ -52,9 +52,9 @@ class ListenerSerial(Listener):
         :param raw_data: данные, строка
         :return: None
         """
-        logging.debug('Data read: {0}'.format(raw_data))
-
         id = raw_data.strip(b"\r\n").decode()
-        msg = Message("button", id, "pressed", time.time(), None)
+        if id[0] == "B":
+            logging.debug('Data read: {0}'.format(raw_data))
+            msg = Message("button", id, "pressed", time.time(), None)
+            self.feedback.accept_msg(msg)
 
-        self.feedback.accept_msg(msg)
