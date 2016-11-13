@@ -60,7 +60,7 @@ msg_sample_button = generate_sample_msg(msg_pattern_button)
 class TestMessageHubInit(unittest.TestCase):
     def test_msg_hub_init(self):
         mh = MessageHub()
-        self.assertEquals(mh.handler_resolver, dict())
+        self.assertEqual(mh.handler_resolver, dict())
 
 
 class TestMessageHubAcceptEventOneHandler(unittest.TestCase):

@@ -68,7 +68,7 @@ class TestSliderMethods(unittest.TestCase):
 
         sl.open()
 
-        self.assertEquals(sl.get_state(), sl.States.opened)
+        self.assertEqual(sl.get_state(), sl.States.opened)
 
         self.assertEqual(sr.get_buf_bit(sl_bit_pos), 1)
         self.assertEqual(sr.get_buf_bit(sl_bit_neg), 1)
@@ -78,7 +78,7 @@ class TestSliderMethods(unittest.TestCase):
 
         sl.close()
 
-        self.assertEquals(sl.get_state(), sl.States.closed)
+        self.assertEqual(sl.get_state(), sl.States.closed)
 
         self.assertEqual(sr.get_buf_bit(sl_bit_pos), 0)
         self.assertEqual(sr.get_buf_bit(sl_bit_neg), 0)
@@ -90,7 +90,7 @@ class TestSliderMethods(unittest.TestCase):
 
         sl.close()
 
-        self.assertEquals(sl.get_state(), sl.States.closed)
+        self.assertEqual(sl.get_state(), sl.States.closed)
 
         self.assertEqual(sr.get_buf_bit(sl_bit_pos), 0)
         self.assertEqual(sr.get_buf_bit(sl_bit_neg), 0)
@@ -102,7 +102,7 @@ class TestSliderMethods(unittest.TestCase):
 
         sl.open()
 
-        self.assertEquals(sl.get_state(), sl.States.opened)
+        self.assertEqual(sl.get_state(), sl.States.opened)
 
         self.assertEqual(sr.get_buf_bit(sl_bit_pos), 1)
         self.assertEqual(sr.get_buf_bit(sl_bit_neg), 1)
@@ -112,7 +112,7 @@ class TestSliderMethods(unittest.TestCase):
 
         sl.toggle()
 
-        self.assertEquals(sl.get_state(), sl.States.opened)
+        self.assertEqual(sl.get_state(), sl.States.opened)
 
         self.assertEqual(sr.get_buf_bit(sl_bit_pos), 1)
         self.assertEqual(sr.get_buf_bit(sl_bit_neg), 1)
@@ -124,7 +124,7 @@ class TestSliderMethods(unittest.TestCase):
 
         sl.toggle()
 
-        self.assertEquals(sl.get_state(), sl.States.closed)
+        self.assertEqual(sl.get_state(), sl.States.closed)
 
         self.assertEqual(sr.get_buf_bit(sl_bit_pos), 0)
         self.assertEqual(sr.get_buf_bit(sl_bit_neg), 0)
