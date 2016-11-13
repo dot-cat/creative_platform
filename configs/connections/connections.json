@@ -26,5 +26,12 @@
       "tty": "/dev/rus_ard_tty",
       "baudrate": 9600
     }
+  },
+  {
+    "id": "SER_GPIO1",
+    "con_type": "serial_gpio",
+    "con_params": {
+      "serial_con": "SER2"
+    }
   }
 ]
