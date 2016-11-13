@@ -14,7 +14,7 @@ def get_controllable_by_params(con_instance, con_params, metadata) -> AbsControl
     if item_type == "door" or item_type == "sunblind":
         new_obj = get_slider_by_params(con_instance, con_params, metadata)
     elif item_type == "lighting" or item_type == "fan":
-        new_obj = get_trigger_by_params(con_instance, con_params["sr_pin"], metadata)
+        new_obj = get_trigger_by_params(con_instance, con_params, metadata)
     elif item_type == "player":
         new_obj = get_player_by_params(con_instance, con_params, metadata)
     else:

@@ -59,7 +59,8 @@
     "description": "",
     "con_id": "SER2",
     "con_params": {
-      "sr_pin": "None"
+      "pin": 13,
+      "active_low": "false"
     }
   }
 ]

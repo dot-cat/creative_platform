@@ -5,7 +5,7 @@ import serial
 
 def get_trigger_by_params(con_instance, con_params, metadata=None) -> AbsTrigger:
     if isinstance(con_instance, ShiftRegBuffered):
-        return Trigger(con_instance, con_params, metadata)
+        return Trigger(con_instance, con_params["sr_pin"], metadata)
 
     elif isinstance(con_instance, serial.Serial):
         return SerTrigger(con_instance, con_params, metadata)

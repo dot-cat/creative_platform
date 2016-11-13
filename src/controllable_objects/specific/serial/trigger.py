@@ -3,13 +3,13 @@
 # DH2 - Dirty Hack 2
 #   Копипаста docstrings методов между классами. Возможно, docstrings в классах тоже
 #   можно наследовать?
-# CN1 - Change Now! 1
-#   Игнорятся con_params
+# CC19 - Consider Change 19
+#   Как соединение использовать SerialGPIO вместо Serial?
 ##############################################################################################
 
+import serial
 
 from controllable_objects.abstract.abs_trigger import AbsTrigger
-import serial
 
 
 def check_con_type(test_obj):
@@ -23,19 +23,27 @@ class Trigger(AbsTrigger):
     connections'ом выступает сдвиговый регистр
     """
 
-    def __init__(self, con_instance, con_params, metadata=None):
+    def __init__(self, con_instance, con_params: dict, metadata=None):
         """
         Конструктор
-        :param metadata:
         :param con_instance: экземпляр последовательного подключения
-        :param con_params: строка, которую высылать
+        :param con_params: словарь, который содержит:
+                           - pin - id (номер или имя) пина, на котором выставлять состояние
+                           - active_low - bool, является ли ноль активным
+        :param metadata: метаданные, доп. информация об объекте
         """
-        # FIXME: CN1
         check_con_type(con_instance)
 
         self.buffer_state = self.States.off
 
         super().__init__(con_instance, con_params, metadata)
+
+        if con_params.get("active_low", "") == "true":
+            self.INACTIVE = 1
+            self.ACTIVE = 0
+        else:
+            self.INACTIVE = 0
+            self.ACTIVE = 1
 
     def set_state(self, target_state):
         # FIXME: DH2
@@ -64,9 +72,15 @@ class Trigger(AbsTrigger):
         Отослать состояние из буффера в connection
         """
         if self.buffer_state == self.States.on:
-            self.con_instance.write(b"0\n")
+            pin_value = self.ACTIVE
         elif self.buffer_state == self.States.off:
-            self.con_instance.write(b"1\n")
+            pin_value = self.INACTIVE
+        else:
+            return
+
+        self.con_instance.write("{0} {1}\n".format(
+            self.con_params["pin"], pin_value).encode()
+        )
 
     def get_state(self):
         # FIXME: DH2
