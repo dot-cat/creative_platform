@@ -60,7 +60,7 @@
     "con_id": "SER2",
     "con_params": {
       "pin": 13,
-      "active_low": "false"
+      "active_low": "true"
     }
   }
 ]
