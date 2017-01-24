@@ -18,8 +18,13 @@ from dpl.subsystems.controller_listeners import ControllerListeners
 # CC8 - Consider Change 8
 #   Сейчас действия выполняются только над controllable'ами. Может разрешить выполнение
 #   действий и над другими объектами? Но тогда нужно реализовать TD2
+# CC19 - Consider Change 19
+#   Сделать функцию более опрятной
 # TD2 - To Do 2
 #   Сделать полноценную реализацию проверки разрешений на выполнение действия.
+# DH3 - Dirty Hack 4
+#   Вынести обработку core-параметров в отдельный блок, убрать полный перебор или сделать
+#   его резонным
 ##############################################################################################
 
 
@@ -34,7 +39,6 @@ class Controller(object):
         logging.debug("%s init started", self)
 
         self.model = Model("../configs")
-        self.model_data = self.model.get_config_data()
 
         self.controllables = ControllerControllables(self.model)
         self.handlers = ControllerHandlers(self.model, self.controllables)
@@ -68,5 +72,28 @@ class Controller(object):
 
         self.handlers.register_all_handlers(self.msg_hub)
 
+    # FIXME: DH4
+    def __get_api_params(self) -> dict:
+        core_params = self.model.get_category_config("core")
+
+        for item in core_params:
+            if item["module"] == "rest_api":
+                return item
+
+        return None
+
+    # FIXME: CC19
     def start_api(self):
-        api.run(host="vostro.lan", debug=True, port=10800, use_reloader=False)
+        api_params = self.__get_api_params()
+
+        if api_params is None:
+            logging.warning("REST API settings not found, "
+                            "falling back to default API settings")
+            api.run(debug=True, use_reloader=False)
+        else:
+            api.run(
+                host=api_params.get("host"),
+                debug=True,
+                port=api_params.get("port"),
+                use_reloader=False
+            )

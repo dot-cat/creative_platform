@@ -1,0 +1,7 @@
+[
+  {
+    "module": "rest_api",
+    "host": "localhost",
+    "port": 10800
+  }
+]
