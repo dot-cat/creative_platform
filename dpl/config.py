@@ -31,9 +31,9 @@ def get_dir_structure(dir_path: str) -> dict:
     return dir_structure
 
 
-class Model(object):
+class Config(object):
     """
-    Класс, который содержит представление всей системы и параметры всех компонентов
+    Класс, который содержит конфигурацию всей системы и параметры всех компонентов
     """
     def __init__(self, conf_dir: str):
         """

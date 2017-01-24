@@ -7,7 +7,7 @@ import dpl.api as api
 import dpl.utils.debug_refs as debug_refs
 from dpl.connections.gpio_chooser import GPIO
 from dpl.messages.message_hub import MessageHub
-from dpl.model import Model
+from dpl.config import Config
 from dpl.subsystems.controller_controllables import ControllerControllables
 from dpl.subsystems.controller_handlers import ControllerHandlers
 from dpl.subsystems.controller_listeners import ControllerListeners
@@ -38,7 +38,7 @@ class Controller(object):
 
         logging.debug("%s init started", self)
 
-        self.model = Model("../configs")
+        self.model = Config("../configs")
 
         self.controllables = ControllerControllables(self.model)
         self.handlers = ControllerHandlers(self.model, self.controllables)

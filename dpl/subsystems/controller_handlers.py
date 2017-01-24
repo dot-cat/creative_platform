@@ -1,11 +1,11 @@
 from dpl.handlers.handler_scenarios import HandlerScenarios, HandleActions, MessagePattern
 from dpl.handlers.user_request_handler import UserRequestHandler
 from dpl.messages.message_hub import MessageHub
-from dpl.model import Model
+from dpl.config import Config
 
 
 class ControllerHandlers(object):
-    def __init__(self, model: Model, controllables):
+    def __init__(self, model: Config, controllables):
         self.model = model
 
         self.__init_handlers(controllables)

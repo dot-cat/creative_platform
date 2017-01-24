@@ -20,11 +20,11 @@ from dpl.controllable_objects.abstract import AbsPlayer
 from dpl.controllable_objects.abstract import AbsSlider
 from dpl.controllable_objects.abstract import AbsTrigger
 from dpl.controllable_objects.factories import get_controllable_by_params
-from dpl.model import Model
+from dpl.config import Config
 
 
 class ControllerControllables(object):
-    def __init__(self, model: Model):
+    def __init__(self, model: Config):
         self.model = model
 
         self.__init_all_connections()

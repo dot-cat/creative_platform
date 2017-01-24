@@ -7,7 +7,7 @@ from flask import Flask, jsonify, abort, url_for, request
 
 from dpl.messages.abs_message import Message
 from dpl.messages.message_hub import MessageHub
-from dpl.model import Model
+from dpl.config import Config
 from dpl.subsystems.controller_controllables import ControllerControllables
 
 app = Flask(__name__)
@@ -23,7 +23,7 @@ def __print_headers():
 app.before_request(__print_headers)
 
 
-def init(arg_model: Model, arg_controllables: ControllerControllables, arg_message_hub: MessageHub):
+def init(arg_model: Config, arg_controllables: ControllerControllables, arg_message_hub: MessageHub):
     global model, controllables, message_hub
     model = arg_model
     controllables = arg_controllables
