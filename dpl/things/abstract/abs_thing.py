@@ -10,7 +10,7 @@
 from enum import Enum
 
 
-class AbsControllable(object):
+class AbsThing(object):
     """
     Базовый абстрактный класс для всех контролируемых объектов
     """

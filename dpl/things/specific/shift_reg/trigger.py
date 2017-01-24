@@ -11,7 +11,7 @@
 
 
 from dpl.connections.shift_reg_buffered import ShiftRegBuffered
-from dpl.controllable_objects.abstract import AbsTrigger
+from dpl.things.abstract import AbsTrigger
 
 
 def check_shift_reg_type(test_obj):

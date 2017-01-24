@@ -1,4 +1,4 @@
-from dpl.controllable_objects.specific.players.mpd_player import (
+from dpl.things.specific.players.mpd_player import (
     MPDPlayer,
     MPDClientConnection,
     AbsPlayer

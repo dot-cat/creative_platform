@@ -8,7 +8,7 @@ from flask import Flask, jsonify, abort, url_for, request
 from dpl.core.config import Config
 from dpl.core.message_hub import MessageHub
 from dpl.messages.abs_message import Message
-from dpl.subsystems.controller_controllables import ControllerControllables
+from dpl.subsystems.controller_things import ControllerThings
 
 app = Flask(__name__)
 
@@ -19,9 +19,9 @@ def __print_headers():
 app.before_request(__print_headers)
 
 
-def init(arg_model: Config, arg_controllables: ControllerControllables, arg_message_hub: MessageHub):
+def init(arg_model: Config, arg_things: ControllerThings, arg_message_hub: MessageHub):
     app.config["model"] = arg_model
-    app.config["controllables"] = arg_controllables
+    app.config["things"] = arg_things
     app.config["msg_hub"] = arg_message_hub
 
 
@@ -56,7 +56,7 @@ def get_room(room_id):
 
 @app.route('/objects/', methods=['GET'])
 def get_objects():
-    all_info = app.config["controllables"].get_all_objects_info()
+    all_info = app.config["things"].get_all_objects_info()
     return jsonify({'objects': all_info})
 
 
@@ -65,7 +65,7 @@ def get_object(object_id):
     object_item = None
 
     try:
-        object_item = app.config["controllables"].get_object_info(object_id)
+        object_item = app.config["things"].get_object_info(object_id)
     except ValueError as e:
         if e.args[0] == "id not found":
             abort(404)
@@ -80,7 +80,7 @@ def get_current_track(object_id):
     object_item = None
 
     try:
-        object_item = app.config["controllables"].do_action(object_id, "get_current_track")
+        object_item = app.config["things"].do_action(object_id, "get_current_track")
     except ValueError as e:
         if e.args[0] == "id not found":
             abort(404)

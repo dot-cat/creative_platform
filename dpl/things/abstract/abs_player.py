@@ -1,10 +1,10 @@
 from enum import Enum
 import logging
 
-from dpl.controllable_objects.abstract import AbsControllable
+from dpl.things.abstract import AbsThing
 
 
-class AbsPlayer(AbsControllable):
+class AbsPlayer(AbsThing):
     """
     Плеер. Объект, который проигрывает медиафайлы
     """

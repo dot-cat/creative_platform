@@ -8,7 +8,7 @@ import dpl.utils.debug_refs as debug_refs
 from dpl.connections.gpio_chooser import GPIO
 from dpl.core.config import Config
 from dpl.core.message_hub import MessageHub
-from dpl.subsystems.controller_controllables import ControllerControllables
+from dpl.subsystems.controller_things import ControllerThings
 from dpl.subsystems.controller_handlers import ControllerHandlers
 from dpl.subsystems.controller_listeners import ControllerListeners
 
@@ -16,7 +16,7 @@ from dpl.subsystems.controller_listeners import ControllerListeners
 ##############################################################################################
 # FIXME List:
 # CC8 - Consider Change 8
-#   Сейчас действия выполняются только над controllable'ами. Может разрешить выполнение
+#   Сейчас действия выполняются только над Thing'ами. Может разрешить выполнение
 #   действий и над другими объектами? Но тогда нужно реализовать TD2
 # CC19 - Consider Change 19
 #   Сделать функцию более опрятной
@@ -40,11 +40,11 @@ class Controller(object):
 
         self.model = Config("../configs")
 
-        self.controllables = ControllerControllables(self.model)
-        self.handlers = ControllerHandlers(self.model, self.controllables)
+        self.things = ControllerThings(self.model)
+        self.handlers = ControllerHandlers(self.model, self.things)
         self.__init_msg_hub()
         self.listeners = ControllerListeners(self.msg_hub)
-        api.init(self.model, self.controllables, self.msg_hub)
+        api.init(self.model, self.things, self.msg_hub)
 
         logging.debug("%s init finished", self)
 
@@ -58,12 +58,12 @@ class Controller(object):
         debug_refs.print_referrers(self.listeners)
         debug_refs.print_referrers(self.msg_hub)
         debug_refs.print_referrers(self.handlers)
-        debug_refs.print_referrers(self.controllables)
+        debug_refs.print_referrers(self.things)
 
         del self.listeners
         del self.msg_hub
         del self.handlers
-        del self.controllables
+        del self.things
 
         logging.debug("%s destruction finished", self)
 

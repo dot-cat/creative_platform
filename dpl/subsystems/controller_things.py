@@ -15,23 +15,23 @@
 import logging
 
 from dpl.connections.factories import get_connection_by_config
-from dpl.controllable_objects.abstract import AbsControllable
-from dpl.controllable_objects.abstract import AbsPlayer
-from dpl.controllable_objects.abstract import AbsSlider
-from dpl.controllable_objects.abstract import AbsTrigger
-from dpl.controllable_objects.factories import get_controllable_by_params
+from dpl.things.abstract import AbsThing
+from dpl.things.abstract import AbsPlayer
+from dpl.things.abstract import AbsSlider
+from dpl.things.abstract import AbsTrigger
+from dpl.things.factories import get_things_by_params
 from dpl.core.config import Config
 
 
-class ControllerControllables(object):
+class ControllerThings(object):
     def __init__(self, model: Config):
         self.model = model
 
         self.__init_all_connections()
-        self.__init_all_controllables()
+        self.__init_all_things()
 
     def __del__(self):
-        self.all_controllables.clear()
+        self.all_things.clear()
         self.all_connections.clear()
 
     def __init_all_connections(self):
@@ -45,10 +45,10 @@ class ControllerControllables(object):
             if new_conn is not None:
                 self.all_connections[item["id"]] = new_conn
 
-    def __init_all_controllables(self):
-        self.all_controllables = dict()
+    def __init_all_things(self):
+        self.all_things = dict()
 
-        for item in self.model.get_category_config("controllables"):
+        for item in self.model.get_category_config("things"):
             item_id = item["id"]
             con_id = item["con_id"]
 
@@ -64,19 +64,19 @@ class ControllerControllables(object):
 
             metadata = {"description": item["description"], "type": item["type"]}
 
-            new_object = get_controllable_by_params(con_instance, item["con_params"], metadata)
+            new_object = get_things_by_params(con_instance, item["con_params"], metadata)
 
             if new_object is not None:
-                self.all_controllables[item_id] = new_object
+                self.all_things[item_id] = new_object
 
-    def __resolve_obj_by_id(self, obj_id: str) -> AbsControllable:
+    def __resolve_obj_by_id(self, obj_id: str) -> AbsThing:
         if not isinstance(obj_id, str):
             raise ValueError('Value must be a string literal')
 
-        if obj_id not in self.all_controllables:
+        if obj_id not in self.all_things:
             raise ValueError('id not found')
 
-        return self.all_controllables[obj_id]
+        return self.all_things[obj_id]
 
     def toggle_controllable(self, obj_id: str):
         """
@@ -99,10 +99,10 @@ class ControllerControllables(object):
             return ["on", "off", "toggle"]
         elif isinstance(obj_alias, AbsPlayer):
             return ["play", "stop", "pause", "toggle", "prev", "next"]
-        elif isinstance(obj_alias, AbsControllable):
+        elif isinstance(obj_alias, AbsThing):
             return ["toggle"]
         else:
-            raise RuntimeError("Resolved object is not controllable: {0}".format(obj_alias))
+            raise RuntimeError("Resolved object is not a thing: {0}".format(obj_alias))
 
     def check_action_permitted(self, obj_id: str, action: str, action_params):
         # FIXME: TD2, Проверка прав на выполнение действия
@@ -132,7 +132,7 @@ class ControllerControllables(object):
         except AttributeError:
             raise
 
-    def __get_resolved_object_info(self, obj_id: str, obj: AbsControllable) -> dict:  # Fixme: CC13
+    def __get_resolved_object_info(self, obj_id: str, obj: AbsThing) -> dict:  # Fixme: CC13
         """
         Извлечь инфрмацию об объекте
         :param obj_id: ID объекта
@@ -173,7 +173,7 @@ class ControllerControllables(object):
         """
         info_list = list()
 
-        for obj_id, obj in self.all_controllables.items():
+        for obj_id, obj in self.all_things.items():
             info_list.append(self.__get_resolved_object_info(obj_id, obj))
 
         return info_list

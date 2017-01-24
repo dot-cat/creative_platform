@@ -1,7 +1,7 @@
 import unittest
 import time
 
-from dpl.controllable_objects.specific.players.mpd_player import MPDPlayer
+from dpl.things.specific.players.mpd_player import MPDPlayer
 from dpl.connections.mpd_client import MPDClientConnection
 
 

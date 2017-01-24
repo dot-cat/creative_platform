@@ -1,7 +1,7 @@
 ##############################################################################################
 # FIXME List:
 # CC3 - Consider Change 3
-#   См. файл controllable_objects/specific/trigger.py
+#   См. файл things/specific/trigger.py
 # CC4 - Consider Change 4
 #   Проверка на тип толком и не нужна: наличие полей pos, neg и их типы проверяются и так.
 # CC5 - Consider Change 5
@@ -14,7 +14,7 @@
 import time
 
 from dpl.connections.shift_reg_buffered import ShiftRegBuffered
-from dpl.controllable_objects.abstract import AbsSlider
+from dpl.things.abstract import AbsSlider
 
 
 def check_shift_reg_type(test_obj):

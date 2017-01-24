@@ -1,14 +1,14 @@
 import logging
 
-from dpl.controllable_objects.abstract import AbsControllable
-from dpl.controllable_objects.factories import (
+from dpl.things.abstract import AbsThing
+from dpl.things.factories import (
     get_slider_by_params,
     get_trigger_by_params,
     get_player_by_params
 )
 
 
-def get_controllable_by_params(con_instance, con_params, metadata) -> AbsControllable:
+def get_things_by_params(con_instance, con_params, metadata) -> AbsThing:
     item_type = metadata["type"]
 
     if item_type == "door" or item_type == "sunblind":

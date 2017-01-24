@@ -5,15 +5,15 @@ from dpl.handlers.user_request_handler import UserRequestHandler
 
 
 class ControllerHandlers(object):
-    def __init__(self, model: Config, controllables):
+    def __init__(self, model: Config, things):
         self.model = model
 
-        self.__init_handlers(controllables)
+        self.__init_handlers(things)
 
     def __del__(self):
         self.all_handlers.clear()
 
-    def __init_handlers(self, controllables):
+    def __init_handlers(self, things):
         self.all_handlers = dict()
 
         handler_data_list = self.model.get_category_config("handlers")
@@ -29,12 +29,12 @@ class ControllerHandlers(object):
 
             if pattern.type == "user_request":
                 self.all_handlers[h_id] = UserRequestHandler(
-                    pattern, controllables
+                    pattern, things
                 )
             else:
                 hconfig = HandleActions()
                 hconfig.add_action(**item["then"])
-                self.all_handlers[h_id] = HandlerScenarios(pattern, controllables, hconfig)
+                self.all_handlers[h_id] = HandlerScenarios(pattern, things, hconfig)
 
     def register_all_handlers(self, msg_hub: MessageHub):
         for handler in self.all_handlers.values():
