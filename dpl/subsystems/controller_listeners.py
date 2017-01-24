@@ -1,9 +1,9 @@
 import logging
 import os.path
 
+from dpl.core.message_hub import MessageHub
 from dpl.listeners.listener_cli import ListenerCli
 from dpl.listeners.listener_serial import ListenerSerial
-from dpl.messages.message_hub import MessageHub
 
 
 class ControllerListeners(object):

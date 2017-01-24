@@ -1,10 +1,9 @@
-import unittest
-import tempfile
-
-from dpl.config import Config
-
-
 import os
+import tempfile
+import unittest
+
+from dpl.core.config import Config
+
 temp_dir = tempfile.TemporaryDirectory()
 temp_dir_path = temp_dir.name
 

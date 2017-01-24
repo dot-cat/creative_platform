@@ -1,11 +1,11 @@
 import unittest
-from unittest.mock import Mock
 from copy import copy
+from unittest.mock import Mock
 
-from dpl.messages.message_hub import MessageHub
+from dpl.core.message_hub import MessageHub
 from dpl.handlers.abs_handler import AbsHandler
-from dpl.messages.message_pattern import MessagePattern
 from dpl.messages.abs_message import Message, time
+from dpl.messages.message_pattern import MessagePattern
 
 msg_pattern_button = MessagePattern(
     "button",

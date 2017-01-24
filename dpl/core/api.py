@@ -5,9 +5,9 @@ import time
 
 from flask import Flask, jsonify, abort, url_for, request
 
+from dpl.core.config import Config
+from dpl.core.message_hub import MessageHub
 from dpl.messages.abs_message import Message
-from dpl.messages.message_hub import MessageHub
-from dpl.config import Config
 from dpl.subsystems.controller_controllables import ControllerControllables
 
 app = Flask(__name__)

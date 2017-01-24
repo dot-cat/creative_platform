@@ -20,7 +20,7 @@ from dpl.controllable_objects.abstract import AbsPlayer
 from dpl.controllable_objects.abstract import AbsSlider
 from dpl.controllable_objects.abstract import AbsTrigger
 from dpl.controllable_objects.factories import get_controllable_by_params
-from dpl.config import Config
+from dpl.core.config import Config
 
 
 class ControllerControllables(object):

@@ -4,7 +4,7 @@ import logging
 
 logging.basicConfig(level=logging.DEBUG)
 
-from dpl.controller import Controller
+from dpl.core.controller import Controller
 
 
 if __name__ == "__main__":

@@ -1,8 +1,8 @@
 import logging
 
+from dpl.core.message_hub import MessageHub
 from dpl.listeners.listener import Listener
 from dpl.messages.abs_message import Message, time
-from dpl.messages.message_hub import MessageHub
 
 
 class ListenerCli(Listener):

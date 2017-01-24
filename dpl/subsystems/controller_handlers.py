@@ -1,7 +1,7 @@
+from dpl.core.config import Config
+from dpl.core.message_hub import MessageHub
 from dpl.handlers.handler_scenarios import HandlerScenarios, HandleActions, MessagePattern
 from dpl.handlers.user_request_handler import UserRequestHandler
-from dpl.messages.message_hub import MessageHub
-from dpl.config import Config
 
 
 class ControllerHandlers(object):
