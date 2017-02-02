@@ -5,7 +5,7 @@ from dpl.connections.shift_reg_buffered import ShiftRegBuffered
 from dpl.connections.shift_reg_gpio import ShiftRegGPIO
 
 
-def get_connection_by_config(config) -> object:
+def get_connection_by_config(config: dict) -> object:
     if config["con_type"] == "shiftreg":
         return ShiftRegBuffered(
             ShiftRegGPIO(**config["con_params"])

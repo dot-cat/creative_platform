@@ -1,7 +1,6 @@
 from dpl.core.config import Config
 from dpl.core.message_hub import MessageHub
-from dpl.handlers.handler_scenarios import HandlerScenarios, HandleActions, MessagePattern
-from dpl.handlers.user_request_handler import UserRequestHandler
+from dpl.handlers.factories import get_handler_by_config
 
 
 class ControllerHandlers(object):
@@ -19,22 +18,7 @@ class ControllerHandlers(object):
         handler_data_list = self.model.get_category_config("handlers")
 
         for item in handler_data_list:
-            h_id = item["id"]
-            h_if = item["if"]
-            pattern = MessagePattern(
-                msg_type=h_if["type"],
-                source_list=h_if["source_list"],
-                event_list=h_if["event_list"]
-            )
-
-            if pattern.type == "user_request":
-                self.all_handlers[h_id] = UserRequestHandler(
-                    pattern, things
-                )
-            else:
-                hconfig = HandleActions()
-                hconfig.add_action(**item["then"])
-                self.all_handlers[h_id] = HandlerScenarios(pattern, things, hconfig)
+            self.all_handlers[item["id"]] = get_handler_by_config(item, things)
 
     def register_all_handlers(self, msg_hub: MessageHub):
         for handler in self.all_handlers.values():
