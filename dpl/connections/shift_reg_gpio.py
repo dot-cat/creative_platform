@@ -5,6 +5,8 @@ from collections import namedtuple
 from dpl.connections.abs_shift_reg import AbsShiftRegister
 from dpl.connections.gpio_chooser import GPIO as GPIO
 
+DELAY = 0.0
+
 
 def pulse(pin):
     """
@@ -13,9 +15,9 @@ def pulse(pin):
     :return: none
     """
     GPIO.output(pin, GPIO.LOW)  # подаем на пин логичиеский 0
-    time.sleep(0.01)
+    time.sleep(DELAY)
     GPIO.output(pin, GPIO.HIGH)  # подаем на пин логичискую 1
-    time.sleep(0.01)
+    time.sleep(DELAY)
     GPIO.output(pin, GPIO.LOW)  # подаем на пин логичиеский 0
 
 
@@ -117,7 +119,7 @@ class ShiftRegGPIO(AbsShiftRegister):
         :return: none
         """
         GPIO.output(self.ports.sclr, GPIO.LOW)
-        time.sleep(0.01)
+        time.sleep(DELAY)
         GPIO.output(self.ports.sclr, GPIO.HIGH)
         return
 
