@@ -14,7 +14,7 @@
 
 import logging
 
-from dpl.connections.factories import get_connection_by_config
+from dpl.connections.connection_builder import get_connection_by_config
 from dpl.things.abstract import AbsThing
 from dpl.things.abstract import AbsPlayer
 from dpl.things.abstract import AbsSlider
