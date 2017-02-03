@@ -4,7 +4,7 @@ from unittest.mock import Mock
 
 from dpl.core.message_hub import MessageHub
 from dpl.handlers.abs_handler import AbsHandler
-from dpl.messages.abs_message import Message, time
+from dpl.messages.message import Message, time
 from dpl.messages.message_pattern import MessagePattern
 
 msg_pattern_button = MessagePattern(

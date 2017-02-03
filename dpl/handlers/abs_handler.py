@@ -6,7 +6,7 @@
 
 from copy import copy
 
-from dpl.messages.abs_message import Message
+from dpl.messages.message import Message
 from dpl.messages.message_pattern import MessagePattern
 
 
