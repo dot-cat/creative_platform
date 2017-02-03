@@ -5,7 +5,7 @@
 ##############################################################################################
 
 
-from dpl.handlers.abs_handler import AbsHandler, MessagePattern, Message
+from dpl.core.handlers.abs_handler import AbsHandler, MessagePattern, Message
 from dpl.subsystems.controller_things import ControllerThings
 
 

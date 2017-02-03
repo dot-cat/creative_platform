@@ -14,7 +14,7 @@ import logging
 from enum import Enum
 from threading import Thread
 
-from dpl.handlers.abs_handler import AbsHandler
+from dpl.core.handlers.abs_handler import AbsHandler
 
 
 class Operation(Enum):

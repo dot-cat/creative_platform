@@ -6,8 +6,9 @@
 
 from copy import copy
 
-from dpl.messages.message import Message
-from dpl.messages.message_pattern import MessagePattern
+from dpl.core.messages.message_pattern import MessagePattern
+
+from dpl.core.messages.message import Message
 
 
 class AbsHandler(object):

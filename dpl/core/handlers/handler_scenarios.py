@@ -1,5 +1,5 @@
-from dpl.handlers.abs_handler import AbsHandler, Message, MessagePattern
-from dpl.handlers.handle_actions import HandleActions
+from dpl.core.handlers.abs_handler import AbsHandler, Message, MessagePattern
+from dpl.core.handlers.handle_actions import HandleActions
 
 
 class HandlerScenarios(AbsHandler):

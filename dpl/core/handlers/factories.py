@@ -1,7 +1,7 @@
-from dpl.handlers.user_request_handler import UserRequestHandler
-from dpl.handlers.handle_actions import HandleActions
-from dpl.handlers.handler_scenarios import HandlerScenarios
-from dpl.messages.message_pattern import MessagePattern
+from dpl.core.handlers.handle_actions import HandleActions
+from dpl.core.handlers.handler_scenarios import HandlerScenarios
+from dpl.core.handlers.user_request_handler import UserRequestHandler
+from dpl.core.messages.message_pattern import MessagePattern
 
 
 def get_handler_by_config(config: dict, things: object) -> object:

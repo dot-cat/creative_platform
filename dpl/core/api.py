@@ -7,7 +7,7 @@ from flask import Flask, jsonify, abort, url_for, request
 
 from dpl.core.config import Config
 from dpl.core.message_hub import MessageHub
-from dpl.messages.message import Message
+from dpl.core.messages.message import Message
 from dpl.subsystems.controller_things import ControllerThings
 
 app = Flask(__name__)

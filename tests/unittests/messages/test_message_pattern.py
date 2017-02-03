@@ -1,7 +1,7 @@
 import unittest
 from copy import copy
 
-from dpl.messages.message_pattern import MessagePattern
+from dpl.core.messages.message_pattern import MessagePattern
 
 valid_message_pattern_params = {
     "msg_type": "button",

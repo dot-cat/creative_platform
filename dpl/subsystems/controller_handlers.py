@@ -1,6 +1,6 @@
 from dpl.core.config import Config
+from dpl.core.handlers.factories import get_handler_by_config
 from dpl.core.message_hub import MessageHub
-from dpl.handlers.factories import get_handler_by_config
 
 
 class ControllerHandlers(object):
