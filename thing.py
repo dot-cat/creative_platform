@@ -8,6 +8,7 @@
 ##############################################################################################
 
 from enum import Enum
+from dpl.core.connections import Connection
 
 
 class Thing(object):
@@ -79,3 +80,20 @@ class Thing(object):
 
     def get_metadata(self):
         return self.metadata
+
+
+class ThingFactory(object):
+    """
+    Фабрика вещей. Абстрактный класс, который содержит
+    единственный метод build
+    """
+    @staticmethod
+    def build(con_instance, con_params: dict, metadata: dict=None) -> Thing:
+        """
+        Метод, который возвращает готовый объект типа Thing,
+        построенный на основе заданной конфигурации
+        :param con_instance: экземпляр connection'а
+        :param con_params: параметры доступа к connection'у
+        :param metadata: метеданные (имя, описание, тип объекта)
+        """
+        raise NotImplementedError
