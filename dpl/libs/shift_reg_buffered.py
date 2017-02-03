@@ -1,7 +1,7 @@
 import logging
 import threading
 
-from dpl.specific.connections.abs_shift_reg import AbsShiftRegister
+from dpl.libs.abs_shift_reg import AbsShiftRegister
 
 
 class ShiftRegBuffered(AbsShiftRegister):

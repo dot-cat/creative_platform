@@ -1,7 +1,8 @@
 import time
 
-from dpl.specific.connections.gpio_chooser import GPIO
-from dpl.specific.connections.shift_reg_gpio import ShiftRegGPIO
+from dpl.libs.gpio_chooser import GPIO
+
+from dpl.libs.shift_reg_gpio import ShiftRegGPIO
 from dpl.utils.get_user_answer import get_user_answer
 
 

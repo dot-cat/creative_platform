@@ -23,10 +23,10 @@ from dpl.core.things import Trigger
 from dpl.core.things import get_thing_by_params
 
 # noinspection PyUnresolvedReferences
-import dpl.specific.connections.all_enabled
+import dpl.specific.connections
 
 # noinspection PyUnresolvedReferences
-import dpl.specific.things.all_enabled
+import dpl.specific.things
 
 
 class ControllerThings(object):
