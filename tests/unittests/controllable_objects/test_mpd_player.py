@@ -2,7 +2,7 @@ import time
 import unittest
 
 from dpl.specific.connections.mpd_client import MPDClientConnection
-from dpl.things.specific.players.mpd_player import MPDPlayer
+from dpl.specific.things.players import MPDPlayer
 
 
 @unittest.skip("Not implemented, mocking needed")

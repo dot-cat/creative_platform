@@ -13,8 +13,8 @@
 
 import time
 
+from dpl.core.things import AbsSlider
 from dpl.specific.connections.shift_reg_buffered import ShiftRegBuffered
-from dpl.things.abstract import AbsSlider
 
 
 def check_shift_reg_type(test_obj):

@@ -1,7 +1,6 @@
 from enum import Enum
-import logging
 
-from dpl.things.abstract import AbsThing
+from dpl.core.things import AbsThing
 
 
 class AbsPlayer(AbsThing):

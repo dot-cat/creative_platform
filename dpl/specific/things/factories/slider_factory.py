@@ -1,4 +1,5 @@
-from dpl.things.specific.shift_reg.slider import AbsSlider, Slider, ShiftRegBuffered
+from dpl.core.things import AbsSlider
+from dpl.specific.things.shift_reg.slider import Slider, ShiftRegBuffered
 
 
 def get_slider_by_params(con_instance, con_params, metadata=None) -> AbsSlider:

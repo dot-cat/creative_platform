@@ -10,8 +10,8 @@
 ##############################################################################################
 
 
+from dpl.core.things import AbsTrigger
 from dpl.specific.connections.shift_reg_buffered import ShiftRegBuffered
-from dpl.things.abstract import AbsTrigger
 
 
 def check_shift_reg_type(test_obj):

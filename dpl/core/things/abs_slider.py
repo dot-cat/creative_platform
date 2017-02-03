@@ -9,7 +9,7 @@
 
 from enum import Enum
 
-from dpl.things.abstract import AbsThing
+from dpl.core.things import AbsThing
 
 
 class AbsSlider(AbsThing):

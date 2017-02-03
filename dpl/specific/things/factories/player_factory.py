@@ -1,7 +1,8 @@
-from dpl.things.specific.players.mpd_player import (
+from dpl.core.things import AbsPlayer
+
+from dpl.specific.things.players import (
     MPDPlayer,
-    MPDClientConnection,
-    AbsPlayer
+    MPDClientConnection
 )
 
 

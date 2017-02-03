@@ -15,8 +15,8 @@
 import contextlib
 import logging
 
+from dpl.core.things import AbsPlayer
 from dpl.specific.connections.mpd_client import MPDClientConnection
-from dpl.things.abstract.abs_player import AbsPlayer
 
 
 class MPDPlayer(AbsPlayer):

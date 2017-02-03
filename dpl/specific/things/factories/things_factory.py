@@ -1,7 +1,7 @@
 import logging
 
-from dpl.things.abstract import AbsThing
-from dpl.things.factories import (
+from dpl.core.things import AbsThing
+from dpl.specific.things.factories import (
     get_slider_by_params,
     get_trigger_by_params,
     get_player_by_params
