@@ -58,9 +58,8 @@ class ControllerThings(object):
             item_id = item["id"]
             con_id = item["con_id"]
 
-            try:
-                con_instance = self.all_connections[con_id]
-            except KeyError:
+            con_instance = self.all_connections.get(con_id, None)
+            if con_instance is None:
                 logging.warning(
                     "Unable to init component: %s. "
                     "Connection %s is unavailable",
