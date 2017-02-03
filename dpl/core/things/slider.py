@@ -9,10 +9,10 @@
 
 from enum import Enum
 
-from dpl.core.things import AbsThing
+from dpl.core.things import Thing
 
 
-class AbsSlider(AbsThing):
+class Slider(Thing):
     """
     Объект с четырьмя состояниями: закрыто, открывается, открыто, открывается
     """

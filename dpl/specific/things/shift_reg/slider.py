@@ -13,7 +13,7 @@
 
 import time
 
-from dpl.core.things import AbsSlider
+from dpl.core.things import Slider
 from dpl.specific.connections.shift_reg_buffered import ShiftRegBuffered
 
 
@@ -22,7 +22,7 @@ def check_shift_reg_type(test_obj):
         raise ValueError('type of con_instance value must be a ShiftRegBuffered')
 
 
-class Slider(AbsSlider):
+class ShiftRegSlider(Slider):
     """
     Объект с четырьмя состояниями: закрыто, открывается, открыто, открывается.
     connections'ом выступает сдвиговый регистр

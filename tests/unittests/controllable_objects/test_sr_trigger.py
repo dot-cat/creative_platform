@@ -3,7 +3,7 @@ import unittest
 from unittest.mock import Mock
 
 from dpl.specific.connections.abs_shift_reg import AbsShiftRegister
-from dpl.specific.things.shift_reg.trigger import Trigger, ShiftRegBuffered
+from dpl.specific.things.shift_reg.trigger import ShiftRegTrigger, ShiftRegBuffered
 
 sr_base = Mock(spec_set=AbsShiftRegister)
 sr_base.get_capacity.return_value = 8
@@ -17,42 +17,42 @@ logging.debug('test_sr_trigger: {0}'.format(sr))
 
 class TestTriggerInit(unittest.TestCase): 
     def test_init_normal(self):
-        Trigger(sr, tr_bit_pos)
+        ShiftRegTrigger(sr, tr_bit_pos)
 
     def test_init_invalid_connection_type(self):
         with self.assertRaisesRegex(ValueError, 'type of con_instance value must be a ShiftRegBuffered'):
-            Trigger('str', tr_bit_pos)
+            ShiftRegTrigger('str', tr_bit_pos)
 
     def test_init_invalid_pin(self):
         with self.assertRaisesRegex(ValueError, 'Bit number must be an integer'):
-            Trigger(sr, 'str')
+            ShiftRegTrigger(sr, 'str')
 
         with self.assertRaisesRegex(ValueError, 'Bit number must be positive or zero'):
-            Trigger(sr, -1)
+            ShiftRegTrigger(sr, -1)
 
         with self.assertRaisesRegex(ValueError, 'Bit position can\'t be bigger than '
                                                 'register capacity \({0}\)'.format(sr.get_capacity())):
-            Trigger(sr, sr.get_capacity())
+            ShiftRegTrigger(sr, sr.get_capacity())
 
         with self.assertRaisesRegex(ValueError, 'Bit position can\'t be bigger than '
                                                 'register capacity \({0}\)'.format(sr.get_capacity())):
-            Trigger(sr, sr.get_capacity() + 1)
+            ShiftRegTrigger(sr, sr.get_capacity() + 1)
 
 
 class TestTriggerMethods(unittest.TestCase):
     def test_get_init_state(self):
-        trig = Trigger(sr, tr_bit_pos)
+        trig = ShiftRegTrigger(sr, tr_bit_pos)
 
         self.assertEqual(trig.get_state(), trig.States.off)
 
     def test_set_invalid_state(self):
-        trig = Trigger(sr, tr_bit_pos)
+        trig = ShiftRegTrigger(sr, tr_bit_pos)
 
         with self.assertRaisesRegex(ValueError, 'Type of state argument must be a Trigger.State'):
             trig.set_state('str')
 
     def test_set_state_on(self):
-        trig = Trigger(sr, tr_bit_pos)
+        trig = ShiftRegTrigger(sr, tr_bit_pos)
 
         trig.set_state(trig.States.on)
 
@@ -61,7 +61,7 @@ class TestTriggerMethods(unittest.TestCase):
         self.assertEqual(sr.get_buf_bit(tr_bit_pos), 1)
 
     def test_set_state_off(self):
-        trig = Trigger(sr, tr_bit_pos)
+        trig = ShiftRegTrigger(sr, tr_bit_pos)
 
         trig.set_state(trig.States.off)
 
@@ -70,7 +70,7 @@ class TestTriggerMethods(unittest.TestCase):
         self.assertEqual(sr.get_buf_bit(tr_bit_pos), 0)
 
     def test_set_on(self):
-        trig = Trigger(sr, tr_bit_pos)
+        trig = ShiftRegTrigger(sr, tr_bit_pos)
 
         trig.set_on()
 
@@ -79,7 +79,7 @@ class TestTriggerMethods(unittest.TestCase):
         self.assertEqual(sr.get_buf_bit(tr_bit_pos), 1)
 
     def test_set_off(self):
-        trig = Trigger(sr, tr_bit_pos)
+        trig = ShiftRegTrigger(sr, tr_bit_pos)
 
         trig.set_off()
 
@@ -88,7 +88,7 @@ class TestTriggerMethods(unittest.TestCase):
         self.assertEqual(sr.get_buf_bit(tr_bit_pos), 0)
 
     def test_toggle(self):
-        trig = Trigger(sr, tr_bit_pos)
+        trig = ShiftRegTrigger(sr, tr_bit_pos)
 
         trig.set_off()
 

@@ -15,11 +15,11 @@
 import contextlib
 import logging
 
-from dpl.core.things import AbsPlayer
+from dpl.core.things import Player
 from dpl.specific.connections.mpd_client import MPDClientConnection
 
 
-class MPDPlayer(AbsPlayer):
+class MPDPlayer(Player):
     def __init__(self, con_instance: MPDClientConnection, con_params=None, metadata=None):
         """
         Конструктор, копия конструктора из базового класса

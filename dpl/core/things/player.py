@@ -1,9 +1,9 @@
 from enum import Enum
 
-from dpl.core.things import AbsThing
+from dpl.core.things import Thing
 
 
-class AbsPlayer(AbsThing):
+class Player(Thing):
     """
     Плеер. Объект, который проигрывает медиафайлы
     """

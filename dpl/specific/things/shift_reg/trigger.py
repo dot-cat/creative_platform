@@ -10,7 +10,7 @@
 ##############################################################################################
 
 
-from dpl.core.things import AbsTrigger
+from dpl.core.things import Trigger
 from dpl.specific.connections.shift_reg_buffered import ShiftRegBuffered
 
 
@@ -19,7 +19,7 @@ def check_shift_reg_type(test_obj):
         raise ValueError('type of con_instance value must be a ShiftRegBuffered')
 
 
-class Trigger(AbsTrigger):
+class ShiftRegTrigger(Trigger):
     """
     Объект с двумя состояниями: включено и выключено,
     connections'ом выступает сдвиговый регистр

@@ -16,10 +16,10 @@ import logging
 
 from dpl.core.config import Config
 from dpl.core.connections import get_connection_by_config
-from dpl.core.things import AbsPlayer
-from dpl.core.things import AbsSlider
-from dpl.core.things import AbsThing
-from dpl.core.things import AbsTrigger
+from dpl.core.things import Player
+from dpl.core.things import Slider
+from dpl.core.things import Thing
+from dpl.core.things import Trigger
 from dpl.specific.things.factories import get_things_by_params
 
 import dpl.specific.connections.all_enabled
@@ -71,7 +71,7 @@ class ControllerThings(object):
             if new_object is not None:
                 self.all_things[item_id] = new_object
 
-    def __resolve_obj_by_id(self, obj_id: str) -> AbsThing:
+    def __resolve_obj_by_id(self, obj_id: str) -> Thing:
         if not isinstance(obj_id, str):
             raise ValueError('Value must be a string literal')
 
@@ -95,13 +95,13 @@ class ControllerThings(object):
     def get_permitted_actions(self, obj_id: str) -> list:  # Fixme: TD3
         obj_alias = self.__resolve_obj_by_id(obj_id)
 
-        if isinstance(obj_alias, AbsSlider):
+        if isinstance(obj_alias, Slider):
             return ["open", "close", "toggle"]
-        elif isinstance(obj_alias, AbsTrigger):
+        elif isinstance(obj_alias, Trigger):
             return ["on", "off", "toggle"]
-        elif isinstance(obj_alias, AbsPlayer):
+        elif isinstance(obj_alias, Player):
             return ["play", "stop", "pause", "toggle", "prev", "next"]
-        elif isinstance(obj_alias, AbsThing):
+        elif isinstance(obj_alias, Thing):
             return ["toggle"]
         else:
             raise RuntimeError("Resolved object is not a thing: {0}".format(obj_alias))
@@ -134,7 +134,7 @@ class ControllerThings(object):
         except AttributeError:
             raise
 
-    def __get_resolved_object_info(self, obj_id: str, obj: AbsThing) -> dict:  # Fixme: CC13
+    def __get_resolved_object_info(self, obj_id: str, obj: Thing) -> dict:  # Fixme: CC13
         """
         Извлечь инфрмацию об объекте
         :param obj_id: ID объекта

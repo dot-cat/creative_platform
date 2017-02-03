@@ -1,4 +1,4 @@
-from dpl.core.things import AbsPlayer
+from dpl.core.things import Player
 
 from dpl.specific.things.players import (
     MPDPlayer,
@@ -6,7 +6,7 @@ from dpl.specific.things.players import (
 )
 
 
-def get_player_by_params(con_instance, con_params, metadata=None) -> AbsPlayer:
+def get_player_by_params(con_instance, con_params, metadata=None) -> Player:
     if isinstance(con_instance, MPDClientConnection):
         return MPDPlayer(con_instance, con_params, metadata)
 

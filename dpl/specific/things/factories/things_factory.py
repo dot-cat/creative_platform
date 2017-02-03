@@ -1,6 +1,6 @@
 import logging
 
-from dpl.core.things import AbsThing
+from dpl.core.things import Thing
 from dpl.specific.things.factories import (
     get_slider_by_params,
     get_trigger_by_params,
@@ -8,7 +8,7 @@ from dpl.specific.things.factories import (
 )
 
 
-def get_things_by_params(con_instance, con_params, metadata) -> AbsThing:
+def get_things_by_params(con_instance, con_params, metadata) -> Thing:
     item_type = metadata["type"]
 
     if item_type == "door" or item_type == "sunblind":
