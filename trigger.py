@@ -6,10 +6,10 @@
 
 import logging
 
-from dpl.core.things import AbsThing
+from dpl.core.things import Thing
 
 
-class AbsTrigger(AbsThing):
+class Trigger(Thing):
     """
     Объект с двумя состояниями: включено и выключено
     """
