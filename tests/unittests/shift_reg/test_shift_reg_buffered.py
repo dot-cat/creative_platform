@@ -1,9 +1,8 @@
 import unittest
 from unittest.mock import Mock
 
-from dpl.connections.shift_reg_buffered import ShiftRegBuffered
-from dpl.connections.abs_shift_reg import AbsShiftRegister
-
+from dpl.specific.connections.abs_shift_reg import AbsShiftRegister
+from dpl.specific.connections.shift_reg_buffered import ShiftRegBuffered
 
 sr_base = Mock(spec_set=AbsShiftRegister)
 sr_base.get_capacity.return_value = 8

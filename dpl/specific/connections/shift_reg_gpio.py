@@ -2,8 +2,8 @@ import logging
 import time
 from collections import namedtuple
 
-from dpl.connections.abs_shift_reg import AbsShiftRegister
-from dpl.connections.gpio_chooser import GPIO as GPIO
+from dpl.specific.connections.abs_shift_reg import AbsShiftRegister
+from dpl.specific.connections.gpio_chooser import GPIO as GPIO
 
 DELAY = 0.0
 

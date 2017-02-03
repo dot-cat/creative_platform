@@ -5,12 +5,12 @@ import logging
 
 import dpl.core.api as api
 import dpl.utils.debug_refs as debug_refs
-from dpl.connections.gpio_chooser import GPIO
 from dpl.core.config import Config
 from dpl.core.message_hub import MessageHub
-from dpl.subsystems.controller_things import ControllerThings
+from dpl.specific.connections.gpio_chooser import GPIO
 from dpl.subsystems.controller_handlers import ControllerHandlers
 from dpl.subsystems.controller_listeners import ControllerListeners
+from dpl.subsystems.controller_things import ControllerThings
 
 
 ##############################################################################################

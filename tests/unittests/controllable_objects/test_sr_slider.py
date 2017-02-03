@@ -7,12 +7,12 @@
 #   Связано с задачей: T70.
 ##############################################################################################
 
-import unittest
 import logging
+import unittest
 from unittest.mock import Mock
 
+from dpl.specific.connections.abs_shift_reg import AbsShiftRegister
 from dpl.things.specific.shift_reg.slider import Slider, ShiftRegBuffered
-from dpl.connections.abs_shift_reg import AbsShiftRegister
 
 sr_base = Mock(spec_set=AbsShiftRegister)
 sr_base.get_capacity.return_value = 8

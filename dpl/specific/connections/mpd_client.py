@@ -7,9 +7,9 @@
 import logging
 
 from mpd import MPDClient
-from dpl.connections.abs_connection import Connection, ConnectionFactory
 
-from dpl.connections.connection_registry import ConnectionRegistry
+from dpl.core.connections import ConnectionRegistry
+from dpl.core.connections import Connection, ConnectionFactory
 
 
 class MPDClientConnection(MPDClient, Connection):

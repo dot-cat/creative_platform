@@ -14,13 +14,15 @@
 
 import logging
 
-from dpl.connections.connection_builder import get_connection_by_config
-from dpl.things.abstract import AbsThing
+from dpl.core.config import Config
+from dpl.core.connections import get_connection_by_config
 from dpl.things.abstract import AbsPlayer
 from dpl.things.abstract import AbsSlider
+from dpl.things.abstract import AbsThing
 from dpl.things.abstract import AbsTrigger
 from dpl.things.factories import get_things_by_params
-from dpl.core.config import Config
+
+import dpl.specific.connections.all_enabled
 
 
 class ControllerThings(object):

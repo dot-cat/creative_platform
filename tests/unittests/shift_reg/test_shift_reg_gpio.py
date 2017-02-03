@@ -1,8 +1,7 @@
-from dpl.connections.gpio_chooser import GPIO
 import unittest
 
-from dpl.connections.shift_reg_gpio import ShiftRegGPIO
-
+from dpl.specific.connections.gpio_chooser import GPIO
+from dpl.specific.connections.shift_reg_gpio import ShiftRegGPIO
 
 GPIO.setmode(GPIO.BOARD)
 

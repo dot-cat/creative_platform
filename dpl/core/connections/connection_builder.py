@@ -1,9 +1,7 @@
 import logging
 
-from dpl.connections.abs_connection import ConnectionFactory, Connection
-import dpl.connections.all_enabled  # FIXME: CC20
-
-from dpl.connections.connection_registry import ConnectionRegistry
+from dpl.core.connections import ConnectionRegistry
+from dpl.core.connections import Connection
 
 
 def get_connection_by_config(config: dict) -> Connection:

@@ -1,8 +1,7 @@
-from dpl.connections.abs_connection import Connection, ConnectionFactory
-from dpl.connections.shift_reg_gpio import ShiftRegGPIO
-from dpl.connections.shift_reg_buffered import ShiftRegBuffered
-
-from dpl.connections.connection_registry import ConnectionRegistry
+from dpl.core.connections import ConnectionRegistry
+from dpl.core.connections import Connection, ConnectionFactory
+from dpl.specific.connections.shift_reg_buffered import ShiftRegBuffered
+from dpl.specific.connections.shift_reg_gpio import ShiftRegGPIO
 
 
 class ShiftRegGPIOBuffered(ShiftRegBuffered, Connection):

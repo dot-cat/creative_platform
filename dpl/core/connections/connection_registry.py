@@ -1,4 +1,4 @@
-from dpl.connections.abs_connection import ConnectionFactory
+from dpl.core.connections import ConnectionFactory
 
 
 class ConnectionRegistry(object):

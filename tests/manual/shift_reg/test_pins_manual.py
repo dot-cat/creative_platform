@@ -1,9 +1,8 @@
-from dpl.connections.gpio_chooser import GPIO
 import time
 
+from dpl.specific.connections.gpio_chooser import GPIO
+from dpl.specific.connections.shift_reg_gpio import ShiftRegGPIO
 from dpl.utils.get_user_answer import get_user_answer
-
-from dpl.connections.shift_reg_gpio import ShiftRegGPIO
 
 
 def test_forward(register):

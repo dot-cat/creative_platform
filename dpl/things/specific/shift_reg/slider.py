@@ -13,7 +13,7 @@
 
 import time
 
-from dpl.connections.shift_reg_buffered import ShiftRegBuffered
+from dpl.specific.connections.shift_reg_buffered import ShiftRegBuffered
 from dpl.things.abstract import AbsSlider
 
 
