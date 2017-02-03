@@ -15,6 +15,7 @@
 import contextlib
 import logging
 
+from dpl.core.things import ThingFactory, ThingRegistry
 from dpl.core.things import Player
 from dpl.specific.connections.mpd_client import MPDClientConnection
 
@@ -84,3 +85,14 @@ class MPDPlayer(Player):
             return {
                 "name": "undefined"
             }  # CC 18
+
+
+class MPDPlayerFactory(ThingFactory):
+    @staticmethod
+    def build(con_instance, con_params: dict, metadata: dict=None) -> MPDPlayer:
+        return MPDPlayer(con_instance, con_params, metadata)
+
+
+ThingRegistry.register_factory(
+    "player", MPDClientConnection, MPDPlayerFactory()
+)

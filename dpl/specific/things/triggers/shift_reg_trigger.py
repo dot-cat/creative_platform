@@ -10,8 +10,8 @@
 ##############################################################################################
 
 
-from dpl.core.things import Trigger
-from dpl.specific.connections.shift_reg_buffered import ShiftRegBuffered
+from dpl.core.things import Trigger, ThingRegistry, ThingFactory
+from dpl.specific.connections.shift_reg_gpio_buffered import ShiftRegBuffered, ShiftRegGPIOBuffered
 
 
 def check_shift_reg_type(test_obj):
@@ -73,4 +73,27 @@ class ShiftRegTrigger(Trigger):
         :return: значение типа self.States
         """
         return self.States(self.con_instance.get_buf_bit(self.con_params))
+
+
+class ShiftRegSliderFactory(ThingFactory):
+    @staticmethod
+    def build(con_instance: ShiftRegBuffered, con_params: dict, metadata: dict=None) -> ShiftRegTrigger:
+        return ShiftRegTrigger(
+            con_instance,
+            con_params["sr_pin"],
+            metadata
+        )
+
+
+ThingRegistry.register_factory(
+    "lighting",
+    ShiftRegGPIOBuffered,
+    ShiftRegSliderFactory()
+)
+
+ThingRegistry.register_factory(
+    "fan",
+    ShiftRegGPIOBuffered,
+    ShiftRegSliderFactory()
+)
 

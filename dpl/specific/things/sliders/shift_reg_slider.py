@@ -1,7 +1,7 @@
 ##############################################################################################
 # FIXME List:
 # CC3 - Consider Change 3
-#   См. файл things/specific/trigger.py
+#   См. файл things/specific/shift_reg_trigger.py
 # CC4 - Consider Change 4
 #   Проверка на тип толком и не нужна: наличие полей pos, neg и их типы проверяются и так.
 # CC5 - Consider Change 5
@@ -13,8 +13,8 @@
 
 import time
 
-from dpl.core.things import Slider
-from dpl.specific.connections.shift_reg_buffered import ShiftRegBuffered
+from dpl.core.things import Slider, ThingRegistry, ThingFactory
+from dpl.specific.connections.shift_reg_gpio_buffered import ShiftRegBuffered, ShiftRegGPIOBuffered
 
 
 def check_shift_reg_type(test_obj):
@@ -171,3 +171,23 @@ class ShiftRegSlider(Slider):
         :return: None
         """
         time.sleep(self.con_params.transition_time)  # Fixme: CC5
+
+
+class ShiftRegSliderFactory(ThingFactory):
+    @staticmethod
+    def build(con_instance: ShiftRegBuffered, con_params: dict, metadata: dict=None) -> ShiftRegSlider:
+        cp = ShiftRegSlider.ConParams(**con_params)
+        return ShiftRegSlider(con_instance, cp, metadata)
+
+
+ThingRegistry.register_factory(
+    "sunblind",
+    ShiftRegGPIOBuffered,
+    ShiftRegSliderFactory()
+)
+
+ThingRegistry.register_factory(
+    "door",
+    ShiftRegGPIOBuffered,
+    ShiftRegSliderFactory()
+)

@@ -48,7 +48,3 @@ class ConnectionFactory(object):
         """
         raise NotImplementedError
 
-
-"""
-
-"""

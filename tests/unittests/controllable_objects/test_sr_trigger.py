@@ -3,7 +3,7 @@ import unittest
 from unittest.mock import Mock
 
 from dpl.specific.connections.abs_shift_reg import AbsShiftRegister
-from dpl.specific.things.shift_reg.trigger import ShiftRegTrigger, ShiftRegBuffered
+from dpl.specific.things.triggers.shift_reg_trigger import ShiftRegTrigger, ShiftRegBuffered
 
 sr_base = Mock(spec_set=AbsShiftRegister)
 sr_base.get_capacity.return_value = 8

@@ -20,9 +20,10 @@ from dpl.core.things import Player
 from dpl.core.things import Slider
 from dpl.core.things import Thing
 from dpl.core.things import Trigger
-from dpl.specific.things.factories import get_things_by_params
+from dpl.core.things.things_builder import get_thing_by_params
 
 import dpl.specific.connections.all_enabled
+import dpl.specific.things.all_enabled
 
 
 class ControllerThings(object):
@@ -66,7 +67,7 @@ class ControllerThings(object):
 
             metadata = {"description": item["description"], "type": item["type"]}
 
-            new_object = get_things_by_params(con_instance, item["con_params"], metadata)
+            new_object = get_thing_by_params(con_instance, item["con_params"], metadata)
 
             if new_object is not None:
                 self.all_things[item_id] = new_object
