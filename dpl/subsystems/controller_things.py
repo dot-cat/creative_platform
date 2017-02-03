@@ -20,9 +20,12 @@ from dpl.core.things import Player
 from dpl.core.things import Slider
 from dpl.core.things import Thing
 from dpl.core.things import Trigger
-from dpl.core.things.things_builder import get_thing_by_params
+from dpl.core.things import get_thing_by_params
 
+# noinspection PyUnresolvedReferences
 import dpl.specific.connections.all_enabled
+
+# noinspection PyUnresolvedReferences
 import dpl.specific.things.all_enabled
 
 

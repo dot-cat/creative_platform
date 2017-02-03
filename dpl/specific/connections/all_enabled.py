@@ -8,3 +8,5 @@
 # FIXME: CC20
 from .mpd_client import MPDClientConnection
 from .shift_reg_gpio_buffered import ShiftRegGPIOBuffered
+
+__all__ = ['MPDClientConnection', 'ShiftRegGPIOBuffered']
