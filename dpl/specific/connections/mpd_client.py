@@ -38,7 +38,7 @@ class MPDClientConnection(MPDClient, Connection):
 
 class MPDClientConnectionFactory(ConnectionFactory):
     @staticmethod
-    def build(config: dict):
+    def build(config: dict) -> MPDClientConnection:
         try:
             return MPDClientConnection(**config["con_params"])
         except ConnectionRefusedError:

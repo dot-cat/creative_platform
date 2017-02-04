@@ -16,7 +16,7 @@ class ShiftRegGPIOBuffered(ShiftRegBuffered, Connection):
 
 class ShiftRegGPIOBufferedFactory(ConnectionFactory):
     @staticmethod
-    def build(config: dict):
+    def build(config: dict) -> ShiftRegGPIOBuffered:
         return ShiftRegGPIOBuffered(
             config["con_params"]
         )
