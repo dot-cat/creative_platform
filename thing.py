@@ -24,7 +24,7 @@ class Thing(object):
         off = False
         undefined = None
 
-    def __init__(self, con_instance, con_params, metadata=None):
+    def __init__(self, con_instance: Connection, con_params, metadata=None):
         """
         Инициализация контроллируемого объекта
         :param con_instance: экземпляр connection'а
@@ -42,19 +42,6 @@ class Thing(object):
         """
         Немедленно установить конкретное состояние
         :param target_state: значение из self.States, желаемое состояние
-        """
-        raise NotImplementedError
-
-    def set_state_buffer(self, target_state):
-        """
-        Установить состояние в буффере, не отсылать в connection
-        :param target_state: значение из self.States, желаемое состояние
-        """
-        raise NotImplementedError
-
-    def apply_buffer_state(self):
-        """
-        Отослать состояние из буффера в connection
         """
         raise NotImplementedError
 
