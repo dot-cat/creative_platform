@@ -22,6 +22,8 @@ from dpl.subsystems.controller_listeners import ControllerListeners
 #   Сделать функцию более опрятной
 # TD2 - To Do 2
 #   Сделать полноценную реализацию проверки разрешений на выполнение действия.
+# TD4 - To Do 4
+#   Сделать путь к конфиг-файлах изменяемым
 # DH3 - Dirty Hack 4
 #   Вынести обработку core-параметров в отдельный блок, убрать полный перебор или сделать
 #   его резонным
@@ -38,7 +40,7 @@ class Controller(object):
 
         logging.debug("%s init started", self)
 
-        self.model = Config("../configs")
+        self.model = Config("../configs")  # FIXME: TD4
 
         self.things = ControllerThings(self.model)
         self.handlers = ControllerHandlers(self.model, self.things)

@@ -2,7 +2,7 @@ import gc
 from pprint import pprint
 
 
-def print_referrers(instance):
+def print_referrers(instance: object) -> None:
     """
     Print referrers of object instance
     :param instance: studied instance
