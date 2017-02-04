@@ -1,4 +1,4 @@
-def get_user_answer():
+def get_user_answer() -> bool:
     """
     Получить ответ от пользователя (y\n) на некотоырй вопрос
     :return: True - ответ y, False - ответ n
