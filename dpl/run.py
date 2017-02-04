@@ -2,13 +2,10 @@
 
 import logging
 
-logging.basicConfig(level=logging.DEBUG)
-
-logging.debug("Started loading libs...")
-
 from dpl.core.controller import Controller
 
-logging.debug("Libs loading finished.")
+logger = logging.getLogger("dpl")
+logger.setLevel(logging.DEBUG)
 
 if __name__ == "__main__":
     controller = Controller()

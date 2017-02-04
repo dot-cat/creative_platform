@@ -1,17 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import logging
-
-import dpl.utils.debug_refs as debug_refs
-from dpl.core.config import Config
-from dpl.core.message_hub import MessageHub
-from dpl.libs.gpio_chooser import GPIO
-from dpl.subsystems.controller_handlers import ControllerHandlers
-from dpl.subsystems.controller_listeners import ControllerListeners
-from dpl.subsystems.controller_things import ControllerThings
-
-
 ##############################################################################################
 # FIXME List:
 # CC8 - Consider Change 8
@@ -28,6 +17,18 @@ from dpl.subsystems.controller_things import ControllerThings
 #   его резонным
 ##############################################################################################
 
+import logging
+
+import dpl.utils.debug_refs as debug_refs
+from dpl.core.config import Config
+from dpl.core.message_hub import MessageHub
+from dpl.libs.gpio_chooser import GPIO
+from dpl.subsystems.controller_handlers import ControllerHandlers
+from dpl.subsystems.controller_listeners import ControllerListeners
+from dpl.subsystems.controller_things import ControllerThings
+
+logger = logging.getLogger(__name__)
+
 
 class Controller(object):
     def __init__(self):
@@ -37,7 +38,7 @@ class Controller(object):
         """
         GPIO.setmode(GPIO.BOARD)
 
-        logging.debug("%s init started", self)
+        logger.debug("%s init started", self)
 
         self.model = Config("../configs")  # FIXME: TD4
 
@@ -46,14 +47,14 @@ class Controller(object):
         self.__init_msg_hub()
         self.listeners = ControllerListeners(self.msg_hub)
 
-        logging.debug("%s init finished", self)
+        logger.debug("%s init finished", self)
 
     def __del__(self):
         """
         Деструктор, выполняет освобождение и остановку всего и вся
         :return: none
         """
-        logging.debug("%s destruction started", self)
+        logger.debug("%s destruction started", self)
 
         debug_refs.print_referrers(self.listeners)
         debug_refs.print_referrers(self.msg_hub)
@@ -65,7 +66,7 @@ class Controller(object):
         del self.handlers
         del self.things
 
-        logging.debug("%s destruction finished", self)
+        logger.debug("%s destruction finished", self)
 
     def __init_msg_hub(self):
         self.msg_hub = MessageHub()
@@ -84,19 +85,19 @@ class Controller(object):
 
     # FIXME: CC19
     def run_api(self):
-        logging.debug("Loading API libs...")
+        logger.debug("Loading API libs...")
         import dpl.core.api as api
 
-        logging.debug("API init...")
+        logger.debug("API init...")
         api.init(self.model, self.things, self.msg_hub)
 
-        logging.debug("API is ready to run")
+        logger.debug("API is ready to run")
 
         api_params = self.__get_api_params()
 
         if api_params is None:
-            logging.warning("REST API settings not found, "
-                            "falling back to default API settings")
+            logger.warning("REST API settings not found, "
+                           "falling back to default API settings")
             api.run(debug=True, use_reloader=False)
         else:
             api.run(

@@ -11,6 +11,8 @@ from mpd import MPDClient
 from dpl.core.connections import ConnectionRegistry
 from dpl.core.connections import Connection, ConnectionFactory
 
+logger = logging.getLogger(__name__)
+
 
 class MPDClientConnection(MPDClient, Connection):
     def __init__(self, host, port, timeout=10, idletimeout=None):  # CC14
@@ -42,7 +44,7 @@ class MPDClientConnectionFactory(ConnectionFactory):
         try:
             return MPDClientConnection(**config["con_params"])
         except ConnectionRefusedError:
-            logging.warning("Unable to connect to MPD server %s", config["con_params"])
+            logger.warning("Unable to connect to MPD server %s", config["con_params"])
             return None
 
 

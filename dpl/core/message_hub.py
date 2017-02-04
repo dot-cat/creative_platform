@@ -16,6 +16,8 @@ from threading import Thread
 
 from dpl.core.handlers.abs_handler import AbsHandler
 
+logger = logging.getLogger(__name__)
+
 
 class Operation(Enum):
     remove = 0
@@ -59,8 +61,8 @@ class MessageHub(object):
         self.__process_handler(handler, Operation.remove)
 
     def accept_msg(self, message):
-        logging.debug("Accepted message: %s", message)
-        logging.debug("%s", message.dump_dict())
+        logger.debug("Accepted message: %s", message)
+        logger.debug("%s", message.dump_dict())
 
         types_available = self.handler_resolver
 

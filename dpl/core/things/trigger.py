@@ -8,6 +8,8 @@ import logging
 
 from dpl.core.things import Thing
 
+logger = logging.getLogger(__name__)
+
 
 class Trigger(Thing):
     """
@@ -37,14 +39,14 @@ class Trigger(Thing):
         """
         Немедленно устанавливает триггер в состояние "включено"
         """
-        logging.warning("'set_on' method is deprecated. Use 'on' method instead")
+        logger.warning("'set_on' method is deprecated. Use 'on' method instead")
         self.on()
 
     def set_off(self):
         """
         Немедленно устанавливает триггер в состояние "выключено"
         """
-        logging.warning("'set_off' method is deprecated. Use 'off' method instead")
+        logger.warning("'set_off' method is deprecated. Use 'off' method instead")
         self.off()
 
     def toggle(self):
@@ -60,7 +62,7 @@ class Trigger(Thing):
             self.on()
 
         else:
-            logging.debug(
+            logger.debug(
                 "Unable to toggle %s object from %s state",
                 self,
                 self.get_state()

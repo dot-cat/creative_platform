@@ -6,6 +6,8 @@ from dpl.core.listener import Listener
 from dpl.core.message_hub import MessageHub
 from dpl.core.messages.message import Message, time
 
+logger = logging.getLogger(__name__)
+
 
 class ListenerSerial(Listener):
     def __init__(self, feedback, tty, baudrate):
@@ -53,7 +55,7 @@ class ListenerSerial(Listener):
         :param raw_data: данные, строка
         :return: None
         """
-        logging.debug('Data read: %s', raw_data)
+        logger.debug('Data read: %s', raw_data)
 
         button_id = raw_data.strip(b"\r\n").decode()
         msg = Message("button", button_id, "pressed", time.time(), None)

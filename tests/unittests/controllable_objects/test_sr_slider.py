@@ -14,6 +14,8 @@ from unittest.mock import Mock
 from dpl.libs.abs_shift_reg import AbsShiftRegister
 from dpl.specific.things.sliders.shift_reg_slider import ShiftRegSlider, ShiftRegBuffered
 
+logger = logging.getLogger(__name__)
+
 sr_base = Mock(spec_set=AbsShiftRegister)
 sr_base.get_capacity.return_value = 8
 
@@ -26,7 +28,7 @@ transition_time = 0.1
 sl_pinstruct = ShiftRegSlider.ConParams(sl_bit_pos, sl_bit_neg, transition_time)
 sl_common_params = (sr, sl_pinstruct)
 
-logging.debug('test_sr_slider: {0}'.format(sr))
+logger.debug('test_sr_slider: {0}'.format(sr))
 
 
 class TestSliderInit(unittest.TestCase):

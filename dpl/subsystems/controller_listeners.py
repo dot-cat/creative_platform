@@ -6,6 +6,8 @@ from dpl.specific.listeners.listener_serial import ListenerSerial
 from dpl.core.message_hub import MessageHub
 from dpl.specific.listeners.listener_cli import ListenerCli
 
+logger = logging.getLogger(__name__)
+
 
 class ControllerListeners(object):
     def __init__(self, msg_hub: MessageHub):
@@ -34,7 +36,7 @@ class ControllerListeners(object):
             listener_serial.start()  # ...запускаем слушателя
 
         else:  # Иначе...
-            logging.warning("Unable to open specified serial device: %s. "
-                            "ListenerSerial disabled", device)
+            logger.warning("Unable to open specified serial device: %s. "
+                           "ListenerSerial disabled", device)
 
         return listener_serial

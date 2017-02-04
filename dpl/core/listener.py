@@ -1,8 +1,3 @@
-import logging
-import weakref  # FIXME: DH1
-from threading import Thread, Event
-
-
 ##############################################################################################
 # FIXME List:
 # DH1 - Dirty Hack 1
@@ -17,6 +12,13 @@ from threading import Thread, Event
 ##############################################################################################
 
 
+import logging
+import weakref  # FIXME: DH1
+from threading import Thread, Event
+
+logger = logging.getLogger(__name__)
+
+
 class Listener(object):
     """
     Слушатель. Базовый класс для всех объектов, которые ожидают некоторые данные,
@@ -28,13 +30,13 @@ class Listener(object):
         Инициализация слушателя
         :param feedback: Объект для обратной связи
         """
-        logging.debug("%s init started", self)
+        logger.debug("%s init started", self)
 
         self.feedback = weakref.proxy(feedback)  # FIXME: DH1
         self.stop_event = Event()
         self.listener_thread = Thread(target=self.__waiter_loop, daemon=True)
 
-        logging.debug("%s init finished", self)
+        logger.debug("%s init finished", self)
 
     def start(self):
         """
@@ -50,11 +52,11 @@ class Listener(object):
         """
         # FIXME: DH1: Он даже не выполняется в текущем виде
 
-        logging.debug("%s destruction started", self)
+        logger.debug("%s destruction started", self)
 
         self.stop_event.set()
 
-        logging.debug("%s destruction finished", self)
+        logger.debug("%s destruction finished", self)
 
     def get_data(self):
         """

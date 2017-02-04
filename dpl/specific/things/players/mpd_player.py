@@ -19,6 +19,8 @@ from dpl.core.things import ThingFactory, ThingRegistry
 from dpl.core.things import Player
 from dpl.specific.connections.mpd_client import MPDClientConnection
 
+logger = logging.getLogger(__name__)
+
 
 class MPDPlayer(Player):
     def __init__(self, con_instance: MPDClientConnection, con_params=None, metadata=None):
@@ -45,7 +47,7 @@ class MPDPlayer(Player):
         elif mpd_state == "pause":
             return cls.States.paused
         else:
-            logging.warning("Unknown state of MPD player: %s", mpd_state)
+            logger.warning("Unknown state of MPD player: %s", mpd_state)
             return cls.States.undefined
 
     def get_state(self):
