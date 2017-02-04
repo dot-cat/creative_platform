@@ -9,4 +9,4 @@ from dpl.core.controller import Controller
 
 if __name__ == "__main__":
     controller = Controller()
-    controller.start_api()
+    controller.run_api()

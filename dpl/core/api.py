@@ -12,10 +12,6 @@ from dpl.subsystems.controller_controllables import ControllerControllables
 
 app = Flask(__name__)
 
-model = None
-controllables = None
-message_hub = None
-
 
 def __print_headers():
     logging.debug("Request headers:\n%s", request.headers)
@@ -24,10 +20,9 @@ app.before_request(__print_headers)
 
 
 def init(arg_model: Config, arg_controllables: ControllerControllables, arg_message_hub: MessageHub):
-    global model, controllables, message_hub
-    model = arg_model
-    controllables = arg_controllables
-    message_hub = arg_message_hub
+    app.config["model"] = arg_model
+    app.config["controllables"] = arg_controllables
+    app.config["msg_hub"] = arg_message_hub
 
 
 def run(*args, **kwargs):
@@ -47,12 +42,12 @@ def get_structure():
 
 @app.route('/rooms/', methods=['GET'])
 def get_rooms():
-    return jsonify({'rooms': model.get_category_config("rooms")})
+    return jsonify({'rooms': app.config["model"].get_category_config("rooms")})
 
 
 @app.route('/rooms/<string:room_id>', methods=['GET'])
 def get_room(room_id):
-    room = list(filter(lambda t: t['id'] == room_id, model.get_category_config("rooms")))
+    room = list(filter(lambda t: t['id'] == room_id, app.config["model"].get_category_config("rooms")))
     if len(room) == 0:
         abort(404)
 
@@ -61,7 +56,7 @@ def get_room(room_id):
 
 @app.route('/objects/', methods=['GET'])
 def get_objects():
-    all_info = controllables.get_all_objects_info()
+    all_info = app.config["controllables"].get_all_objects_info()
     return jsonify({'objects': all_info})
 
 
@@ -70,7 +65,7 @@ def get_object(object_id):
     object_item = None
 
     try:
-        object_item = controllables.get_object_info(object_id)
+        object_item = app.config["controllables"].get_object_info(object_id)
     except ValueError as e:
         if e.args[0] == "id not found":
             abort(404)
@@ -85,7 +80,7 @@ def get_current_track(object_id):
     object_item = None
 
     try:
-        object_item = controllables.do_action(object_id, "get_current_track")
+        object_item = app.config["controllables"].do_action(object_id, "get_current_track")
     except ValueError as e:
         if e.args[0] == "id not found":
             abort(404)
@@ -124,6 +119,6 @@ def receive_message():
     except TypeError:
         return jsonify({"result": "Invalid message format"}), 400
 
-    thread = threading.Thread(target=message_hub.accept_msg, args=(msg,))
+    thread = threading.Thread(target=app.config["msg_hub"].accept_msg, args=(msg,))
     thread.start()
     return jsonify({"result": "accepted"}), 202

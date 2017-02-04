@@ -83,7 +83,7 @@ class Controller(object):
         return None
 
     # FIXME: CC19
-    def start_api(self):
+    def run_api(self):
         api_params = self.__get_api_params()
 
         if api_params is None:
