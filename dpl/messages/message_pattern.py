@@ -2,10 +2,10 @@ from collections.abc import Iterable
 
 
 class MessagePattern(object):
-    def __init__(self, type, source_list: Iterable, event_list: Iterable):
+    def __init__(self, msg_type, source_list: Iterable, event_list: Iterable):
         """
         Шаблон выборки сообщений - структура, которая содержит:
-        :param type: тип сообщения
+        :param msg_type: тип сообщения
         :param source_list: список идентификаторов источников
         :param event_list: список идентификаторов событий
         """
@@ -22,7 +22,7 @@ class MessagePattern(object):
         if not event_list:
             raise ValueError("event_list can't be empty")
 
-        self.type = type
+        self.type = msg_type
         self.sources = source_list
         self.events = event_list
 

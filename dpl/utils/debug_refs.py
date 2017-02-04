@@ -1,5 +1,5 @@
-from pprint import pprint
 import gc
+from pprint import pprint
 
 
 def print_referrers(instance):

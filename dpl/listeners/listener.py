@@ -1,6 +1,7 @@
-from threading import Thread, Event
 import logging
 import weakref  # FIXME: DH1
+from threading import Thread, Event
+
 
 ##############################################################################################
 # FIXME List:
@@ -27,13 +28,13 @@ class Listener(object):
         Инициализация слушателя
         :param feedback: Объект для обратной связи
         """
-        logging.debug("{0} init started".format(self))
+        logging.debug("%s init started", self)
 
         self.feedback = weakref.proxy(feedback)  # FIXME: DH1
         self.stop_event = Event()
         self.listener_thread = Thread(target=self.__waiter_loop, daemon=True)
 
-        logging.debug("{0} init finished".format(self))
+        logging.debug("%s init finished", self)
 
     def start(self):
         """
@@ -49,11 +50,11 @@ class Listener(object):
         """
         # FIXME: DH1: Он даже не выполняется в текущем виде
 
-        logging.debug("{0} destruction started".format(self))
+        logging.debug("%s destruction started", self)
 
         self.stop_event.set()
 
-        logging.debug("{0} destruction finished".format(self))
+        logging.debug("%s destruction finished", self)
 
     def get_data(self):
         """

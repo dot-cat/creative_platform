@@ -1,13 +1,14 @@
 #!flask/bin/python
-from flask import Flask, jsonify, abort, url_for, request
-import time
 import logging
 import threading
+import time
 
-from dpl.subsystems.controller_controllables import ControllerControllables
-from dpl.messages.message_hub import MessageHub
+from flask import Flask, jsonify, abort, url_for, request
+
 from dpl.messages.abs_message import Message
+from dpl.messages.message_hub import MessageHub
 from dpl.model import Model
+from dpl.subsystems.controller_controllables import ControllerControllables
 
 app = Flask(__name__)
 
@@ -17,7 +18,7 @@ message_hub = None
 
 
 def __print_headers():
-    logging.debug("Request headers:\n{0}".format(request.headers))
+    logging.debug("Request headers:\n%s", request.headers)
 
 app.before_request(__print_headers)
 
@@ -111,10 +112,15 @@ def receive_message():
         return jsonify({"result": "Invalid JSON data"}), 400
 
     logging.debug(msg_raw)
-    msg_raw["timestamp"] = time.time()
 
     try:
-        msg = Message(**msg_raw)
+        msg = Message(
+            msg_type=msg_raw["type"],
+            source=msg_raw["source"],
+            event=msg_raw["event"],
+            timestamp=time.time(),
+            body=msg_raw["body"]
+        )
     except TypeError:
         return jsonify({"result": "Invalid message format"}), 400
 

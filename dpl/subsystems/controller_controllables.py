@@ -14,13 +14,13 @@
 
 import logging
 
-from dpl.model import Model
-
-from dpl.controllable_objects.factories.controllable_factory import get_controllable_by_params, AbsControllable
-from dpl.controllable_objects.abstract.abs_player import AbsPlayer
-from dpl.controllable_objects.abstract.abs_slider import AbsSlider
-from dpl.controllable_objects.abstract.abs_trigger import AbsTrigger
 from dpl.connections.factories import get_connection_by_config
+from dpl.controllable_objects.abstract import AbsControllable
+from dpl.controllable_objects.abstract import AbsPlayer
+from dpl.controllable_objects.abstract import AbsSlider
+from dpl.controllable_objects.abstract import AbsTrigger
+from dpl.controllable_objects.factories import get_controllable_by_params
+from dpl.model import Model
 
 
 class ControllerControllables(object):
@@ -55,9 +55,11 @@ class ControllerControllables(object):
             try:
                 con_instance = self.all_connections[con_id]
             except KeyError:
-                logging.warning("Unable to init component: {0}. Connection {1} is unavailable".format(
+                logging.warning(
+                    "Unable to init component: %s. "
+                    "Connection %s is unavailable",
                     item_id, con_id
-                ))
+                )
                 continue
 
             metadata = {"description": item["description"], "type": item["type"]}
@@ -68,7 +70,7 @@ class ControllerControllables(object):
                 self.all_controllables[item_id] = new_object
 
     def __resolve_obj_by_id(self, obj_id: str) -> AbsControllable:
-        if type(obj_id) != str:
+        if not isinstance(obj_id, str):
             raise ValueError('Value must be a string literal')
 
         if obj_id not in self.all_controllables:
@@ -137,11 +139,14 @@ class ControllerControllables(object):
         :param obj: ссылка на объект
         :return: словарь с информацией об объекте
         """
-        obj_info = dict()  # Создаем новый словарь
-        obj_info["id"] = obj_id  # Записываем ID в словарь
-        obj_info["status"] = obj.get_state_string()  # Записываем текущее состояние в словарь
-        obj_info["actions"] = self.get_permitted_actions(obj_id)  # Записываем действия, доступные пользователю
-        obj_info.update(obj.get_metadata())  # Записываем метаданные
+        # Создаем новый словарь
+        obj_info = dict()
+
+        # Заполняем его значениями
+        obj_info["id"] = obj_id  # ID объекта
+        obj_info["status"] = obj.get_state_string()  # текущее состояние
+        obj_info["actions"] = self.get_permitted_actions(obj_id)  # действия, доступные пользователю
+        obj_info.update(obj.get_metadata())  # метаданные
 
         return obj_info
 

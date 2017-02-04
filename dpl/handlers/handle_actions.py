@@ -4,7 +4,7 @@ from collections import namedtuple
 ActionItem = namedtuple("ActionItem", ("obj_id", "obj_action", "action_args"))
 
 
-class HandleConfig(object):
+class HandleActions(object):
     def __init__(self):
         """
         Класс, обеспечивающий конфигурацию метода handle

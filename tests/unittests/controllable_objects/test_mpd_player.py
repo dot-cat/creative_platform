@@ -5,6 +5,7 @@ from dpl.controllable_objects.specific.players.mpd_player import MPDPlayer
 from dpl.connections.mpd_client import MPDClientConnection
 
 
+@unittest.skip("Not implemented, mocking needed")
 class TestMPDClient(unittest.TestCase):
     def test_all(self):
         connection = MPDClientConnection("localhost", 6600)

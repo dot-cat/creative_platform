@@ -10,8 +10,8 @@
 ##############################################################################################
 
 
-from enum import Enum
 import logging
+from enum import Enum
 from threading import Thread
 
 from dpl.handlers.abs_handler import AbsHandler
@@ -59,8 +59,8 @@ class MessageHub(object):
         self.__process_handler(handler, Operation.remove)
 
     def accept_msg(self, message):
-        logging.debug("Accepted message: {0}".format(message))
-        logging.debug("{0}".format(message.dump_dict()))
+        logging.debug("Accepted message: %s", message)
+        logging.debug("%s", message.dump_dict())
 
         types_available = self.handler_resolver
 

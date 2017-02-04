@@ -4,9 +4,10 @@
 #   Возвращать не копию, а ссылку.
 ##############################################################################################
 
+from copy import copy
+
 from dpl.messages.abs_message import Message
 from dpl.messages.message_pattern import MessagePattern
-from copy import copy
 
 
 class AbsHandler(object):

@@ -10,8 +10,8 @@
 ##############################################################################################
 
 
-from dpl.controllable_objects.abstract.abs_trigger import AbsTrigger
 from dpl.connections.shift_reg_buffered import ShiftRegBuffered
+from dpl.controllable_objects.abstract import AbsTrigger
 
 
 def check_shift_reg_type(test_obj):
@@ -54,7 +54,7 @@ class Trigger(AbsTrigger):
         Установить состояние в буффере, не отсылать в connection
         :param target_state: значение из self.States, желаемое состояние
         """
-        if type(target_state) != self.States:
+        if not isinstance(target_state, self.States):
             raise ValueError('Type of state argument must be a Trigger.State')
 
         self.con_instance.set_buf_bit(self.con_params, target_state.value)

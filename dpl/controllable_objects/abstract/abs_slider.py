@@ -7,9 +7,9 @@
 #   наполовину из-за того, что один из процессов остановит дверь раньше времени.
 ##############################################################################################
 
-from dpl.controllable_objects.abstract.abs_controllable import AbsControllable
-
 from enum import Enum
+
+from dpl.controllable_objects.abstract import AbsControllable
 
 
 class AbsSlider(AbsControllable):

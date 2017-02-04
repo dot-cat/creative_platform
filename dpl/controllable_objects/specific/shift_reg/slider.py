@@ -11,10 +11,10 @@
 #   определенном состоянии (например, предотвращает останов двери раньше времени).
 ##############################################################################################
 
-from dpl.controllable_objects.abstract.abs_slider import AbsSlider
-from dpl.connections.shift_reg_buffered import ShiftRegBuffered
-
 import time
+
+from dpl.connections.shift_reg_buffered import ShiftRegBuffered
+from dpl.controllable_objects.abstract import AbsSlider
 
 
 def check_shift_reg_type(test_obj):
@@ -58,7 +58,10 @@ class Slider(AbsSlider):
         """
         check_shift_reg_type(con_instance)
 
-        con_params_error = ValueError('con_params must be an instance of Slider.ConParams class or a compatible dict')
+        con_params_error = ValueError(
+            "con_params must be an instance of "
+            "Slider.ConParams class or a compatible dict"
+        )
 
         if not isinstance(con_params, self.ConParams):  # Fixme: CC4
             if isinstance(con_params, dict):
@@ -130,7 +133,7 @@ class Slider(AbsSlider):
         :param target_state: желаемое состояние
         :return: None
         """
-        if type(target_state) != self.States:
+        if not isinstance(target_state, self.States):
             raise ValueError('Type of target_state argument must be a Slider.State')
 
         self.con_instance.set_buf_bit(self.con_params.pos, target_state.value[0])

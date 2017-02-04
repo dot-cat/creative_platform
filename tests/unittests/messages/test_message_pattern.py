@@ -4,7 +4,7 @@ from copy import copy
 from dpl.messages.message_pattern import MessagePattern
 
 valid_message_pattern_params = {
-    "type": "button",
+    "msg_type": "button",
     "source_list": ["B1", "B2"],
     "event_list": ["pressed"]
 }

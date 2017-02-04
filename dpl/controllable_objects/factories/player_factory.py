@@ -1,4 +1,8 @@
-from dpl.controllable_objects.specific.players.mpd_player import MPDPlayer, MPDClientConnection, AbsPlayer
+from dpl.controllable_objects.specific.players.mpd_player import (
+    MPDPlayer,
+    MPDClientConnection,
+    AbsPlayer
+)
 
 
 def get_player_by_params(con_instance, con_params, metadata=None) -> AbsPlayer:

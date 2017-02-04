@@ -1,8 +1,8 @@
-import os.path
 import logging
+import os.path
 
-from dpl.listeners.listener_serial import ListenerSerial
 from dpl.listeners.listener_cli import ListenerCli
+from dpl.listeners.listener_serial import ListenerSerial
 from dpl.messages.message_hub import MessageHub
 
 
@@ -28,11 +28,12 @@ class ControllerListeners(object):
         listener_serial = None  # Устанавливаем возращаемое значение по умолчанию
 
         if os.path.exists(device):  # Если путь к устройству верный...
-            listener_serial = ListenerSerial(self.msg_hub, device, speed)  # ...иницализируем слушателя
+            # ...иницализируем слушателя
+            listener_serial = ListenerSerial(self.msg_hub, device, speed)
             listener_serial.start()  # ...запускаем слушателя
 
         else:  # Иначе...
-            logging.warning("Unable to open specified serial device: {0}. "
-                            "ListenerSerial disabled".format(device))
+            logging.warning("Unable to open specified serial device: %s. "
+                            "ListenerSerial disabled", device)
 
         return listener_serial

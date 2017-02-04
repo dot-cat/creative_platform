@@ -12,11 +12,11 @@
 ##############################################################################################
 
 
-import logging
 import contextlib
+import logging
 
-from dpl.controllable_objects.abstract.abs_player import AbsPlayer
 from dpl.connections.mpd_client import MPDClientConnection
+from dpl.controllable_objects.abstract.abs_player import AbsPlayer
 
 
 class MPDPlayer(AbsPlayer):
@@ -44,7 +44,7 @@ class MPDPlayer(AbsPlayer):
         elif mpd_state == "pause":
             return MPDPlayer.States.paused
         else:
-            logging.debug("Warning: unknown state of MPD player: {0}".format(mpd_state))
+            logging.debug("Warning: unknown state of MPD player: %s", mpd_state)
             return MPDPlayer.States.undefined
 
     def get_state(self):

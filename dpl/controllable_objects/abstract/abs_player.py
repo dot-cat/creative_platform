@@ -1,6 +1,7 @@
-from dpl.controllable_objects.abstract.abs_controllable import AbsControllable
-
 from enum import Enum
+import logging
+
+from dpl.controllable_objects.abstract import AbsControllable
 
 
 class AbsPlayer(AbsControllable):
@@ -49,10 +50,12 @@ class AbsPlayer(AbsControllable):
         """
         curr_state = self.get_state()
 
-        if curr_state == self.States.stopped or curr_state == self.States.paused:  # Если проигрывание остановлено...
+        # Если проигрывание остановлено...
+        if curr_state == self.States.stopped or curr_state == self.States.paused:
             self.play()  # запускаем его
 
-        elif curr_state == self.States.playing:  # Если проигрывание запущено...
+        # Если проигрывание запущено...
+        elif curr_state == self.States.playing:
             self.pause()  # приостанавливаем его
 
         # Fixme CC1:

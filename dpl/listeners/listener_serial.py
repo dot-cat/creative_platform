@@ -1,4 +1,5 @@
 import logging
+
 import serial
 
 from dpl.listeners.listener import Listener
@@ -17,10 +18,10 @@ class ListenerSerial(Listener):
         if not isinstance(feedback, MessageHub):
             raise ValueError('wrong type of feedback object')
 
-        if type(tty) != str:
+        if not isinstance(tty, str):
             raise ValueError('tty must be a string')
 
-        if type(baudrate) != int or baudrate <= 0:
+        if not isinstance(baudrate, int) or baudrate <= 0:
             raise ValueError('baud-rate value must be positive')
 
         self.serial = serial.Serial(tty)
@@ -52,9 +53,9 @@ class ListenerSerial(Listener):
         :param raw_data: данные, строка
         :return: None
         """
-        logging.debug('Data read: {0}'.format(raw_data))
+        logging.debug('Data read: %s', raw_data)
 
-        id = raw_data.strip(b"\r\n").decode()
-        msg = Message("button", id, "pressed", time.time(), None)
+        button_id = raw_data.strip(b"\r\n").decode()
+        msg = Message("button", button_id, "pressed", time.time(), None)
 
         self.feedback.accept_msg(msg)

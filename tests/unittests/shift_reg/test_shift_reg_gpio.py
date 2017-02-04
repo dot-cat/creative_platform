@@ -13,7 +13,11 @@ sclr = 40  # пин для очистки
 
 common_args = [si, rck, sck, sclr]
 
+skip_reason_non_rpi = 'Following tests are only valid for RPi, ' \
+                      'other platforms can have different pin IDs'
 
+
+@unittest.skipUnless(GPIO.__name__ == 'RPi.GPIO', skip_reason_non_rpi)
 class TestShiftRegConstructor(unittest.TestCase):
     def __common_arg_test_part(self, invalid_arg, error_type, error_msg):
         for i in range(0, len(common_args)):
@@ -66,23 +70,23 @@ class TestShiftRegWrite(unittest.TestCase):
             sr.write_data(1 << sr.get_capacity())
 
     # TODO: Тесты с реальным чтением значений с портов регистра
-    @unittest.skip('Not implemented')
+    @unittest.skipUnless(GPIO.__name__ == 'RPi.GPIO', skip_reason_non_rpi)
     def test_1st_sr_1st_bit(self):
         pass
 
-    @unittest.skip('Not implemented')
+    @unittest.skipUnless(GPIO.__name__ == 'RPi.GPIO', skip_reason_non_rpi)
     def test_1st_sr_middle_bit(self):
         pass
 
-    @unittest.skip('Not implemented')
+    @unittest.skipUnless(GPIO.__name__ == 'RPi.GPIO', skip_reason_non_rpi)
     def test_1st_sr_last_bit(self):
         pass
 
-    @unittest.skip('Not implemented')
+    @unittest.skipUnless(GPIO.__name__ == 'RPi.GPIO', skip_reason_non_rpi)
     def test_2nd_sr_1st_bit(self):
         pass
 
-    @unittest.skip('Not implemented')
+    @unittest.skipUnless(GPIO.__name__ == 'RPi.GPIO', skip_reason_non_rpi)
     def test_2nd_sr_last_bit(self):
         pass
 

@@ -6,7 +6,7 @@
 
 import logging
 
-from dpl.controllable_objects.abstract.abs_controllable import AbsControllable
+from dpl.controllable_objects.abstract import AbsControllable
 
 
 class AbsTrigger(AbsControllable):
