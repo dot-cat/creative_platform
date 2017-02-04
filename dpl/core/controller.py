@@ -3,7 +3,6 @@
 
 import logging
 
-import dpl.core.api as api
 import dpl.utils.debug_refs as debug_refs
 from dpl.core.config import Config
 from dpl.core.message_hub import MessageHub
@@ -46,7 +45,6 @@ class Controller(object):
         self.handlers = ControllerHandlers(self.model, self.things)
         self.__init_msg_hub()
         self.listeners = ControllerListeners(self.msg_hub)
-        api.init(self.model, self.things, self.msg_hub)
 
         logging.debug("%s init finished", self)
 
@@ -86,6 +84,14 @@ class Controller(object):
 
     # FIXME: CC19
     def run_api(self):
+        logging.debug("Loading API libs...")
+        import dpl.core.api as api
+
+        logging.debug("API init...")
+        api.init(self.model, self.things, self.msg_hub)
+
+        logging.debug("API is ready to run")
+
         api_params = self.__get_api_params()
 
         if api_params is None:
