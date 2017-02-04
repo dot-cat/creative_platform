@@ -36,17 +36,17 @@ class MPDPlayer(Player):
         finally:
             self.con_instance.disconnect()
 
-    @staticmethod
-    def __mpd_state_to_self_state(mpd_state: str):
+    @classmethod
+    def __mpd_state_to_self_state(cls, mpd_state: str) -> Player.States:
         if mpd_state == "play":
-            return MPDPlayer.States.playing
+            return cls.States.playing
         elif mpd_state == "stop":
-            return MPDPlayer.States.stopped
+            return cls.States.stopped
         elif mpd_state == "pause":
-            return MPDPlayer.States.paused
+            return cls.States.paused
         else:
-            logging.debug("Warning: unknown state of MPD player: %s", mpd_state)
-            return MPDPlayer.States.undefined
+            logging.warning("Unknown state of MPD player: %s", mpd_state)
+            return cls.States.undefined
 
     def get_state(self):
         try:

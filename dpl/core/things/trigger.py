@@ -53,8 +53,15 @@ class Trigger(Thing):
         """
         if self.get_state() == self.States.on:  # если переключатель включен
             # выключаем его
-            self.set_off()
+            self.off()
 
         elif self.get_state() == self.States.off:  # если переключатель выключен...
             # включаем его
-            self.set_on()
+            self.on()
+
+        else:
+            logging.debug(
+                "Unable to toggle %s object from %s state",
+                self,
+                self.get_state()
+            )

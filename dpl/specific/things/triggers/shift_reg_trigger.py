@@ -25,12 +25,12 @@ class ShiftRegTrigger(Trigger):
     connections'ом выступает сдвиговый регистр
     """
 
-    def __init__(self, con_instance, con_params, metadata=None):
+    def __init__(self, con_instance: ShiftRegBuffered, con_params: int, metadata=None):
         """
         Конструктор
-        :param metadata:
         :param con_instance: экземпляр сдвигового регистра
         :param con_params: целое число, пин сдвигового регистра, на который подключен триггер
+        :param metadata: метаданные (ID, расположение в пространстве и т.д.)
         """
         check_shift_reg_type(con_instance)
 
