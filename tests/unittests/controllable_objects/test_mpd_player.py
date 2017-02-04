@@ -1,8 +1,8 @@
 import unittest
 import time
 
-from controllable_objects.specific.players.mpd_player import MPDPlayer
-from connections.mpd_client import MPDClientConnection
+from dpl.controllable_objects.specific.players.mpd_player import MPDPlayer
+from dpl.connections.mpd_client import MPDClientConnection
 
 
 class TestMPDClient(unittest.TestCase):

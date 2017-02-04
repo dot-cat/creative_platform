@@ -11,8 +11,8 @@ import unittest
 import logging
 from unittest.mock import Mock
 
-from controllable_objects.specific.shift_reg.slider import Slider, ShiftRegBuffered
-from connections.abs_shift_reg import AbsShiftRegister
+from dpl.controllable_objects.specific.shift_reg.slider import Slider, ShiftRegBuffered
+from dpl.connections.abs_shift_reg import AbsShiftRegister
 
 sr_base = Mock(spec_set=AbsShiftRegister)
 sr_base.get_capacity.return_value = 8

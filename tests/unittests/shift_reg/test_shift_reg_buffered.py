@@ -1,8 +1,8 @@
 import unittest
 from unittest.mock import Mock
 
-from connections.shift_reg_buffered import ShiftRegBuffered
-from connections.abs_shift_reg import AbsShiftRegister
+from dpl.connections.shift_reg_buffered import ShiftRegBuffered
+from dpl.connections.abs_shift_reg import AbsShiftRegister
 
 
 sr_base = Mock(spec_set=AbsShiftRegister)

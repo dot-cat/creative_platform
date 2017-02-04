@@ -1,7 +1,7 @@
 import unittest
 import tempfile
 
-from model import Model
+from dpl.model import Model
 
 
 import os
