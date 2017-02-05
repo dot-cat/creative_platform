@@ -20,10 +20,10 @@ class Slider(Actuator):
         """
         Возможные состояния выдвигающегося элемента
         """
-        closed  = [0, 0]
-        closing = [0, 1]
-        opening = [1, 0]
-        opened  = [1, 1]
+        closed  = (0, 0)
+        closing = (0, 1)
+        opening = (1, 0)
+        opened  = (1, 1)
         unknown = None
 
     __COMMAND_LIST = ("toggle", "open", "close")
