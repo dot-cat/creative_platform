@@ -77,10 +77,10 @@ class ShiftRegSlider(Slider):
 
         super().__init__(con_instance, con_params, metadata)
 
-        self.close()  # Закрываем дверь, если она была открыта
-
-        self.__is_enabled = False
+        self.__is_enabled = True
         self.__last_seen = time.time()
+
+        self.close()  # Закрываем дверь, если она была открыта
 
     @property
     def state(self) -> Slider.States:
@@ -88,8 +88,8 @@ class ShiftRegSlider(Slider):
         Текущее состояние объекта
         :return: объект типа self.States
         """
-        ci = self.__con_instance  # type: ShiftRegBuffered
-        cp = self.__con_params  # type: ShiftRegSlider.ConParams
+        ci = self.con_instance  # type: ShiftRegBuffered
+        cp = self.con_params  # type: ShiftRegSlider.ConParams
 
         return self.States(
             (
@@ -143,10 +143,10 @@ class ShiftRegSlider(Slider):
             self.on_avail_update(self)
 
     def __set_state(self, target):
-        ci = self.__con_instance  # type: ShiftRegBuffered
+        ci = self.con_instance  # type: ShiftRegBuffered
 
-        ci.set_buf_bit(self.__con_params.pos, target.value[0])
-        ci.set_buf_bit(self.__con_params.neg, target.value[1])
+        ci.set_buf_bit(self.con_params.pos, target.value[0])
+        ci.set_buf_bit(self.con_params.neg, target.value[1])
 
         ci.write_buffer()
 
@@ -154,7 +154,7 @@ class ShiftRegSlider(Slider):
             self.on_update(self)
 
     def __wait_transition(self):
-        time.sleep(self.__con_params.transition_time)
+        time.sleep(self.con_params.transition_time)
 
     def open(self) -> Actuator.ExecutionResult:
         """
