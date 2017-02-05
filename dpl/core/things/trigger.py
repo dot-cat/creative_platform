@@ -4,6 +4,7 @@
 ##############################################################################################
 
 import logging
+from enum import Enum
 
 from dpl.core.things import Actuator
 
@@ -14,12 +15,13 @@ class Trigger(Actuator):
     """
     Объект с двумя состояниями: включено и выключено
     """
-    class States(Actuator.States):
+    class States(Enum):
         """
         Возможные состояния триггера
         """
         on = True
         off = False
+        unknown = None
 
     __COMMAND_LIST = ("toggle", "on", "off")
 
