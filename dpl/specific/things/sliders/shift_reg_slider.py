@@ -11,9 +11,7 @@
 #   определенном состоянии (например, предотвращает останов двери раньше времени).
 ##############################################################################################
 
-import time
-
-from dpl.core.things import Slider, ThingRegistry, ThingFactory
+from dpl.core.things import Slider, ThingRegistry, ThingFactory, Actuator
 from dpl.specific.connections.shift_reg_gpio_buffered import ShiftRegBuffered, ShiftRegGPIOBuffered
 
 
@@ -79,98 +77,59 @@ class ShiftRegSlider(Slider):
 
         self.close()  # Закрываем дверь, если она была открыта
 
-    def set_state(self, target_state):
+    @property
+    def state(self) -> Slider.States:
         """
-        Немедленно установить состояние слайдера
-        :param target_state: желаемое состояние
+        Текущее состояние объекта
+        :return: объект типа self.States
+        """
+        raise NotImplementedError
+
+    @property
+    def is_available(self) -> bool:
+        """
+        Доступность объекта для использования
+        :return: True - доступен, False - недоступен
+        """
+        raise NotImplementedError
+
+    @property
+    def last_seen(self) -> float:
+        """
+        Возвращает время, когда объект был доступен в последний раз
+        :return: float, UNIX time
+        """
+        raise NotImplementedError
+
+    def disable(self) -> None:
+        """
+        Отключает объект, останавливает обновление состояния и
+        делает его неактивным
         :return: None
         """
-        self.set_state_buffer(target_state)
+        raise NotImplementedError
 
-        self.apply_buffer_state()
-
-    def open(self):
+    def enable(self) -> None:
         """
-        Открыть слайдер, для публичного использования
+        Включает объект, запускает обновление состояние и делает
+        его активным
         :return: None
         """
-        # Если слайдер закрыт или закрывается...
-        if self.get_state() == self.States.closed or self.get_state() == self.States.closing:
-            # ...начинаем его открывать...
-            self.set_state(self.States.opening)
+        raise NotImplementedError
 
-            # ...и ждем открытия
-            self.__wait_open()
-        else:
-            return  # Иначе выходим
+    def open(self) -> Actuator.ExecutionResult:
+        """
+        Открывает слайдер
+        :return: Actuator.ExecutionResult
+        """
+        raise NotImplementedError
 
-        # Если никто не изменил состояние слайдера вместо нас...
-        if self.get_state() == self.States.opening:  # Fixme: CC6
-            self.set_state(self.States.opened)  # ...останавливаем дверь, открыто
-
-    def close(self):
+    def close(self) -> Actuator.ExecutionResult:
         """
-        Закрыть слайдер, для публичного использования
-        :return: None
+        Закрывает слайдер
+        :return: Actuator.ExecutionResult
         """
-        # Если дверь открыта или открывается...
-        if self.get_state() == self.States.opened or self.get_state() == self.States.opening:
-            # ...начинаем ее закрывать...
-            self.set_state(self.States.closing)
-
-            # ...и ждем закрытия
-            self.__wait_close()
-        else:
-            return  # Иначе выходим
-
-        # Если никто не изменил состояние двери вместо нас...
-        if self.get_state() == self.States.closing:  # Fixme: CC6
-            self.set_state(self.States.closed)  # ...останавливаем дверь, закрыто
-
-    def set_state_buffer(self, target_state):
-        """
-        Установка состояния в буффере, без отсылки в con_instance
-        :param target_state: желаемое состояние
-        :return: None
-        """
-        if not isinstance(target_state, self.States):
-            raise ValueError('Type of target_state argument must be a Slider.State')
-
-        self.con_instance.set_buf_bit(self.con_params.pos, target_state.value[0])
-        self.con_instance.set_buf_bit(self.con_params.neg, target_state.value[1])
-
-    def apply_buffer_state(self):
-        """
-        Применить состояние из буфера
-        :return: None
-        """
-        self.con_instance.write_buffer()
-
-    def get_state(self):
-        """
-        Получить текущее состояние
-        :return: состояние, экземпляр типа Slider.States
-        """
-        return self.States(
-            [
-                self.con_instance.get_buf_bit(self.con_params.pos),
-                self.con_instance.get_buf_bit(self.con_params.neg)
-            ]
-        )
-
-    def __wait_close(self):
-        """
-        Блокирующая функция, ожидает окончания закрытия двери
-        :return: None
-        """
-        time.sleep(self.con_params.transition_time)  # Fixme: CC5
-
-    def __wait_open(self):
-        """
-        Блокирующая функция, ожидает окончания открытия двери
-        :return: None
-        """
-        time.sleep(self.con_params.transition_time)  # Fixme: CC5
+        raise NotImplementedError
 
 
 class ShiftRegSliderFactory(ThingFactory):
