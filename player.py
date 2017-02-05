@@ -1,9 +1,9 @@
 from enum import Enum
 
-from dpl.core.things import Thing
+from dpl.core.things import Actuator
 
 
-class Player(Thing):
+class Player(Actuator):
     """
     Плеер. Объект, который проигрывает медиафайлы
     """
@@ -16,6 +16,8 @@ class Player(Thing):
         paused = 2,
         undefined = None
 
+    __COMMAND_LIST = ("toggle", "play", "stop", "pause", "next", "prev")
+
     def __init__(self, con_instance, con_params, metadata=None):
         """
         Конструктор, копия конструктора из базового класса
@@ -23,40 +25,43 @@ class Player(Thing):
         """
         super().__init__(con_instance, con_params, metadata)
 
-    def play(self) -> None:
+    @property
+    def command_list(self) -> tuple:
+        """
+        Возвращает список всех доступных команд
+        :return: tuple
+        """
+        return self.__COMMAND_LIST
+
+    def play(self) -> Actuator.ExecutionResult:
         raise NotImplementedError
 
-    def stop(self) -> None:
+    def stop(self) -> Actuator.ExecutionResult:
         raise NotImplementedError
 
-    def pause(self) -> None:
+    def pause(self) -> Actuator.ExecutionResult:
         raise NotImplementedError
 
-    def next(self) -> None:
+    def next(self) -> Actuator.ExecutionResult:
         raise NotImplementedError
 
-    def prev(self) -> None:
+    def prev(self) -> Actuator.ExecutionResult:
         raise NotImplementedError
 
-    def get_current_track(self) -> dict:
-        raise NotImplementedError
-
-    def toggle(self) -> None:
+    def toggle(self) -> Actuator.ExecutionResult:
         """
         Переключает состояние плеера в противоположное:
         запускает остановленное воспроизведение и останавливает запущенное
         :return None
         """
-        curr_state = self.get_state()
-
         # Если проигрывание остановлено...
-        if curr_state == self.States.stopped or curr_state == self.States.paused:
+        if self.state == self.States.stopped or self.state == self.States.paused:
             self.play()  # запускаем его
 
         # Если проигрывание запущено...
-        elif curr_state == self.States.playing:
+        elif self.state == self.States.playing:
             self.pause()  # приостанавливаем его
 
         # Fixme CC1:
         else:  # Если состояние другое...
-            pass  # игнорируем команду
+            return self.ExecutionResult.IGNORED_BAD_STATE
