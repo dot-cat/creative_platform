@@ -39,7 +39,7 @@ class Thing(object):
         """
         unknown = None
 
-    def __init__(self, con_instance: Connection, con_params: object, metadata: dict=None):
+    def __init__(self, con_instance: Connection, con_params, metadata: dict=None):
         """
         Конструктор
         :param con_instance: экземпляр соединения
@@ -51,6 +51,14 @@ class Thing(object):
         self.__metadata = metadata
         self.__on_update = None
         self.__on_avail_update = None
+
+    @property
+    def con_instance(self) -> Connection:
+        return self.__con_instance
+
+    @property
+    def con_params(self):
+        return self.__con_params
 
     @property
     def metadata(self) -> dict or None:
