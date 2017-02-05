@@ -92,13 +92,18 @@ class Thing(object):
         """
         raise NotImplementedError
 
+    @staticmethod
+    def __is_good_callback(func) -> bool:
+        return isinstance(func, callable) or func is None
+
     @property
     def on_update(self) -> callable:
         return self.__on_update
 
     @on_update.setter
     def on_update(self, func):
-        self.__on_update = func
+        if self.__is_good_callback(func):
+            self.__on_update = func
 
     @property
     def on_avail_update(self) -> callable:
@@ -106,7 +111,8 @@ class Thing(object):
 
     @on_avail_update.setter
     def on_avail_update(self, func):
-        self.__on_avail_update = func
+        if self.__is_good_callback(func):
+            self.__on_avail_update = func
 
     def disable(self) -> None:
         """
