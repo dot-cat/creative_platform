@@ -1,69 +1,109 @@
 ##############################################################################################
 # FIXME List:
-# CC10 - Consider Change 10
-#   Нет проверки текущего состояния: можно "включить" или "выключить" триггер дважды.
+#
 ##############################################################################################
 
 import logging
 
-from dpl.core.things import Thing
+from dpl.core.things import Actuator
 
 logger = logging.getLogger(__name__)
 
 
-class Trigger(Thing):
+class Trigger(Actuator):
     """
     Объект с двумя состояниями: включено и выключено
     """
+    class States(Actuator.States):
+        """
+        Возможные состояния триггера
+        """
+        on = True
+        off = False
+
+    __COMMAND_LIST = ("toggle", "on", "off")
 
     def __init__(self, con_instance, con_params, metadata=None):
         """
         Конструктор, копия конструктора из базового класса
-        :param metadata:
         """
         super().__init__(con_instance, con_params, metadata)
 
-    def on(self):
+    @property
+    def command_list(self) -> tuple:
+        """
+        Возвращает список всех доступных команд
+        :return: tuple
+        """
+        return self.__COMMAND_LIST
+
+    @property
+    def extended_info(self) -> None:
+        """
+        Возвращает расширенную информацию о состоянии объекта
+        :return: None
+        """
+        return None
+
+    def execute(self, cmd: str, *args, **kwargs) -> Actuator.ExecutionResult:
+        """
+        Запускает выполнение команды, указанной в cmd
+        :param cmd: строка, команда на выполнение
+        :param args, kwargs: параметры команды
+        :return: возвращаемое значение
+        """
+        invalid_cmd_error = ValueError("Invalid command: {0}".format(cmd))
+
+        if cmd not in self.__COMMAND_LIST:
+            raise invalid_cmd_error
+
+        cmd_func = self.__getattribute__(cmd)
+
+        if cmd_func is not callable:
+            raise invalid_cmd_error
+
+        return cmd_func(*args, **kwargs)
+
+    def on(self) -> Actuator.ExecutionResult:
         """
         Немедленно устанавливает триггер в состояние "включено"
         """
-        self.set_state(self.States.on)  # CC10
+        raise NotImplementedError
 
-    def off(self):
+    def off(self) -> Actuator.ExecutionResult:
         """
         Немедленно устанавливает триггер в состояние "выключено"
         """
-        self.set_state(self.States.off)  # CC10
+        raise NotImplementedError
 
-    def set_on(self):
+    def set_on(self) -> Actuator.ExecutionResult:
         """
         Немедленно устанавливает триггер в состояние "включено"
         """
-        logger.warning("'set_on' method is deprecated. Use 'on' method instead")
-        self.on()
+        raise DeprecationWarning("Deprecated, use on method instead")
 
-    def set_off(self):
+    def set_off(self) -> Actuator.ExecutionResult:
         """
         Немедленно устанавливает триггер в состояние "выключено"
         """
-        logger.warning("'set_off' method is deprecated. Use 'off' method instead")
-        self.off()
+        raise DeprecationWarning("Deprecated, use off method instead")
 
-    def toggle(self):
+    def toggle(self) -> Actuator.ExecutionResult:
         """
         Переключить из текущего состояния в противоположное
         """
-        if self.get_state() == self.States.on:  # если переключатель включен
+        if self.state == self.States.on:  # если переключатель включен
             # выключаем его
-            self.off()
+            return self.off()
 
-        elif self.get_state() == self.States.off:  # если переключатель выключен...
+        elif self.state == self.States.off:  # если переключатель выключен...
             # включаем его
-            self.on()
+            return self.on()
 
         else:
             logger.debug(
                 "Unable to toggle %s object from %s state",
                 self,
-                self.get_state()
+                self.state
             )
+            return Actuator.ExecutionResult.IGNORED_BAD_STATE
