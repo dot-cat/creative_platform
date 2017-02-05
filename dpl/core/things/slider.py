@@ -7,16 +7,14 @@
 #   наполовину из-за того, что один из процессов остановит дверь раньше времени.
 ##############################################################################################
 
-from enum import Enum
-
-from dpl.core.things import Thing
+from dpl.core.things import Actuator
 
 
-class Slider(Thing):
+class Slider(Actuator):
     """
     Объект с четырьмя состояниями: закрыто, открывается, открыто, открывается
     """
-    class States(Enum):
+    class States(Actuator.States):
         """
         Возможные состояния выдвигающегося элемента
         """
@@ -24,7 +22,8 @@ class Slider(Thing):
         closing = [0, 1]
         opening = [1, 0]
         opened  = [1, 1]
-        undefined = None
+
+    __COMMAND_LIST = ("toggle", "open", "close")
 
     def __init__(self, con_instance, con_params, metadata=None):
         """
@@ -33,32 +32,48 @@ class Slider(Thing):
         """
         super().__init__(con_instance, con_params, metadata)
 
-    def open(self):
+    @property
+    def command_list(self) -> tuple:
+        """
+        Возвращает список всех доступных команд
+        :return: tuple
+        """
+        return self.__COMMAND_LIST
+
+    @property
+    def extended_info(self) -> None:
+        """
+        Возвращает расширенную информацию о состоянии объекта
+        :return: None
+        """
+        return None
+
+    def open(self) -> Actuator.ExecutionResult:
         """
         Открывает слайдер
-        :return None
+        :return: Actuator.ExecutionResult
         """
         raise NotImplementedError
 
-    def close(self):
+    def close(self) -> Actuator.ExecutionResult:
         """
         Закрывает слайдер
-        :return None
+        :return: Actuator.ExecutionResult
         """
         raise NotImplementedError
 
-    def toggle(self):
+    def toggle(self) -> Actuator.ExecutionResult:
         """
         Переключает состояние слайдера в противоположное:
         открывает закрытый, закрывает открытый
-        :return None
+        :return: Actuator.ExecutionResult
         """
-        if self.get_state() == self.States.opened:  # Если слайдер открыт...
-            self.close()  # закрываем его
+        if self.state == self.States.opened:  # Если слайдер открыт...
+            return self.close()  # закрываем его
 
-        elif self.get_state() == self.States.closed:  # Если слайдер закрыт...
-            self.open()  # открываем его
+        elif self.state == self.States.closed:  # Если слайдер закрыт...
+            return self.open()  # открываем его
 
         # Fixme CC1:
         else:  # Если слайдер открывается или закрывается...
-            pass  # игнорируем команду
+            return Actuator.ExecutionResult.IGNORED_BAD_STATE  # игнорируем команду
