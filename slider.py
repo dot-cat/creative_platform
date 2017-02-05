@@ -7,6 +7,8 @@
 #   наполовину из-за того, что один из процессов остановит дверь раньше времени.
 ##############################################################################################
 
+from enum import Enum
+
 from dpl.core.things import Actuator
 
 
@@ -14,7 +16,7 @@ class Slider(Actuator):
     """
     Объект с четырьмя состояниями: закрыто, открывается, открыто, открывается
     """
-    class States(Actuator.States):
+    class States(Enum):
         """
         Возможные состояния выдвигающегося элемента
         """
@@ -22,6 +24,7 @@ class Slider(Actuator):
         closing = [0, 1]
         opening = [1, 0]
         opened  = [1, 1]
+        unknown = None
 
     __COMMAND_LIST = ("toggle", "open", "close")
 
