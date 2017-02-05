@@ -47,25 +47,6 @@ class Trigger(Actuator):
         """
         return None
 
-    def execute(self, cmd: str, *args, **kwargs) -> Actuator.ExecutionResult:
-        """
-        Запускает выполнение команды, указанной в cmd
-        :param cmd: строка, команда на выполнение
-        :param args, kwargs: параметры команды
-        :return: возвращаемое значение
-        """
-        invalid_cmd_error = ValueError("Invalid command: {0}".format(cmd))
-
-        if cmd not in self.__COMMAND_LIST:
-            raise invalid_cmd_error
-
-        cmd_func = self.__getattribute__(cmd)
-
-        if cmd_func is not callable:
-            raise invalid_cmd_error
-
-        return cmd_func(*args, **kwargs)
-
     def on(self) -> Actuator.ExecutionResult:
         """
         Немедленно устанавливает триггер в состояние "включено"
