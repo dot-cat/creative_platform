@@ -11,7 +11,7 @@ def test_forward(register):
         register.write_data(1 << i)
         time.sleep(1)
 
-    print('Did you seen successive light connect of diodes from first to last?')  # FIXME: Check grammar here
+    print('Did you seen successive light up of diodes from first to last?')  # FIXME: Check grammar here
     return get_user_answer()
 
 
@@ -20,7 +20,7 @@ def test_backward(register):
         register.write_data(1 << i)
         time.sleep(1)
 
-    print('Did you seen successive light connect of diodes from last to first?')  # FIXME: Check grammar here
+    print('Did you seen successive light up of diodes from last to first?')  # FIXME: Check grammar here
     return get_user_answer()
 
 if __name__ == '__main__':
