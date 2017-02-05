@@ -23,14 +23,72 @@ ConnectionRegistry.register_factory(
 См. также: класс MPDClientConnection
 """
 
+from enum import IntEnum
+
 
 class Connection(object):
     """
-    Соединение. Абстрактный класс соединений (подключений) в программе.
-    Соединения являются средой, через которую идет передача данных
-    между контроллером (устройством с DPL) и объектами (things)
+    Connection (соединение)
+
+    Абстракция всех соединений между устройствами в программе
+
+    Свойства:
+    * имеет индикацию состояния соединения:
+      CONNECTED, CONNECTING, DISABLED
+
+    Гарантии:
+    * после создания находится в состоянии DISABLED
+    * при неожиданном разрыве - переходит в состояние CONNECTING
+      и пытается восстановить соединение
+    * если данные по соединению не могут быть переданы -
+      возвращается код ошибки
+    * вызов метода connect игнориуется, если соединение уже активно
+      (CONNECTED или CONNECTING)
+    * вызов метода disconnect игнорируется, если соединение уже выключено
+      (DISABLED)
     """
-    pass
+    class States(IntEnum):
+        DISABLED = -1  # Соединение выключено, восстановление не происходит
+        CONNECTING = 0  # Соединение активно, идет установка соединения
+        CONNECTED = 1  # Соединение активно, восстановлено и готово к работе
+
+    def set_connect_params(self, *args, **kwargs):
+        """
+        Устанавливает параметры запуска соединения
+        :param args, kwargs: параметры, которые нужны для запуска соединения
+        :return: None
+        """
+        raise NotImplementedError
+
+    def connect(self, *args, **kwargs) -> None:
+        """
+        Переводит соединение из пассивного в активное состояние
+        :return: None
+        """
+        raise NotImplementedError
+
+    def reconnect(self) -> None:
+        """
+        Переводит соединение из пассивного в активное состояние
+        с восстановлением настроек
+        :return: None
+        """
+        raise NotImplementedError
+
+    def disconnect(self) -> None:
+        """
+        Переводит соединение в пассивное состояние
+        :return: None
+        """
+        raise NotImplementedError
+
+    @property
+    def state(self) -> States:
+        """
+        Текущее состояние соединения
+        :return: Connection.States
+        """
+        raise NotImplementedError
 
 
 class ConnectionFactory(object):
