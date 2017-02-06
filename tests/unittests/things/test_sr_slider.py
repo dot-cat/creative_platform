@@ -63,14 +63,14 @@ class TestSliderMethods(unittest.TestCase):
     def test_init_state(self):
         sl = ShiftRegSlider(*sl_common_params)
 
-        self.assertEqual(sl.get_state(), sl.States.closed)
+        self.assertEqual(sl.state, sl.States.closed)
 
     def test_open_closed(self):
         sl = ShiftRegSlider(*sl_common_params)
 
         sl.open()
 
-        self.assertEquals(sl.get_state(), sl.States.opened)
+        self.assertEquals(sl.state, sl.States.opened)
 
         self.assertEqual(sr.get_buf_bit(sl_bit_pos), 1)
         self.assertEqual(sr.get_buf_bit(sl_bit_neg), 1)
@@ -80,7 +80,7 @@ class TestSliderMethods(unittest.TestCase):
 
         sl.close()
 
-        self.assertEquals(sl.get_state(), sl.States.closed)
+        self.assertEquals(sl.state, sl.States.closed)
 
         self.assertEqual(sr.get_buf_bit(sl_bit_pos), 0)
         self.assertEqual(sr.get_buf_bit(sl_bit_neg), 0)
@@ -92,7 +92,7 @@ class TestSliderMethods(unittest.TestCase):
 
         sl.close()
 
-        self.assertEquals(sl.get_state(), sl.States.closed)
+        self.assertEquals(sl.state, sl.States.closed)
 
         self.assertEqual(sr.get_buf_bit(sl_bit_pos), 0)
         self.assertEqual(sr.get_buf_bit(sl_bit_neg), 0)
@@ -104,7 +104,7 @@ class TestSliderMethods(unittest.TestCase):
 
         sl.open()
 
-        self.assertEquals(sl.get_state(), sl.States.opened)
+        self.assertEquals(sl.state, sl.States.opened)
 
         self.assertEqual(sr.get_buf_bit(sl_bit_pos), 1)
         self.assertEqual(sr.get_buf_bit(sl_bit_neg), 1)
@@ -114,7 +114,7 @@ class TestSliderMethods(unittest.TestCase):
 
         sl.toggle()
 
-        self.assertEquals(sl.get_state(), sl.States.opened)
+        self.assertEquals(sl.state, sl.States.opened)
 
         self.assertEqual(sr.get_buf_bit(sl_bit_pos), 1)
         self.assertEqual(sr.get_buf_bit(sl_bit_neg), 1)
@@ -126,7 +126,7 @@ class TestSliderMethods(unittest.TestCase):
 
         sl.toggle()
 
-        self.assertEquals(sl.get_state(), sl.States.closed)
+        self.assertEquals(sl.state, sl.States.closed)
 
         self.assertEqual(sr.get_buf_bit(sl_bit_pos), 0)
         self.assertEqual(sr.get_buf_bit(sl_bit_neg), 0)
