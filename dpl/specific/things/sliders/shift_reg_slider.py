@@ -9,6 +9,8 @@
 # CC6 - Consider Change 6
 #   Защита на случай многопоточного выполнения - предотвращает зависание двери в не-
 #   определенном состоянии (например, предотвращает останов двери раньше времени).
+# CC22 - Consider Change 22
+#   См. CC22 в ShiftRegTrigger
 ##############################################################################################
 
 import time
@@ -77,8 +79,8 @@ class ShiftRegSlider(Slider):
 
         super().__init__(con_instance, con_params, metadata)
 
-        self.__is_enabled = True
-        self.__last_seen = time.time()
+        self._is_enabled = True
+        self._last_seen = time.time()
 
         self.close()  # Закрываем дверь, если она была открыта
 
@@ -88,8 +90,8 @@ class ShiftRegSlider(Slider):
         Текущее состояние объекта
         :return: объект типа self.States
         """
-        ci = self.con_instance  # type: ShiftRegBuffered
-        cp = self.con_params  # type: ShiftRegSlider.ConParams
+        ci = self._con_instance  # type: ShiftRegBuffered
+        cp = self._con_params  # type: ShiftRegSlider.ConParams
 
         return self.States(
             (
@@ -104,21 +106,21 @@ class ShiftRegSlider(Slider):
         Доступность объекта для использования
         :return: True - доступен, False - недоступен
         """
-        return self.__is_enabled
+        return self._is_enabled
 
-    def __update_last_seen(self):
-        self.__last_seen = time.time()
+    def _update_last_seen(self):
+        self._last_seen = time.time()
 
     @property
-    def last_seen(self) -> float:
+    def last_seen(self) -> float:  # Fixme: CC23
         """
         Возвращает время, когда объект был доступен в последний раз
         :return: float, UNIX time
         """
-        if self.__is_enabled:
-            self.__update_last_seen()
+        if self._is_enabled:
+            self._update_last_seen()
 
-        return self.__last_seen
+        return self._last_seen
 
     def disable(self) -> None:
         """
@@ -126,7 +128,7 @@ class ShiftRegSlider(Slider):
         делает его неактивным
         :return: None
         """
-        self.__is_enabled = False
+        self._is_enabled = False
 
         if self.on_avail_update:
             self.on_avail_update(self)
@@ -137,24 +139,24 @@ class ShiftRegSlider(Slider):
         его активным
         :return: None
         """
-        self.__is_enabled = True
+        self._is_enabled = True
 
         if self.on_avail_update:
             self.on_avail_update(self)
 
-    def __set_state(self, target):
-        ci = self.con_instance  # type: ShiftRegBuffered
+    def _set_state(self, target):
+        ci = self._con_instance  # type: ShiftRegBuffered
 
-        ci.set_buf_bit(self.con_params.pos, target.value[0])
-        ci.set_buf_bit(self.con_params.neg, target.value[1])
+        ci.set_buf_bit(self._con_params.pos, target.value[0])
+        ci.set_buf_bit(self._con_params.neg, target.value[1])
 
         ci.write_buffer()
 
         if self.on_update:
             self.on_update(self)
 
-    def __wait_transition(self):
-        time.sleep(self.con_params.transition_time)
+    def _wait_transition(self):
+        time.sleep(self._con_params.transition_time)
 
     def open(self) -> Actuator.ExecutionResult:
         """
@@ -167,16 +169,18 @@ class ShiftRegSlider(Slider):
         # Если слайдер закрыт или закрывается...
         if self.state == self.States.closed or self.state == self.States.closing:
             # ...начинаем его открывать...
-            self.__set_state(self.States.opening)
+            self._set_state(self.States.opening)
 
             # ...и ждем открытия
-            self.__wait_transition()
+            self._wait_transition()
         else:
             return Actuator.ExecutionResult.IGNORED_BAD_STATE  # Иначе выходим
 
         # Если никто не изменил состояние слайдера вместо нас...
         if self.state == self.States.opening:  # Fixme: CC6
-            self.__set_state(self.States.opened)  # ...останавливаем дверь, открыто
+            self._set_state(self.States.opened)  # ...останавливаем дверь, открыто
+
+        return Actuator.ExecutionResult.OK
 
     def close(self) -> Actuator.ExecutionResult:
         """
@@ -189,16 +193,18 @@ class ShiftRegSlider(Slider):
         # Если дверь открыта или открывается...
         if self.state == self.States.opened or self.state == self.States.opening:
             # ...начинаем ее закрывать...
-            self.__set_state(self.States.closing)
+            self._set_state(self.States.closing)
 
             # ...и ждем закрытия
-            self.__wait_transition()
+            self._wait_transition()
         else:
             return Actuator.ExecutionResult.IGNORED_BAD_STATE  # Иначе выходим
 
         # Если никто не изменил состояние двери вместо нас...
         if self.state == self.States.closing:  # Fixme: CC6
-            self.__set_state(self.States.closed)  # ...останавливаем дверь, закрыто
+            self._set_state(self.States.closed)  # ...останавливаем дверь, закрыто
+
+        return Actuator.ExecutionResult.OK
 
 
 class ShiftRegSliderFactory(ThingFactory):

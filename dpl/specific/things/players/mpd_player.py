@@ -33,10 +33,10 @@ class MPDPlayer(Player):
     @contextlib.contextmanager
     def connection(self):
         try:
-            self.con_instance.reconnect()
+            self._con_instance.reconnect()
             yield
         finally:
-            self.con_instance.disconnect()
+            self._con_instance.disconnect()
 
     @classmethod
     def __mpd_state_to_self_state(cls, mpd_state: str) -> Player.States:
@@ -53,7 +53,7 @@ class MPDPlayer(Player):
     def get_state(self):
         try:
             with self.connection():
-                status = self.con_instance.status()
+                status = self._con_instance.status()
         except ConnectionRefusedError:
             return MPDPlayer.States.undefined
 
@@ -61,28 +61,28 @@ class MPDPlayer(Player):
 
     def play(self) -> None:  # CC15
         with self.connection():
-            self.con_instance.play()
+            self._con_instance.play()
 
     def stop(self) -> None:  # CC15
         with self.connection():
-            self.con_instance.stop()
+            self._con_instance.stop()
 
     def pause(self) -> None:  # CC15
         with self.connection():
-            self.con_instance.pause()
+            self._con_instance.pause()
 
     def next(self) -> None:  # CC15
         with self.connection():
-            self.con_instance.next()
+            self._con_instance.next()
 
     def prev(self) -> None:  # CC15
         with self.connection():
-            self.con_instance.previous()
+            self._con_instance.previous()
 
     def get_current_track(self) -> dict:  # CC16
         try:
             with self.connection():
-                return self.con_instance.currentsong()  # CC 17
+                return self._con_instance.currentsong()  # CC 17
         except ConnectionRefusedError:
             return {
                 "name": "undefined"

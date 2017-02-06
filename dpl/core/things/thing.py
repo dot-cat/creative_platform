@@ -46,19 +46,11 @@ class Thing(object):
         :param con_params: параметры доступа к соединению
         :param metadata: метаданные объекта (см. свойство metadata)
         """
-        self.__con_instance = con_instance
-        self.__con_params = con_params
-        self.__metadata = metadata
-        self.__on_update = None
-        self.__on_avail_update = None
-
-    @property
-    def con_instance(self) -> Connection:
-        return self.__con_instance
-
-    @property
-    def con_params(self):
-        return self.__con_params
+        self._con_instance = con_instance
+        self._con_params = con_params
+        self._metadata = metadata
+        self._on_update = None
+        self._on_avail_update = None
 
     @property
     def metadata(self) -> dict or None:
@@ -66,7 +58,7 @@ class Thing(object):
         Метаданные объекта. Например: ID, название, описание и т.д.
         :return: словарь с метаданными либо None
         """
-        return self.__metadata
+        return self._metadata
 
     @property
     def state(self) -> States:
@@ -106,21 +98,21 @@ class Thing(object):
 
     @property
     def on_update(self) -> callable:
-        return self.__on_update
+        return self._on_update
 
     @on_update.setter
     def on_update(self, func):
         if self.__is_good_callback(func):
-            self.__on_update = func
+            self._on_update = func
 
     @property
     def on_avail_update(self) -> callable:
-        return self.__on_avail_update
+        return self._on_avail_update
 
     @on_avail_update.setter
     def on_avail_update(self, func):
         if self.__is_good_callback(func):
-            self.__on_avail_update = func
+            self._on_avail_update = func
 
     def disable(self) -> None:
         """

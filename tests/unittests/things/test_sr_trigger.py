@@ -45,64 +45,40 @@ class TestTriggerMethods(unittest.TestCase):
     def test_get_init_state(self):
         trig = ShiftRegTrigger(sr, tr_bit_pos)
 
-        self.assertEqual(trig.get_state(), trig.States.off)
+        self.assertEqual(trig.state, trig.States.off)
 
-    def test_set_invalid_state(self):
+    def test_on(self):
         trig = ShiftRegTrigger(sr, tr_bit_pos)
 
-        with self.assertRaisesRegex(ValueError, 'Type of state argument must be a Trigger.State'):
-            trig.set_state('str')
+        trig.on()
 
-    def test_set_state_on(self):
-        trig = ShiftRegTrigger(sr, tr_bit_pos)
-
-        trig.set_state(trig.States.on)
-
-        self.assertEqual(trig.get_state(), trig.States.on)
+        self.assertEqual(trig.state, trig.States.on)
 
         self.assertEqual(sr.get_buf_bit(tr_bit_pos), 1)
 
-    def test_set_state_off(self):
+    def test_off(self):
         trig = ShiftRegTrigger(sr, tr_bit_pos)
 
-        trig.set_state(trig.States.off)
+        trig.off()
 
-        self.assertEqual(trig.get_state(), trig.States.off)
-
-        self.assertEqual(sr.get_buf_bit(tr_bit_pos), 0)
-
-    def test_set_on(self):
-        trig = ShiftRegTrigger(sr, tr_bit_pos)
-
-        trig.set_on()
-
-        self.assertEqual(trig.get_state(), trig.States.on)
-
-        self.assertEqual(sr.get_buf_bit(tr_bit_pos), 1)
-
-    def test_set_off(self):
-        trig = ShiftRegTrigger(sr, tr_bit_pos)
-
-        trig.set_off()
-
-        self.assertEqual(trig.get_state(), trig.States.off)
+        self.assertEqual(trig.state, trig.States.off)
 
         self.assertEqual(sr.get_buf_bit(tr_bit_pos), 0)
 
     def test_toggle(self):
         trig = ShiftRegTrigger(sr, tr_bit_pos)
 
-        trig.set_off()
+        trig.off()
 
         trig.toggle()
 
-        self.assertEqual(trig.get_state(), trig.States.on)
+        self.assertEqual(trig.state, trig.States.on)
 
         self.assertEqual(sr.get_buf_bit(tr_bit_pos), 1)
 
         trig.toggle()
 
-        self.assertEqual(trig.get_state(), trig.States.off)
+        self.assertEqual(trig.state, trig.States.off)
 
         self.assertEqual(sr.get_buf_bit(tr_bit_pos), 0)
 
