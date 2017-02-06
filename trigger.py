@@ -4,6 +4,7 @@
 ##############################################################################################
 
 import logging
+import warnings
 from enum import Enum
 
 from dpl.core.things import Actuator
@@ -63,13 +64,15 @@ class Trigger(Actuator):
         """
         Немедленно устанавливает триггер в состояние "включено"
         """
-        raise DeprecationWarning("Deprecated, use on method instead")
+        warnings.warn("Deprecated, use on method instead", DeprecationWarning)
+        return self.on()
 
     def set_off(self) -> Actuator.ExecutionResult:
         """
         Немедленно устанавливает триггер в состояние "выключено"
         """
-        raise DeprecationWarning("Deprecated, use off method instead")
+        warnings.warn("Deprecated, use off method instead", DeprecationWarning)
+        return self.off()
 
     def toggle(self) -> Actuator.ExecutionResult:
         """
