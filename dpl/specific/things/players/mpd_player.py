@@ -50,7 +50,8 @@ class MPDPlayer(Player):
             logger.warning("Unknown state of MPD player: %s", mpd_state)
             return cls.States.undefined
 
-    def get_state(self):
+    @property
+    def state(self):
         try:
             with self.connection():
                 status = self._con_instance.status()

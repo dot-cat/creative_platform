@@ -20,6 +20,7 @@ from dpl.core.things import Player
 from dpl.core.things import Slider
 from dpl.core.things import Thing
 from dpl.core.things import Trigger
+from dpl.core.things import Actuator
 from dpl.core.things import get_thing_by_params
 
 # noinspection PyUnresolvedReferences
@@ -91,7 +92,7 @@ class ControllerThings(object):
         :param obj_id: идентификатор объекта
         :return: True - успешно, False - неуспешно
         """
-        obj_alias = self.__resolve_obj_by_id(obj_id)
+        obj_alias = self.__resolve_obj_by_id(obj_id)  # type: Actuator
 
         obj_alias.toggle()
 
@@ -151,9 +152,9 @@ class ControllerThings(object):
 
         # Заполняем его значениями
         obj_info["id"] = obj_id  # ID объекта
-        obj_info["status"] = obj.get_state_string()  # текущее состояние
+        obj_info["status"] = obj.state.name  # текущее состояние
         obj_info["actions"] = self.get_permitted_actions(obj_id)  # действия, доступные пользователю
-        obj_info.update(obj.get_metadata())  # метаданные
+        obj_info.update(obj.metadata)  # метаданные
 
         return obj_info
 
