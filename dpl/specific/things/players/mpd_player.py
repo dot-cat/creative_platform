@@ -14,8 +14,9 @@
 
 import contextlib
 import logging
+import time
 
-from dpl.core.things import ThingFactory, ThingRegistry
+from dpl.core.things import ThingFactory, ThingRegistry, Actuator
 from dpl.core.things import Player
 from dpl.specific.connections.mpd_client import MPDClientConnection
 
@@ -30,13 +31,10 @@ class MPDPlayer(Player):
         """
         super().__init__(con_instance, con_params, metadata)
 
-    @contextlib.contextmanager
-    def connection(self):
-        try:
-            self._con_instance.reconnect()
-            yield
-        finally:
-            self._con_instance.disconnect()
+        self._is_con_failed = False
+        self._is_enabled = True
+        self._state = self.States.undefined
+        self._extended_info = None
 
     @classmethod
     def __mpd_state_to_self_state(cls, mpd_state: str) -> Player.States:
@@ -48,46 +46,29 @@ class MPDPlayer(Player):
             return cls.States.paused
         else:
             logger.warning("Unknown state of MPD player: %s", mpd_state)
-            return cls.States.undefined
 
-    def get_state(self):
-        try:
-            with self.connection():
-                status = self._con_instance.status()
-        except ConnectionRefusedError:
-            return MPDPlayer.States.undefined
+        return cls.States.undefined
 
-        return self.__mpd_state_to_self_state(status["state"])
+    @property
+    def extended_info(self) -> dict or None:
+        return self._extended_info
 
-    def play(self) -> None:  # CC15
-        with self.connection():
-            self._con_instance.play()
+    @property
+    def is_available(self) -> bool:
+        """
+        Доступность объекта для использования
+        :return: True - доступен, False - недоступен
+        """
+        return self._is_enabled and not self._is_con_failed
 
-    def stop(self) -> None:  # CC15
-        with self.connection():
-            self._con_instance.stop()
+    def _state_updater(self):
+        ci = self._con_instance  # type: MPDClientConnection
 
-    def pause(self) -> None:  # CC15
-        with self.connection():
-            self._con_instance.pause()
-
-    def next(self) -> None:  # CC15
-        with self.connection():
-            self._con_instance.next()
-
-    def prev(self) -> None:  # CC15
-        with self.connection():
-            self._con_instance.previous()
-
-    def get_current_track(self) -> dict:  # CC16
-        try:
-            with self.connection():
-                return self._con_instance.currentsong()  # CC 17
-        except ConnectionRefusedError:
-            return {
-                "name": "undefined"
-            }  # CC 18
-
+        while self._is_enabled:
+            ci.idle()
+            self._extended_info = ci.status()
+            self._state = self.__mpd_state_to_self_state(self._extended_info["state"])
+            
 
 class MPDPlayerFactory(ThingFactory):
     @staticmethod
