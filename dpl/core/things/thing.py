@@ -92,6 +92,14 @@ class Thing(object):
         """
         raise NotImplementedError
 
+    @property
+    def commands(self) -> list or tuple:
+        """
+        Возвращает список всех доступных команд
+        :return: list или tuple
+        """
+        raise NotImplementedError
+
     @staticmethod
     def __is_good_callback(func) -> bool:
         return isinstance(func, callable) or func is None

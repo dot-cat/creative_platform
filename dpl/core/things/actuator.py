@@ -29,14 +29,6 @@ class Actuator(Thing):
         """
         super().__init__(con_instance, con_params, metadata)
 
-    @property
-    def commands(self) -> list or tuple:
-        """
-        Возвращает список всех доступных команд
-        :return: list или tuple
-        """
-        raise NotImplementedError
-
     def execute(self, cmd: str, *args, **kwargs) -> ExecutionResult:
         """
         Запускает выполнение команды, указанной в cmd
