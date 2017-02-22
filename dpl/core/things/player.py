@@ -26,7 +26,7 @@ class Player(Actuator):
         super().__init__(con_instance, con_params, metadata)
 
     @property
-    def commands(self) -> tuple:
+    def actions(self) -> tuple:
         """
         Возвращает список всех доступных команд
         :return: tuple
