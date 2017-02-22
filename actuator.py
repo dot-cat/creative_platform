@@ -1,3 +1,11 @@
+##############################################################################################
+# FIXME List:
+# CC24 - Consider Change 24
+#   Переименовать cmd в action
+# TD5 - To Do 5
+#   Переименовать все вхождения command в action
+##############################################################################################
+
 from enum import IntEnum
 
 from dpl.core.things import Thing
@@ -30,23 +38,23 @@ class Actuator(Thing):
         super().__init__(con_instance, con_params, metadata)
 
     @property
-    def commands(self) -> list or tuple:
+    def actions(self) -> list or tuple:
         """
-        Возвращает список всех доступных команд
+        Возвращает список всех доступных команд/действий над объектом
         :return: list или tuple
         """
         raise NotImplementedError
 
-    def execute(self, cmd: str, *args, **kwargs) -> ExecutionResult:
+    def execute(self, cmd: str, *args, **kwargs) -> ExecutionResult:  # Fixme: CC24
         """
-        Запускает выполнение команды, указанной в cmd
+        Запускает выполнение команды/действия, указанной в cmd
         :param cmd: строка, команда на выполнение
         :param args, kwargs: параметры команды
         :return: возвращаемое значение
         """
         invalid_cmd_error = ValueError("Invalid command: {0}".format(cmd))
 
-        if cmd not in self.commands:
+        if cmd not in self.actions:
             raise invalid_cmd_error
 
         cmd_func = self.__getattribute__(cmd)
