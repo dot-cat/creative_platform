@@ -10,9 +10,12 @@
 #   * оставить как есть, ничего не возвращать, выбрасывать исключения в случае ошибки.
 # CC13 - Consider Change 13
 #   Кешировать информацию об объектах.
+# CC23 - Consider Change 23
+#   Перенести логику формирования словарного представления на Thing
 ##############################################################################################
 
 import logging
+import warnings
 
 from dpl.core.config import Config
 from dpl.core.connections import get_connection_by_config
@@ -140,13 +143,19 @@ class ControllerThings(object):
         except AttributeError:
             raise
 
-    def __get_resolved_object_info(self, obj_id: str, obj: Thing) -> dict:  # Fixme: CC13
+    def __get_resolved_object_info(self, obj_id: str, obj: Thing) -> dict:
         """
         Извлечь инфрмацию об объекте
         :param obj_id: ID объекта
         :param obj: ссылка на объект
         :return: словарь с информацией об объекте
         """
+        warnings.warn(
+            "This method will be replaced "
+            "with __get_resolved_thing_info",
+            PendingDeprecationWarning
+        )
+
         # Создаем новый словарь
         obj_info = dict()
 
@@ -158,7 +167,73 @@ class ControllerThings(object):
 
         return obj_info
 
-    def get_object_info(self, obj_id: str) -> dict:  # Fixme: TD3, CC13
+    def get_object_info(self, obj_id: str) -> dict:
+        """
+        Получить информацию об объекте по ID.
+        :param obj_id: ID объекта
+        :return: словарь в формате:
+        {
+            "id": "D1",
+            "type": "door",
+            "actions": ["open", "close", "toggle"],
+            "description": "Entrance door",
+            "status": "opened"
+        }
+        """
+        warnings.warn(
+            "This method will be replaced "
+            "with get_thing_info",
+            PendingDeprecationWarning
+        )
+        obj = self.__resolve_obj_by_id(obj_id)  # Получаем объект по ID
+        return self.__get_resolved_object_info(obj_id, obj)
+
+    def get_all_objects_info(self) -> list:
+        """
+        Получить информацию о всех объектах в системе
+        :return: список с информацией обо всех объектах
+        """
+        warnings.warn(
+            "This method will be replaced "
+            "with get_all_things_info",
+            PendingDeprecationWarning
+        )
+
+        info_list = list()
+
+        for obj_id, obj in self.all_things.items():
+            info_list.append(self.__get_resolved_object_info(obj_id, obj))
+
+        return info_list
+
+    @staticmethod
+    def __get_resolved_thing_info(th_id: str, th: Thing) -> dict:  # Fixme: CC13, CC23
+        """
+        Извлечь инфрмацию об объекте
+        :param th_id: ID объекта
+        :param th: ссылка на объект
+        :return: словарь с информацией об объекте
+        """
+        # Создаем новый словарь
+        th_info = dict()
+
+        # Заполняем его значениями
+        th_info["id"] = th_id  # ID объекта
+        th_info["state"] = th.state.name  # текущее состояние
+        if isinstance(th, Actuator):
+            th_info["actions"] = th.actions  # действия, доступные пользователю
+        else:
+            th_info["actions"] = tuple()
+
+        th_info["is_available"] = th.is_available
+        th_info["last_seen"] = th.last_seen
+        th_info["extended_info"] = th.extended_info
+
+        th_info.update(th.metadata)  # метаданные
+
+        return th_info
+
+    def get_thing_info(self, obj_id: str) -> dict:  # Fixme: TD3, CC13
         """
         Получить информацию об объекте по ID.
         :param obj_id: ID объекта
@@ -172,9 +247,9 @@ class ControllerThings(object):
         }
         """
         obj = self.__resolve_obj_by_id(obj_id)  # Получаем объект по ID
-        return self.__get_resolved_object_info(obj_id, obj)
+        return self.__get_resolved_thing_info(obj_id, obj)
 
-    def get_all_objects_info(self) -> list:  # Fixme: CC13
+    def get_all_things_info(self) -> list:  # Fixme: CC13
         """
         Получить информацию о всех объектах в системе
         :return: список с информацией обо всех объектах
@@ -182,7 +257,7 @@ class ControllerThings(object):
         info_list = list()
 
         for obj_id, obj in self.all_things.items():
-            info_list.append(self.__get_resolved_object_info(obj_id, obj))
+            info_list.append(self.__get_resolved_thing_info(obj_id, obj))
 
         return info_list
 

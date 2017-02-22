@@ -1,7 +1,16 @@
 #!flask/bin/python
+
+##############################################################################################
+# FIXME List:
+# RN1 - Rewrite Now 1
+#   Убрать нафиг полный перебор
+##############################################################################################
+
+
 import logging
 import threading
 import time
+import warnings
 
 from flask import Flask, jsonify, abort, url_for, request
 
@@ -40,6 +49,7 @@ def get_structure():
         {
             'rooms': url_for('get_rooms'),
             'objects': url_for('get_objects'),
+            'things': url_for('get_things'),
             'messages': url_for('receive_message')
         }
     )
@@ -50,7 +60,7 @@ def get_rooms():
     return jsonify({'rooms': app.config["model"].get_category_config("rooms")})
 
 
-@app.route('/rooms/<string:room_id>', methods=['GET'])
+@app.route('/rooms/<string:room_id>', methods=['GET'])  # Fixme: RN1
 def get_room(room_id):
     room = list(filter(lambda t: t['id'] == room_id, app.config["model"].get_category_config("rooms")))
     if len(room) == 0:
@@ -61,12 +71,20 @@ def get_room(room_id):
 
 @app.route('/objects/', methods=['GET'])
 def get_objects():
+    warnings.warn(
+        "This route will be replaced with /things/ route",
+        PendingDeprecationWarning
+    )
     all_info = app.config["things"].get_all_objects_info()
     return jsonify({'objects': all_info})
 
 
 @app.route('/objects/<string:object_id>', methods=['GET'])
 def get_object(object_id):
+    warnings.warn(
+        "This route will be replaced with /things/<string:object_id> route",
+        PendingDeprecationWarning
+    )
     object_item = None
 
     try:
@@ -82,6 +100,11 @@ def get_object(object_id):
 
 @app.route('/objects/<string:object_id>/current_track', methods=['GET'])
 def get_current_track(object_id):
+    warnings.warn(
+        "This route will be removed in v0.4. "
+        "All needed information is moved to extended_info attribute",
+        PendingDeprecationWarning
+    )
     object_item = None
 
     try:
@@ -93,6 +116,29 @@ def get_current_track(object_id):
             raise
     except AttributeError:
         abort(404)
+
+    return jsonify(object_item)
+
+
+@app.route('/things/', methods=['GET'])
+def get_things():
+    things_container = app.config["things"]  # type: ControllerThings
+    all_info = things_container.get_all_things_info()
+    return jsonify({'things': all_info})
+
+
+@app.route('/things/<string:thing_id>', methods=['GET'])  # Fixme: RN1
+def get_thing(thing_id):
+    object_item = None
+    things_container = app.config["things"]  # type: ControllerThings
+
+    try:
+        object_item = things_container.get_thing_info(thing_id)
+    except ValueError as e:
+        if e.args[0] == "id not found":
+            abort(404)
+        else:
+            raise
 
     return jsonify(object_item)
 
