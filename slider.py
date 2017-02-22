@@ -36,7 +36,7 @@ class Slider(Actuator):
         super().__init__(con_instance, con_params, metadata)
 
     @property
-    def command_list(self) -> tuple:
+    def commands(self) -> tuple:
         """
         Возвращает список всех доступных команд
         :return: tuple

@@ -30,7 +30,7 @@ class Actuator(Thing):
         super().__init__(con_instance, con_params, metadata)
 
     @property
-    def command_list(self) -> list or tuple:
+    def commands(self) -> list or tuple:
         """
         Возвращает список всех доступных команд
         :return: list или tuple
@@ -46,7 +46,7 @@ class Actuator(Thing):
         """
         invalid_cmd_error = ValueError("Invalid command: {0}".format(cmd))
 
-        if cmd not in self.command_list:
+        if cmd not in self.commands:
             raise invalid_cmd_error
 
         cmd_func = self.__getattribute__(cmd)
