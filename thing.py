@@ -32,6 +32,9 @@ class Thing(object):
       информация о текущем состоянии (например, текущее значение сенсора,
       текущий трек и плейлист плеера и т.д.)
     * extended_info может вернуть None
+
+    Классы-наследники могут расширять реализацию и добавлять как новые
+    методы, так и новые свойства.
     """
 
     class States(Enum):
@@ -86,13 +89,17 @@ class Thing(object):
         """
         raise NotImplementedError
 
-    @property
-    def extended_info(self) -> dict or None:
+    def to_dict(self) -> dict:
         """
-        Возвращает расширенную информацию о состоянии объекта
-        :return: словарь с информацией либо None
+        Метод, возвращающий копию объекта в виде словаря
+        :return: словарь-копия значений из свойств
         """
-        raise NotImplementedError
+        return {
+            "state": self.state.name,
+            "is_available": self.is_available,
+            "last_seen": self.last_seen,
+            "metadata": self.metadata
+        }
 
     @staticmethod
     def __is_good_callback(func) -> bool:

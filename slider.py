@@ -43,14 +43,6 @@ class Slider(Actuator):
         """
         return self.__COMMAND_LIST
 
-    @property
-    def extended_info(self) -> None:
-        """
-        Возвращает расширенную информацию о состоянии объекта
-        :return: None
-        """
-        return None
-
     def open(self) -> Actuator.ExecutionResult:
         """
         Открывает слайдер

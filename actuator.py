@@ -45,6 +45,16 @@ class Actuator(Thing):
         """
         raise NotImplementedError
 
+    def to_dict(self) -> dict:
+        """
+        Метод, возвращающий копию объекта в виде словаря
+        :return: словарь-копия значений из свойств
+        """
+        result = super(Thing).to_dict()  # Свойства базового класса
+        result["actions"] = self.actions  # Специфичное поле: доступные действия
+
+        return result
+
     def execute(self, cmd: str, *args, **kwargs) -> ExecutionResult:  # Fixme: CC24
         """
         Запускает выполнение команды/действия, указанной в cmd
