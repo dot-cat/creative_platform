@@ -104,15 +104,13 @@ class Player(Actuator):
         result = super().to_dict()  # Свойства базового класса
 
         # Специфичные поля:
-        result["extended_info"] = {
-            "volume": self.volume,
-            "source": self.source,
-            "title": self.title,
-            "artist": self.artist,
-            "album": self.album,
-            "elapsed": self.elapsed,
-            "duration": self.duration
-        }
+        result["volume"] = self.volume
+        result["source"] = self.source
+        result["title"] = self.title
+        result["artist"] = self.artist
+        result["album"] = self.album
+        result["elapsed"] = self.elapsed
+        result["duration"] = self.duration
 
         return result
 
