@@ -89,18 +89,6 @@ class MPDPlayer(Player):
 
         return self._last_seen
 
-    @property
-    def extended_info(self):
-        """
-        Возвращает расширенную информацию о состоянии объекта
-        :return: словарь с информацией либо None
-        """
-        try:
-            with self._connection():
-                return self._con_instance.status()
-        except ConnectionRefusedError:
-            return None
-
     def disable(self) -> None:
         """
         Отключает объект, останавливает обновление состояния и
@@ -158,7 +146,7 @@ class MPDPlayer(Player):
     def get_current_track(self) -> dict:  # CC16
         warnings.warn(
             "This method will be removed in v0.4. "
-            "All needed information is moved to extended_info attribute",
+            "All needed information is moved to corresponding properties",
             PendingDeprecationWarning
         )
         try:
