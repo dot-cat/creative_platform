@@ -111,6 +111,101 @@ class MPDPlayer(Player):
         if self.on_avail_update:
             self.on_avail_update(self)
 
+    def _get_status(self) -> dict:
+        warnings.warn(
+            "This method is a temporary solution and must be removed  "
+            "or changed before release",
+            DeprecationWarning
+        )
+
+        try:
+            with self._connection():
+                return self._con_instance.status()  # CC 17
+        except ConnectionRefusedError:
+            return {}  # CC 18
+
+    @property
+    def volume(self) -> int:  # Fixme: CC26
+        """
+        Текущий уровень громкости в процентах
+        :return: int, -1 = n/a
+        """
+        status = self._get_status()
+        return status.get("volume", -1)
+
+    @property
+    def source(self) -> str:
+        """
+        Имя текущего файла либо URI потока
+        :return: str
+        """
+        ti = self._get_current_track_info()
+        return ti.get("file", None)  # None = error
+
+    @property
+    def title(self) -> str:
+        """
+        Название текущего трека либо потока
+        :return: str
+        """
+        ti = self._get_current_track_info()
+        return ti.get(
+            "title",
+            ti.get(  # if there is no title -> try to get stream name
+                "name", None
+            )
+        )  # None = error
+
+    @property
+    def artist(self) -> str or None:
+        """
+        Имя исполнителя трека
+        :return: строка либо None, если информация отсутствует
+        """
+        ti = self._get_current_track_info()
+        return ti.get("artist", None)
+
+    @property
+    def album(self) -> str or None:
+        """
+        Название альбома трека
+        :return: строка либо None, если информация отсутствует
+        """
+        ti = self._get_current_track_info()
+        return ti.get("album", None)
+
+    @property
+    def elapsed(self) -> float:
+        """
+        Позиция проигрывания трека. Истекшее время с начала проигрывания трека в секундах.
+        :return: float
+        """
+        ti = self._get_status()
+        return ti.get("elapsed", -1.0)
+
+    @property
+    def duration(self) -> float:
+        """
+        Длина трека текущего трека в секундах
+        :return: float, -1.0 = бесконечный трек/стрим
+        """
+        ti = self._get_current_track_info()
+        return ti.get("time", -1.0)
+
+    def set_volume(self, value: int) -> Actuator.ExecutionResult:
+        """
+        Установить новое значение громкости в диапазоне от 0 до 100
+        :param value: значаение громкости
+        :return: Actuator.ExecutionResult
+        """
+        if value < 0 or value > 100:
+            raise ValueError()
+
+        with self._connection():
+            self._con_instance.setvol()
+
+        return Actuator.ExecutionResult.OK
+
     def play(self) -> Actuator.ExecutionResult:  # CC15
         with self._connection():
             self._con_instance.play()
@@ -143,19 +238,38 @@ class MPDPlayer(Player):
             except mpd.CommandError:  # Треки нельзя переключать тогда, когда плеер MPD остановлен
                 return self.ExecutionResult.IGNORED_BAD_STATE
 
+    def seek(self, track_pos: float) -> Actuator.ExecutionResult:
+        """
+        Прокрутить текущий трек к указанной позиции
+        :param track_pos: позиция в треке
+        :return: Actuator.ExecutionResult
+        """
+        with self._connection():
+            try:
+                self._con_instance.seekcur(track_pos)
+            except mpd.CommandError:  # Треки нельзя переключать тогда, когда плеер MPD остановлен
+                return self.ExecutionResult.IGNORED_BAD_STATE
+
+    def _get_current_track_info(self) -> dict:
+        warnings.warn(
+            "This method is a temporary solution and must be removed  "
+            "or changed before release",
+            DeprecationWarning
+        )
+
+        try:
+            with self._connection():
+                return self._con_instance.currentsong()  # CC 17
+        except ConnectionRefusedError:
+            return dict()  # CC 18
+
     def get_current_track(self) -> dict:  # CC16
         warnings.warn(
             "This method will be removed in v0.4. "
             "All needed information is moved to corresponding properties",
             PendingDeprecationWarning
         )
-        try:
-            with self._connection():
-                return self._con_instance.currentsong()  # CC 17
-        except ConnectionRefusedError:
-            return {
-                "name": "undefined"
-            }  # CC 18
+        return self._get_current_track_info()
 
 
 class MPDPlayerFactory(ThingFactory):
