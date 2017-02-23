@@ -100,8 +100,7 @@ class Thing(object):
         result = {
             "state": self.state.name,
             "is_available": self.is_available,
-            "last_updated": self.last_updated,
-            "extended_info": dict()
+            "last_updated": self.last_updated
         }
 
         result.update(self.metadata)
