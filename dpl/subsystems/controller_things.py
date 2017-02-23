@@ -219,17 +219,7 @@ class ControllerThings(object):
 
         # Заполняем его значениями
         th_info["id"] = th_id  # ID объекта
-        th_info["state"] = th.state.name  # текущее состояние
-        if isinstance(th, Actuator):
-            th_info["actions"] = th.actions  # действия, доступные пользователю
-        else:
-            th_info["actions"] = tuple()
-
-        th_info["is_available"] = th.is_available
-        th_info["last_seen"] = th.last_seen
-        th_info["extended_info"] = th.extended_info
-
-        th_info.update(th.metadata)  # метаданные
+        th_info.update(th.to_dict())
 
         return th_info
 
