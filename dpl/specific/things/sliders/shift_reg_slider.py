@@ -112,9 +112,9 @@ class ShiftRegSlider(Slider):
         self._last_seen = time.time()
 
     @property
-    def last_seen(self) -> float:  # Fixme: CC23
+    def last_updated(self) -> float:  # Fixme: CC23
         """
-        Возвращает время, когда объект был доступен в последний раз
+        Возвращает время, когда объект был обновлен в последний раз
         :return: float, UNIX time
         """
         if self._is_enabled:

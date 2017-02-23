@@ -19,10 +19,10 @@ class Thing(object):
     * текущее состояние обновляется автоматически и всегда актуально
     * состояние объекта не изменяется, если подключение потеряно
     * при обновлении состояния объект оповещает об этом всех подписчиков
-    * объект обладает свойствами is_available и last_seen
+    * объект обладает свойствами is_available и last_updated
     * is_available обозначает готовность объекта к приему команд и/или
       считыванию новых значений
-    * last_seen - время, когда объект был доступен
+    * last_updated - время, когда объект был обновлен
     * обладает методами disable и enable
     * disable переводит объект в состояние "недоступен" и
       останавливает автоматическое обновление состояния
@@ -82,9 +82,9 @@ class Thing(object):
         raise NotImplementedError
 
     @property
-    def last_seen(self) -> float:
+    def last_updated(self) -> float:
         """
-        Возвращает время, когда объект был доступен в последний раз
+        Возвращает время, когда объект был обновлен в последний раз
         :return: float, UNIX time
         """
         raise NotImplementedError
@@ -97,7 +97,7 @@ class Thing(object):
         result = {
             "state": self.state.name,
             "is_available": self.is_available,
-            "last_seen": self.last_seen,
+            "last_updated": self.last_updated,
             "extended_info": dict()
         }
 
