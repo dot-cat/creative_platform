@@ -50,7 +50,7 @@ class Actuator(Thing):
         Метод, возвращающий копию объекта в виде словаря
         :return: словарь-копия значений из свойств
         """
-        result = super(Thing).to_dict()  # Свойства базового класса
+        result = super().to_dict()  # Свойства базового класса
         result["actions"] = self.actions  # Специфичное поле: доступные действия
 
         return result

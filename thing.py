@@ -94,12 +94,15 @@ class Thing(object):
         Метод, возвращающий копию объекта в виде словаря
         :return: словарь-копия значений из свойств
         """
-        return {
+        result = {
             "state": self.state.name,
             "is_available": self.is_available,
-            "last_seen": self.last_seen,
-            "metadata": self.metadata
+            "last_seen": self.last_seen
         }
+
+        result.update(self.metadata)
+
+        return result
 
     @staticmethod
     def __is_good_callback(func) -> bool:
