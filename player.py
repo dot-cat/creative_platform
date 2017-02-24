@@ -24,7 +24,7 @@ class Player(Actuator):
         playing = 0,
         stopped = 1,
         paused = 2,
-        undefined = None
+        unknown = None
 
     __COMMAND_LIST = ("toggle", "activate", "deactivate",
                       "set_volume", "play", "stop",
