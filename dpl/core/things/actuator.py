@@ -58,6 +58,7 @@ class Actuator(Thing):
         """
         result = super().to_dict()  # Свойства базового класса
         result["actions"] = self.actions  # Специфичное поле: доступные действия
+        result["is_active"] = self.is_active  # Специфичное поле: является ли текущее состояние активным
 
         return result
 
