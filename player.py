@@ -4,9 +4,13 @@
 #   Реализовать setter для свойства volume
 ##############################################################################################
 
+import logging
+import warnings
 from enum import Enum
 
 from dpl.core.things import Actuator
+
+logger = logging.getLogger(__name__)
 
 
 class Player(Actuator):
@@ -22,7 +26,8 @@ class Player(Actuator):
         paused = 2,
         undefined = None
 
-    __COMMAND_LIST = ("set_volume", "toggle", "play", "stop",
+    __COMMAND_LIST = ("toggle", "activate", "deactivate",
+                      "set_volume", "play", "stop",
                       "pause", "next", "prev", "seek")
 
     def __init__(self, con_instance, con_params, metadata=None):
@@ -39,6 +44,14 @@ class Player(Actuator):
         :return: tuple
         """
         return self.__COMMAND_LIST
+
+    @property
+    def is_active(self) -> bool:
+        """
+        Находится ли объект в одном из активных состояний
+        :return: bool, True в состоянии playing, False в других состояниях
+        """
+        return self.state == self.States.playing
 
     @property
     def volume(self) -> int:  # Fixme: CC26
@@ -145,20 +158,34 @@ class Player(Actuator):
         """
         raise NotImplementedError
 
+    def activate(self) -> Actuator.ExecutionResult:
+        """
+        Переключает плеер в состояние playing
+        :return: Actuator.ExecutionResult
+        """
+        return self.play()
+
+    def deactivate(self) -> Actuator.ExecutionResult:
+        """
+        Переключает плеер в состояние paused
+        :return: Actuator.ExecutionResult
+        """
+        return self.pause()
+
     def toggle(self) -> Actuator.ExecutionResult:
         """
         Переключает состояние плеера в противоположное:
         запускает остановленное воспроизведение и останавливает запущенное
         :return None
         """
-        # Если проигрывание остановлено...
-        if self.state == self.States.stopped or self.state == self.States.paused:
-            self.play()  # запускаем его
+        if self.state == self.States.unknown:
+            warnings.warn("Unknown state handling may be deleted", FutureWarning)
 
-        # Если проигрывание запущено...
-        elif self.state == self.States.playing:
-            self.pause()  # приостанавливаем его
+            logger.debug(
+                "Unable to toggle %s object from %s state",
+                self,
+                self.state
+            )
+            return Actuator.ExecutionResult.IGNORED_BAD_STATE
 
-        # Fixme CC1:
-        else:  # Если состояние другое...
-            return self.ExecutionResult.IGNORED_BAD_STATE
+        return super().toggle()

@@ -24,7 +24,7 @@ class Trigger(Actuator):
         off = False
         unknown = None
 
-    __COMMAND_LIST = ("toggle", "on", "off")
+    __COMMAND_LIST = ("toggle", "activate", "deactivate", "on", "off")
 
     def __init__(self, con_instance, con_params, metadata=None):
         """
@@ -39,6 +39,14 @@ class Trigger(Actuator):
         :return: tuple
         """
         return self.__COMMAND_LIST
+
+    @property
+    def is_active(self) -> bool:
+        """
+        Находится ли объект в одном из активных состояний
+        :return: bool, True в состоянии on, False в других состояниях
+        """
+        return self.state == self.States.on
 
     def on(self) -> Actuator.ExecutionResult:
         """
@@ -66,22 +74,33 @@ class Trigger(Actuator):
         warnings.warn("Deprecated, use off method instead", DeprecationWarning)
         return self.off()
 
-    def toggle(self) -> Actuator.ExecutionResult:
+    def activate(self) -> Actuator.ExecutionResult:
+        """
+        Переключает Trigger в состояние on
+        :return: Actuator.ExecutionResult
+        """
+        return self.on()
+
+    def deactivate(self) -> Actuator.ExecutionResult:
+        """
+        Переключает Trigger в состояние off
+        :return: Actuator.ExecutionResult
+        """
+        return self.off()
+
+    def toggle(self) -> Actuator.ExecutionResult:  # Fixme: CC1
         """
         Переключить из текущего состояния в противоположное
+        :return: Actuator.ExecutionResult
         """
-        if self.state == self.States.on:  # если переключатель включен
-            # выключаем его
-            return self.off()
+        if self.state == self.States.unknown:
+            warnings.warn("Unknown state handling may be deleted", FutureWarning)
 
-        elif self.state == self.States.off:  # если переключатель выключен...
-            # включаем его
-            return self.on()
-
-        else:
             logger.debug(
                 "Unable to toggle %s object from %s state",
                 self,
                 self.state
             )
             return Actuator.ExecutionResult.IGNORED_BAD_STATE
+
+        return super().toggle()
