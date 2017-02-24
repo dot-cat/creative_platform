@@ -19,7 +19,13 @@ class Actuator(Thing):
     Гарантии:
     * выполняемые команды возвращают код ошибки при обрыве соединения
     * позволяет получить список всех доступных команд
+    * обладает свойством is_active, которое обозначает нахождение объекта в одном из
+      активных состояний (например: включен, идет проигрывание, идет обнаружение движения и т.д.).
+    * свойство is_active зависит только от state и не зависит от is_available
     * обладает методом execute, который выполняет одну из доступных команд
+    * обладает методом toggle, который переключает между двумя крайними состояниями
+    * обладает методом activate, который переводит объект в одно из активных состояний
+    * обладает методом deactivate, который переводит объект в одно из неактивных состоянийй
     """
 
     class ExecutionResult(IntEnum):
@@ -55,6 +61,14 @@ class Actuator(Thing):
 
         return result
 
+    @property
+    def is_active(self) -> bool:
+        """
+        Находится ли объект в одном из активных состояний
+        :return: bool, True or False
+        """
+        raise NotImplementedError
+
     def execute(self, cmd: str, *args, **kwargs) -> ExecutionResult:  # Fixme: CC24
         """
         Запускает выполнение команды/действия, указанной в cmd
@@ -77,6 +91,23 @@ class Actuator(Thing):
     def toggle(self) -> ExecutionResult:
         """
         Переключает объект между двумя крайними состояниями
+        :return: результат выполнения
+        """
+        if self.is_active:
+            return self.deactivate()
+        else:
+            return self.activate()
+
+    def activate(self) -> ExecutionResult:
+        """
+        Переключает объект в одно из активных состояний
+        :return: результат выполнения
+        """
+        raise NotImplementedError
+
+    def deactivate(self) -> ExecutionResult:
+        """
+        Переключает объект в одно из НЕактивных состояний
         :return: результат выполнения
         """
         raise NotImplementedError
