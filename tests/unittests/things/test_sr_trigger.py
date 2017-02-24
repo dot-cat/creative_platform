@@ -47,6 +47,20 @@ class TestTriggerMethods(unittest.TestCase):
 
         self.assertEqual(trig.state, trig.States.off)
 
+    def test_off_is_not_active(self):
+        trig = ShiftRegTrigger(sr, tr_bit_pos)
+
+        trig.off()
+
+        self.assertEqual(trig.is_active, False)
+
+    def test_on_is_active(self):
+        trig = ShiftRegTrigger(sr, tr_bit_pos)
+
+        trig.on()
+
+        self.assertEqual(trig.is_active, True)
+
     def test_on(self):
         trig = ShiftRegTrigger(sr, tr_bit_pos)
 

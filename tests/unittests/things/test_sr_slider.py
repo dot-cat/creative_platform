@@ -65,6 +65,20 @@ class TestSliderMethods(unittest.TestCase):
 
         self.assertEqual(sl.state, sl.States.closed)
 
+    def test_closed_is_not_active(self):
+        sl = ShiftRegSlider(*sl_common_params)
+
+        sl.close()
+
+        self.assertEqual(sl.is_active, False)
+
+    def test_opened_is_active(self):
+        sl = ShiftRegSlider(*sl_common_params)
+
+        sl.open()
+
+        self.assertEqual(sl.is_active, True)
+
     def test_open_closed(self):
         sl = ShiftRegSlider(*sl_common_params)
 
