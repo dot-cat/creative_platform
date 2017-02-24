@@ -11,6 +11,7 @@ import logging
 import threading
 import time
 import warnings
+import copy
 
 from flask import Flask, jsonify, abort, url_for, request
 
@@ -48,6 +49,7 @@ def get_structure():
     return jsonify(
         {
             'rooms': url_for('get_rooms'),
+            'placements': url_for('get_placements'),
             'objects': url_for('get_objects'),
             'things': url_for('get_things'),
             'messages': url_for('receive_message')
@@ -57,16 +59,48 @@ def get_structure():
 
 @app.route('/rooms/', methods=['GET'])
 def get_rooms():
-    return jsonify({'rooms': app.config["model"].get_category_config("rooms")})
+    warnings.warn(
+        "This route will be replaced with /placements/ route",
+        PendingDeprecationWarning
+    )
+    return jsonify({'placements': app.config["model"].get_category_config("placements")})
 
 
 @app.route('/rooms/<string:room_id>', methods=['GET'])  # Fixme: RN1
 def get_room(room_id):
-    room = list(filter(lambda t: t['id'] == room_id, app.config["model"].get_category_config("rooms")))
+    warnings.warn(
+        "This route will be replaced with /placements/ route",
+        PendingDeprecationWarning
+    )
+    room = list(filter(lambda t: t['id'] == room_id, app.config["model"].get_category_config("placements")))
     if len(room) == 0:
         abort(404)
 
     return jsonify(room[0])
+
+
+@app.route('/placements/', methods=['GET'])
+def get_placements():
+    room_list = copy.deepcopy(app.config["model"].get_category_config("placements"))  # type: list(dict)
+
+    for item in room_list:  # type: dict
+        item.pop("objects")
+
+    return jsonify({'placements': room_list})
+
+
+@app.route('/placements/<string:pl_id>', methods=['GET'])  # Fixme: RN1
+def get_placement(pl_id):
+
+    room_list = list(filter(lambda t: t['id'] == pl_id, app.config["model"].get_category_config("placements")))
+    if len(room_list) == 0:
+        abort(404)
+
+    room = copy.copy(room_list[0])  # type: dict
+
+    room.pop("objects")
+
+    return jsonify(room)
 
 
 @app.route('/objects/', methods=['GET'])

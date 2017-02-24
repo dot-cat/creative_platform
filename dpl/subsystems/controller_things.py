@@ -57,6 +57,21 @@ class ControllerThings(object):
             if new_conn is not None:
                 self.all_connections[item["id"]] = new_conn
 
+    def __get_placement(self, thing_id: str) -> str or None:
+        """
+        Получить id размещения объекта
+        :param thing_id: id объекта
+        :return: id размещения объекта
+        """
+        warnings.warn("This method is a dirty hack and will be removed in v0.4", DeprecationWarning)
+
+        for item in self.model.get_category_config("placements"):
+            if thing_id in item["objects"]:
+                return item["id"]
+
+        else:
+            return None
+
     def __init_all_things(self):
         self.all_things = dict()
 
@@ -73,7 +88,11 @@ class ControllerThings(object):
                 )
                 continue
 
-            metadata = {"description": item["description"], "type": item["type"]}
+            metadata = {
+                "description": item["description"],
+                "type": item["type"],
+                "placement": self.__get_placement(item_id)
+            }
 
             new_object = get_thing_by_params(con_instance, item["con_params"], metadata)
 
@@ -95,6 +114,7 @@ class ControllerThings(object):
         :param obj_id: идентификатор объекта
         :return: True - успешно, False - неуспешно
         """
+        warnings.warn("This method is deprecated and will be removed in v0.4", DeprecationWarning)
         obj_alias = self.__resolve_obj_by_id(obj_id)  # type: Actuator
 
         obj_alias.toggle()
