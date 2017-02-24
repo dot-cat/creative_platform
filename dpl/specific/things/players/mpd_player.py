@@ -55,7 +55,7 @@ class MPDPlayer(Player):
             return cls.States.paused
         else:
             logger.warning("Unknown state of MPD player: %s", mpd_state)
-            return cls.States.undefined
+            return cls.States.unknown
 
     @property
     def state(self):
@@ -63,7 +63,7 @@ class MPDPlayer(Player):
             with self._connection():
                 status = self._con_instance.status()
         except ConnectionRefusedError:
-            return MPDPlayer.States.undefined
+            return MPDPlayer.States.unknown
 
         return self.__mpd_state_to_self_state(status["state"])
 
