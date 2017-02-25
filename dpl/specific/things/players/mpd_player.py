@@ -9,6 +9,8 @@
 #   Отдавать только строку (атрибут "name") или полный словарь с информацией от текущем треке?
 # CC18 - Consider Change 18
 #   Отдавать только {"name": "name here"} или полный словарь ( с ключами file, id, name, pos)?
+# CC27 - Consider Change 27
+#   Заменить реализацию на _alternative_get_title
 ##############################################################################################
 
 
@@ -142,6 +144,49 @@ class MPDPlayer(Player):
         ti = self._get_current_track_info()
         return ti.get("file", None)  # None = error
 
+    @staticmethod
+    def _alternative_get_title(ti: dict) -> str:
+        """
+        Вернуть название текущего трека.
+        Альтернативный подход к составлению заголовка. Используется в mpc и компоненте HomeAssistant
+        :param: Информация о текущем треке, полученная от MPD
+        :return: название трека
+        """
+        warnings.warn("This method may be deleted in the next releases", FutureWarning)
+
+        default = None
+
+        name = ti.get("name", default)
+        title = ti.get("title", default)
+
+        if name is None:  # it's not a stream
+            result = title
+        elif title is None:  # there is no title, may be a stream
+            result = name
+        else:  # it's a stream with a title
+            result = "{stream_name}: {title}".format(stream_name=name, title=title)
+
+        return result
+
+    @staticmethod
+    def _get_title(ti: dict) -> str:
+        """
+        Вернуть название текущего трека.
+        Подход к составлению заголовка, который используется в MPDroid и ncmpcpp
+        :param: Информация о текущем треке, полученная от MPD
+        :return: название трека
+        """
+        default = ""
+
+        source = ti.get("file", default)  # Если источник неизвестен - вернуть None
+        name = ti.get("name", source)  # Если поток неизвестен - вернуть источник
+        title = ti.get("title", name)  # Если название трека неизевстно - вернуть поток
+
+        if title is default:  # Если источник неизвестен - похоже, у нас ошибка
+            logger.error("Unable to fetch title: %s", self)
+
+        return title
+
     @property
     def title(self) -> str:
         """
@@ -149,12 +194,10 @@ class MPDPlayer(Player):
         :return: str
         """
         ti = self._get_current_track_info()
-        return ti.get(
-            "title",
-            ti.get(  # if there is no title -> try to get stream name
-                "name", None
-            )
-        )  # None = error
+
+        title = self._get_title(ti)  # Fixme: CC27
+
+        return title
 
     @property
     def artist(self) -> str or None:
