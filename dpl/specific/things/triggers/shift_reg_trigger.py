@@ -90,7 +90,7 @@ class ShiftRegTrigger(Trigger):
         self._is_enabled = False
 
         if self.on_avail_update:
-            self.on_avail_update(self)
+            self.on_avail_update(self, None)
 
     def enable(self) -> None:
         """
