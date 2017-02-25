@@ -156,15 +156,21 @@ def get_current_track(object_id):
 
 @app.route('/things/', methods=['GET'])
 def get_things():
-    placement = request.args.get('placement', None)
+    placement = request.args.get('placement', None)  # type: str
+    th_type = request.args.get('type', None)  # type: str
 
     things_container = app.config["things"]  # type: ControllerThings
     all_info = things_container.get_all_things_info()
 
     if placement is None:
-        result = all_info
+        filtered_placement = all_info
     else:
-        result = list(filter(lambda t: t['placement'] == placement, all_info))
+        filtered_placement = list(filter(lambda t: t['placement'] == placement, all_info))
+
+    if th_type is None:
+        result = filtered_placement
+    else:
+        result = list(filter(lambda t: t['type'] == th_type, filtered_placement))
 
     return jsonify({'things': result})
 
