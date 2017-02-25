@@ -124,8 +124,7 @@ class ShiftRegSlider(Slider):
 
     def disable(self) -> None:
         """
-        Отключает объект, останавливает обновление состояния и
-        делает его неактивным
+        Отключает объект, останавливает обновление состояния и делает его неактивным
         :return: None
         """
         self._is_enabled = False
@@ -135,14 +134,13 @@ class ShiftRegSlider(Slider):
 
     def enable(self) -> None:
         """
-        Включает объект, запускает обновление состояние и делает
-        его активным
+        Включает объект, запускает обновление состояние и делает его активным
         :return: None
         """
         self._is_enabled = True
 
         if self.on_avail_update:
-            self.on_avail_update(self)
+            self.on_avail_update(self, None)
 
     def _set_state(self, target):
         ci = self._con_instance  # type: ShiftRegBuffered
@@ -153,7 +151,7 @@ class ShiftRegSlider(Slider):
         ci.write_buffer()
 
         if self.on_update:
-            self.on_update(self)
+            self.on_update(self, None)
 
     def _wait_transition(self):
         time.sleep(self._con_params.transition_time)

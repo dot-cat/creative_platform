@@ -101,14 +101,14 @@ class ShiftRegTrigger(Trigger):
         self._is_enabled = True
 
         if self.on_avail_update:
-            self.on_avail_update(self)
+            self.on_avail_update(self, None)
 
     def _set_state(self, target):
         self._con_instance.set_buf_bit(self._con_params, target.value)
         self._con_instance.write_buffer()
 
         if self.on_update:
-            self.on_update(self)
+            self.on_update(self, None)
 
     def on(self) -> Actuator.ExecutionResult:
         if not self.is_available:

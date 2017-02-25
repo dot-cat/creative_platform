@@ -112,20 +112,42 @@ class Thing(object):
         return isinstance(func, callable) or func is None
 
     @property
-    def on_update(self) -> callable:
+    def on_update(self) -> callable or None:
+        """
+        Функтор, который запускается при обновлении свойств объекта
+        :return: текущий зарегистрированный функтор
+        """
         return self._on_update
 
     @on_update.setter
-    def on_update(self, func):
+    def on_update(self, func: callable or None):
+        """
+        Устанавливает функтор, который будет вызван при обновлении свойств объекта
+        :param func: функтор, принимающий два аргумента:
+                     * ссылку на изменившийся объект
+                     * информацию об изменении
+        :return: None
+        """
         if self.__is_good_callback(func):
             self._on_update = func
 
     @property
     def on_avail_update(self) -> callable:
+        """
+        Функтор, который запускается при изменении доступности объекта
+        :return: текущий зарегистрированный функтор
+        """
         return self._on_avail_update
 
     @on_avail_update.setter
     def on_avail_update(self, func):
+        """
+        Устанавливает функтор, который будет вызван при изменении доступности объекта
+        :param func: функтор, принимающий два аргумента:
+                     * ссылку на изменившийся объект
+                     * информацию об изменении
+        :return: None
+        """
         if self.__is_good_callback(func):
             self._on_avail_update = func
 
