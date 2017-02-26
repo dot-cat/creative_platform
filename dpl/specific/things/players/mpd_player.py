@@ -18,6 +18,7 @@ import contextlib
 import logging
 import time
 import warnings
+import threading
 
 from dpl.core.things import ThingFactory, ThingRegistry
 from dpl.core.things import Actuator
@@ -36,8 +37,17 @@ class MPDPlayer(Player):
         :param metadata:
         """
         super().__init__(con_instance, con_params, metadata)
-        self._is_enabled = True
-        self._last_seen = time.time()
+        self._is_enabled = True  # type: bool
+        self._last_updated = time.time()  # type: float
+        self._last_status = {}  # type: dict
+        self._last_current_track = {}  # type: dict
+        self._upd_thread = None  # type: threading.Thread
+
+        self._restart_updater()
+
+    def _restart_updater(self):
+        self._upd_thread = threading.Thread(target=self._updater_loop)
+        self._upd_thread.start()
 
     @contextlib.contextmanager
     def _connection(self):
@@ -59,15 +69,24 @@ class MPDPlayer(Player):
             logger.warning("Unknown state of MPD player: %s", mpd_state)
             return cls.States.unknown
 
+    def _call_on_update(self, *args, **kwargs):
+        if self.on_update:
+            self.on_update(args, kwargs)
+
+    def _call_on_avail_update(self, *args, **kwargs):
+        if self.on_avail_update:
+            self.on_avail_update(args, kwargs)
+
+    def _updater_loop(self):
+        while self._is_enabled:
+            self._update()
+            time.sleep(2)
+
     @property
     def state(self):
-        try:
-            with self._connection():
-                status = self._con_instance.status()
-        except ConnectionRefusedError:
-            return MPDPlayer.States.unknown
-
-        return self.__mpd_state_to_self_state(status["state"])
+        return self.__mpd_state_to_self_state(
+            self._last_status.get("state")
+        )
 
     @property
     def is_available(self) -> bool:  # FIXME: Изменить реализацию, загрушка
@@ -77,19 +96,13 @@ class MPDPlayer(Player):
         """
         return self._is_enabled
 
-    def _update_last_seen(self):
-        self._last_seen = time.time()
-
     @property
     def last_updated(self) -> float:  # Fixme: CC23
         """
         Возвращает время, когда объект был обновлен в последний раз
         :return: float, UNIX time
         """
-        if self._is_enabled:
-            self._update_last_seen()
-
-        return self._last_seen
+        return self._last_updated
 
     def disable(self) -> None:
         """
@@ -98,9 +111,9 @@ class MPDPlayer(Player):
         :return: None
         """
         self._is_enabled = False
+        self._upd_thread.join()
 
-        if self.on_avail_update:
-            self.on_avail_update(self)
+        self._call_on_avail_update(self, None)
 
     def enable(self) -> None:
         """
@@ -109,9 +122,9 @@ class MPDPlayer(Player):
         :return: None
         """
         self._is_enabled = True
+        self._restart_updater()
 
-        if self.on_avail_update:
-            self.on_avail_update(self)
+        self._call_on_avail_update(self, None)
 
     def _get_status(self) -> dict:
         warnings.warn(
@@ -126,23 +139,38 @@ class MPDPlayer(Player):
         except ConnectionRefusedError:
             return {}  # CC 18
 
+    def _update(self, skip_check: bool=False) -> None:
+        """
+        Обновляет значения всех свойств
+        :skip_check: Пропускать ли проверку на наличие отличий
+        :return:
+        """
+        old_properies = self.to_dict()
+
+        new_status = self._get_status()
+        new_curr_track = self._get_current_track_info()
+
+        self._last_status = new_status
+        self._last_current_track = new_curr_track
+        self._last_updated = time.time()
+
+        self._call_on_update(self, old_properies)
+
     @property
     def volume(self) -> int:  # Fixme: CC26
         """
         Текущий уровень громкости в процентах
         :return: int, -1 = n/a
         """
-        status = self._get_status()
-        return status.get("volume", -1)
+        return self._last_status.get("volume", -1)
 
     @property
-    def source(self) -> str:
+    def source(self) -> str or None:
         """
         Имя текущего файла либо URI потока
         :return: str
         """
-        ti = self._get_current_track_info()
-        return ti.get("file", None)  # None = error
+        return self._last_current_track.get("file", None)
 
     @staticmethod
     def _alternative_get_title(ti: dict) -> str:
@@ -168,8 +196,7 @@ class MPDPlayer(Player):
 
         return result
 
-    @staticmethod
-    def _get_title(ti: dict) -> str:
+    def _get_title(self, ti: dict) -> str:
         """
         Вернуть название текущего трека.
         Подход к составлению заголовка, который используется в MPDroid и ncmpcpp
@@ -193,7 +220,7 @@ class MPDPlayer(Player):
         Название текущего трека либо потока
         :return: str
         """
-        ti = self._get_current_track_info()
+        ti = self._last_current_track
 
         title = self._get_title(ti)  # Fixme: CC27
 
@@ -205,8 +232,7 @@ class MPDPlayer(Player):
         Имя исполнителя трека
         :return: строка либо None, если информация отсутствует
         """
-        ti = self._get_current_track_info()
-        return ti.get("artist", None)
+        return self._last_current_track.get("artist", None)
 
     @property
     def album(self) -> str or None:
@@ -214,8 +240,7 @@ class MPDPlayer(Player):
         Название альбома трека
         :return: строка либо None, если информация отсутствует
         """
-        ti = self._get_current_track_info()
-        return ti.get("album", None)
+        return self._last_current_track.get("album", None)
 
     @property
     def elapsed(self) -> float:
@@ -223,8 +248,7 @@ class MPDPlayer(Player):
         Позиция проигрывания трека. Истекшее время с начала проигрывания трека в секундах.
         :return: float
         """
-        ti = self._get_status()
-        return ti.get("elapsed", -1.0)
+        return self._last_status.get("elapsed", -1.0)
 
     @property
     def duration(self) -> float:
@@ -232,8 +256,7 @@ class MPDPlayer(Player):
         Длина трека текущего трека в секундах
         :return: float, -1.0 = бесконечный трек/стрим
         """
-        ti = self._get_current_track_info()
-        return ti.get("time", -1.0)
+        return self._last_current_track.get("time", -1.0)
 
     def set_volume(self, value: int) -> Actuator.ExecutionResult:
         """
