@@ -48,7 +48,7 @@ class ShiftRegTrigger(Trigger):
         super().__init__(con_instance, con_params, metadata)
 
         self._is_enabled = True
-        self._last_seen = time.time()
+        self._last_upd = time.time()
 
     @property
     def state(self):
@@ -67,8 +67,8 @@ class ShiftRegTrigger(Trigger):
         """
         return self._is_enabled
 
-    def _update_last_seen(self):
-        self._last_seen = time.time()
+    def _update_last_upd(self):
+        self._last_upd = time.time()
 
     @property
     def last_updated(self) -> float:  # Fixme: CC23
@@ -76,10 +76,7 @@ class ShiftRegTrigger(Trigger):
         Возвращает время, когда объект был обновлен в последний раз
         :return: float, UNIX time
         """
-        if self._is_enabled:
-            self._update_last_seen()
-
-        return self._last_seen
+        return self._last_upd
 
     def disable(self) -> None:
         """
@@ -106,6 +103,8 @@ class ShiftRegTrigger(Trigger):
     def _set_state(self, target):
         self._con_instance.set_buf_bit(self._con_params, target.value)
         self._con_instance.write_buffer()
+
+        self._update_last_upd()
 
         if self.on_update:
             self.on_update(self, None)
