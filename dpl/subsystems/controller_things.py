@@ -42,6 +42,10 @@ class ControllerThings(object):
         self.__init_all_connections()
         self.__init_all_things()
 
+    def disable_all(self):
+        for key, obj in self.all_things.items():
+            obj.disable()
+
     def __del__(self):
         self.all_things.clear()
         self.all_connections.clear()

@@ -49,6 +49,9 @@ class Controller(object):
 
         logger.debug("%s init finished", self)
 
+    def disable_all_things(self):
+        self.things.disable_all()
+
     def __del__(self):
         """
         Деструктор, выполняет освобождение и остановку всего и вся

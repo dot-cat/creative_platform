@@ -10,3 +10,4 @@ logger.setLevel(logging.DEBUG)
 if __name__ == "__main__":
     controller = Controller()
     controller.run_api()
+    controller.disable_all_things()
