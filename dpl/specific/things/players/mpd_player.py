@@ -30,6 +30,23 @@ import mpd
 logger = logging.getLogger(__name__)
 
 
+def _lost_checker(method_to_decorate):
+    def wrapper(self: Player, *args, **kwargs):
+        try:
+            return method_to_decorate(self, *args, **kwargs)
+        except mpd.ConnectionError:
+            self._is_lost = True
+            return Actuator.ExecutionResult.IGNORED_BAD_STATE
+        except ConnectionRefusedError:
+            self._is_lost = True
+            return Actuator.ExecutionResult.IGNORED_BAD_STATE
+        except ConnectionResetError:
+            self._is_lost = True
+            return Actuator.ExecutionResult.IGNORED_BAD_STATE
+
+    return wrapper
+
+
 class MPDPlayer(Player):
     def __init__(self, con_instance: MPDClientConnection, con_params=None, metadata=None):
         """
@@ -42,8 +59,13 @@ class MPDPlayer(Player):
         self._last_status = {}  # type: dict
         self._last_current_track = {}  # type: dict
         self._upd_thread = None  # type: threading.Thread
+        self._upd_interval = 2  # seconds
+        self.__var_is_lost = False  # type: bool
 
         self._restart_updater()
+
+    def __del__(self):
+        logger.debug("Deleter: %s", self)
 
     def _restart_updater(self):
         self._upd_thread = threading.Thread(target=self._updater_loop)
@@ -53,9 +75,16 @@ class MPDPlayer(Player):
     def _connection(self):
         try:
             self._con_instance.reconnect()
+            self._is_lost = False
             yield
+        except mpd.ConnectionError as e:
+            if e.args[0] == 'Already connected':
+                yield
+            else:
+                raise
         finally:
-            self._con_instance.disconnect()
+            #self._con_instance.disconnect()
+            pass
 
     @classmethod
     def __mpd_state_to_self_state(cls, mpd_state: str) -> Player.States:
@@ -80,7 +109,7 @@ class MPDPlayer(Player):
     def _updater_loop(self):
         while self._is_enabled:
             self._update()
-            time.sleep(2)
+            time.sleep(self._upd_interval)
 
     @property
     def state(self):
@@ -94,7 +123,7 @@ class MPDPlayer(Player):
         Доступность объекта для использования
         :return: True - доступен, False - недоступен
         """
-        return self._is_enabled
+        return self._is_enabled and not self._is_lost
 
     @property
     def last_updated(self) -> float:  # Fixme: CC23
@@ -104,12 +133,24 @@ class MPDPlayer(Player):
         """
         return self._last_updated
 
+    @property
+    def _is_lost(self) -> bool:
+        return self.__var_is_lost
+
+    @_is_lost.setter
+    def _is_lost(self, value: bool) -> None:
+        if self.__var_is_lost != value:
+            self.__var_is_lost = value
+            logger.debug("Connection status change: lost = %s on %s", self._is_lost, self)
+            self._call_on_update()
+
     def disable(self) -> None:
         """
         Отключает объект, останавливает обновление состояния и
         делает его неактивным
         :return: None
         """
+        logger.debug("Component disabled: %s", self)
         self._is_enabled = False
         self._upd_thread.join()
 
@@ -121,6 +162,7 @@ class MPDPlayer(Player):
         его активным
         :return: None
         """
+        logger.debug("Component enabled: %s", self)
         self._is_enabled = True
         self._restart_updater()
 
@@ -133,12 +175,10 @@ class MPDPlayer(Player):
             DeprecationWarning
         )
 
-        try:
-            with self._connection():
-                return self._con_instance.status()  # CC 17
-        except ConnectionRefusedError:
-            return {}  # CC 18
+        with self._connection():
+            return self._con_instance.status()  # CC 17
 
+    @_lost_checker
     def _update(self, skip_check: bool=False) -> None:
         """
         Обновляет значения всех свойств
@@ -258,6 +298,7 @@ class MPDPlayer(Player):
         """
         return self._last_current_track.get("time", -1.0)
 
+    @_lost_checker
     def set_volume(self, value: int) -> Actuator.ExecutionResult:
         """
         Установить новое значение громкости в диапазоне от 0 до 100
@@ -272,24 +313,28 @@ class MPDPlayer(Player):
 
         return Actuator.ExecutionResult.OK
 
+    @_lost_checker
     def play(self) -> Actuator.ExecutionResult:  # CC15
         with self._connection():
             self._con_instance.play()
 
         return Actuator.ExecutionResult.OK
 
+    @_lost_checker
     def stop(self) -> Actuator.ExecutionResult:  # CC15
         with self._connection():
             self._con_instance.stop()
 
         return Actuator.ExecutionResult.OK
 
+    @_lost_checker
     def pause(self) -> Actuator.ExecutionResult:  # CC15
         with self._connection():
             self._con_instance.pause()
 
         return Actuator.ExecutionResult.OK
 
+    @_lost_checker
     def next(self) -> Actuator.ExecutionResult:  # CC15
         with self._connection():
             try:
@@ -297,6 +342,7 @@ class MPDPlayer(Player):
             except mpd.CommandError:  # Треки нельзя переключать тогда, когда плеер MPD остановлен
                 return self.ExecutionResult.IGNORED_BAD_STATE
 
+    @_lost_checker
     def prev(self) -> Actuator.ExecutionResult:  # CC15
         with self._connection():
             try:
@@ -304,6 +350,7 @@ class MPDPlayer(Player):
             except mpd.CommandError:  # Треки нельзя переключать тогда, когда плеер MPD остановлен
                 return self.ExecutionResult.IGNORED_BAD_STATE
 
+    @_lost_checker
     def seek(self, track_pos: float) -> Actuator.ExecutionResult:
         """
         Прокрутить текущий трек к указанной позиции
