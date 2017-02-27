@@ -63,7 +63,7 @@ def get_rooms():
         "This route will be replaced with /placements/ route",
         PendingDeprecationWarning
     )
-    return jsonify({'placements': app.config["model"].get_category_config("placements")})
+    return jsonify({'rooms': app.config["model"].get_category_config("placements")})
 
 
 @app.route('/rooms/<string:room_id>', methods=['GET'])  # Fixme: RN1
