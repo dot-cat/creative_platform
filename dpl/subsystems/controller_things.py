@@ -32,7 +32,7 @@ import dpl.specific.connections
 # noinspection PyUnresolvedReferences
 import dpl.specific.things
 
-logger = logging.getLogger(__name__)
+LOGGER = logging.getLogger(__name__)
 
 
 class ControllerThings(object):
@@ -85,7 +85,7 @@ class ControllerThings(object):
 
             con_instance = self.all_connections.get(con_id, None)
             if con_instance is None:
-                logger.warning(
+                LOGGER.warning(
                     "Unable to init component: %s. "
                     "Connection %s is unavailable",
                     item_id, con_id
@@ -141,7 +141,7 @@ class ControllerThings(object):
 
     def check_action_permitted(self, obj_id: str, action: str, action_params):
         # FIXME: TD2, Проверка прав на выполнение действия
-        logger.warning("Permission checking is not implemented")
+        LOGGER.warning("Permission checking is not implemented")
         pass
 
     def do_action(self, obj_id: str, action: str, action_params=()):

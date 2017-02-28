@@ -16,7 +16,7 @@ import logging
 import weakref  # FIXME: DH1
 from threading import Thread, Event
 
-logger = logging.getLogger(__name__)
+LOGGER = logging.getLogger(__name__)
 
 
 class Listener(object):
@@ -30,13 +30,13 @@ class Listener(object):
         Инициализация слушателя
         :param feedback: Объект для обратной связи
         """
-        logger.debug("%s init started", self)
+        LOGGER.debug("%s init started", self)
 
         self.feedback = weakref.proxy(feedback)  # FIXME: DH1
         self.stop_event = Event()
         self.listener_thread = Thread(target=self.__waiter_loop, daemon=True)
 
-        logger.debug("%s init finished", self)
+        LOGGER.debug("%s init finished", self)
 
     def start(self):
         """
@@ -52,11 +52,11 @@ class Listener(object):
         """
         # FIXME: DH1: Он даже не выполняется в текущем виде
 
-        logger.debug("%s destruction started", self)
+        LOGGER.debug("%s destruction started", self)
 
         self.stop_event.set()
 
-        logger.debug("%s destruction finished", self)
+        LOGGER.debug("%s destruction finished", self)
 
     def get_data(self):
         """

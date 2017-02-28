@@ -4,8 +4,8 @@ import logging
 
 from dpl.core.controller import Controller
 
-logger = logging.getLogger("dpl")
-logger.setLevel(logging.DEBUG)
+LOGGER = logging.getLogger("dpl")
+LOGGER.setLevel(logging.DEBUG)
 
 if __name__ == "__main__":
     controller = Controller()

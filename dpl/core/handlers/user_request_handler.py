@@ -9,7 +9,7 @@ import logging
 from dpl.core.handlers.abs_handler import AbsHandler, MessagePattern, Message
 from dpl.subsystems.controller_things import ControllerThings
 
-logger = logging.getLogger(__name__)
+LOGGER = logging.getLogger(__name__)
 
 
 class UserRequestHandler(AbsHandler):
@@ -18,7 +18,7 @@ class UserRequestHandler(AbsHandler):
 
     def handle(self, message: Message):
         returned = self.to_control.do_action(**message.body)  # CC11
-        logger.debug(
+        LOGGER.debug(
             "Handler caught command: %s. "
             "CMD returned: %s",
             message.body["action"],

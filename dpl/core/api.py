@@ -20,16 +20,16 @@ from dpl.core.message_hub import MessageHub
 from dpl.core.messages.message import Message
 from dpl.subsystems.controller_things import ControllerThings
 
-logger = logging.getLogger(__name__)
+LOGGER = logging.getLogger(__name__)
 
 app = Flask(__name__)
 
-wz_logger = logging.getLogger("werkzeug")
-wz_logger.setLevel(logger.getEffectiveLevel())
+WZ_LOGGER = logging.getLogger("werkzeug")
+WZ_LOGGER.setLevel(LOGGER.getEffectiveLevel())
 
 
 def __print_headers():
-    logger.debug("Request headers:\n%s", request.headers)
+    LOGGER.debug("Request headers:\n%s", request.headers)
 
 app.before_request(__print_headers)
 
@@ -199,13 +199,13 @@ def messages_options():
 
 @app.route('/messages/', methods=['POST'])
 def receive_message():
-    logger.debug(request.get_data())
+    LOGGER.debug(request.get_data())
 
     msg_raw = request.get_json()
     if msg_raw is None:
         return jsonify({"result": "Invalid JSON data"}), 400
 
-    logger.debug(msg_raw)
+    LOGGER.debug(msg_raw)
 
     try:
         msg = Message(

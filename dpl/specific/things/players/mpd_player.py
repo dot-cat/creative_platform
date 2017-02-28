@@ -25,7 +25,7 @@ from dpl.specific.connections.mpd_client import MPDClientConnection
 
 import mpd
 
-logger = logging.getLogger(__name__)
+LOGGER = logging.getLogger(__name__)
 
 
 def _execute_if_enabled(method_to_decorate):
@@ -74,7 +74,7 @@ class MPDPlayer(Player):
         self._restart_updater()
 
     def __del__(self):
-        logger.debug("Deleter: %s", self)
+        LOGGER.debug("Deleter: %s", self)
 
     def _restart_updater(self):
         self._upd_thread = threading.Thread(target=self._updater_loop)
@@ -89,7 +89,7 @@ class MPDPlayer(Player):
             yield
         except mpd.ConnectionError as e:
             if e.args[0] == 'Already connected':
-                logger.warning("Connection already established in %s", self)
+                LOGGER.warning("Connection already established in %s", self)
                 yield
             else:
                 raise
@@ -108,7 +108,7 @@ class MPDPlayer(Player):
         elif mpd_state is None:
             return cls.States.unknown
         else:
-            logger.error("Unknown state of the MPD player: %s", mpd_state)
+            LOGGER.error("Unknown state of the MPD player: %s", mpd_state)
             return cls.States.unknown
 
     def _call_on_update(self, *args, **kwargs):
@@ -154,7 +154,7 @@ class MPDPlayer(Player):
     def _is_lost(self, value: bool) -> None:
         if self._is_lost_value != value:
             self._is_lost_value = value
-            logger.debug("Connection status change: lost = %s on %s", self._is_lost, self)
+            LOGGER.debug("Connection status change: lost = %s on %s", self._is_lost, self)
             self._call_on_update()
 
     def disable(self) -> None:
@@ -167,7 +167,7 @@ class MPDPlayer(Player):
             self._is_enabled = False
             self._upd_thread.join()
 
-            logger.debug("Component disabled: %s", self)
+            LOGGER.debug("Component disabled: %s", self)
 
             self._call_on_avail_update(self, None)
 
@@ -181,7 +181,7 @@ class MPDPlayer(Player):
             self._is_enabled = True
             self._restart_updater()
 
-            logger.debug("Component enabled: %s", self)
+            LOGGER.debug("Component enabled: %s", self)
 
             self._call_on_avail_update(self, None)
 
