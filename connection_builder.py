@@ -6,7 +6,7 @@ from dpl.core.connections import Connection
 LOGGER = logging.getLogger(__name__)
 
 
-def get_connection_by_config(config: dict) -> Connection:
+def get_connection_by_config(config: dict) -> Connection or None:
     factory = ConnectionRegistry.resolve_factory(config["con_type"])
 
     if factory is None:
