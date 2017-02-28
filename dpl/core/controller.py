@@ -77,7 +77,7 @@ class Controller(object):
         self.handlers.register_all_handlers(self.msg_hub)
 
     # FIXME: DH4
-    def __get_api_params(self) -> dict:
+    def __get_api_params(self) -> dict or None:
         core_params = self.model.get_category_config("core")
 
         for item in core_params:
