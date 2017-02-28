@@ -27,10 +27,10 @@ from dpl.core.things import Actuator
 from dpl.core.things import get_thing_by_params
 
 # noinspection PyUnresolvedReferences
-import dpl.specific.connections
+import dpl.specific.connections  # pylint: disable=unused-import
 
 # noinspection PyUnresolvedReferences
-import dpl.specific.things
+import dpl.specific.things  # pylint: disable=unused-import
 
 LOGGER = logging.getLogger(__name__)
 
