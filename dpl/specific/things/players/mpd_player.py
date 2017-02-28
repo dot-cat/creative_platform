@@ -71,6 +71,7 @@ class MPDPlayer(Player):
         self._upd_thread = None  # type: threading.Thread
         self._upd_interval = 2  # seconds
         self.__var_is_lost = False  # type: bool
+        self._con_lock = threading.Lock()  # type: threading.Lock
 
         self._restart_updater()
 
@@ -84,16 +85,19 @@ class MPDPlayer(Player):
     @contextlib.contextmanager
     def _connection(self):
         try:
+            self._con_lock.acquire()
             self._con_instance.reconnect()
             self._is_lost = False
             yield
         except mpd.ConnectionError as e:
             if e.args[0] == 'Already connected':
+                logger.warning("Connection already established in %s", self)
                 yield
             else:
                 raise
         finally:
             self._con_instance.disconnect()
+            self._con_lock.release()
 
     @classmethod
     def __mpd_state_to_self_state(cls, mpd_state: str) -> Player.States:
@@ -103,8 +107,10 @@ class MPDPlayer(Player):
             return cls.States.stopped
         elif mpd_state == "pause":
             return cls.States.paused
+        elif mpd_state is None:
+            return cls.States.unknown
         else:
-            logger.debug("Unknown state of MPD player: %s", mpd_state)
+            logger.error("Unknown state of the MPD player: %s", mpd_state)
             return cls.States.unknown
 
     def _call_on_update(self, *args, **kwargs):
