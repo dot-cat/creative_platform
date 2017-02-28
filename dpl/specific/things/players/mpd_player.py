@@ -18,12 +18,12 @@ import time
 import warnings
 import threading
 
+import mpd
+
 from dpl.core.things import ThingFactory, ThingRegistry
 from dpl.core.things import Actuator
 from dpl.core.things import Player
 from dpl.specific.connections.mpd_client import MPDClientConnection
-
-import mpd
 
 logger = logging.getLogger(__name__)
 
