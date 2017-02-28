@@ -139,7 +139,7 @@ class MPDPlayer(Player):
         return self._is_enabled and not self._is_lost
 
     @property
-    def last_updated(self) -> float:  # Fixme: CC23
+    def last_updated(self) -> float:
         """
         Возвращает время, когда объект был обновлен в последний раз
         :return: float, UNIX time
