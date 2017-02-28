@@ -1,16 +1,14 @@
 ##############################################################################################
 # FIXME List:
-# CC15 - Consider Change 15
-#   Выбрасывает исключение в случае неудачного подключения. Вопрос: отсавить как есть или 
-#   перехватывать?
-# CC16 - Consider Change 16
-#   Может возвращать None вместо "undefined"?
-# CC17 - Consider Change 17
-#   Отдавать только строку (атрибут "name") или полный словарь с информацией от текущем треке?
-# CC18 - Consider Change 18
-#   Отдавать только {"name": "name here"} или полный словарь ( с ключами file, id, name, pos)?
 # CC27 - Consider Change 27
 #   Заменить реализацию на _alternative_get_title
+# CC28 - Consider Change 28
+#   Пересмотреть ВЕСЬ модуль. И отрефакторить при необходимости. Сейчас (28.02.17) на
+#   продолжение возни особо нет времени. Есть более важные задачи.
+#   Конкретно по пунктам:
+#   * select вместо polling, в отдельном потоке (см. как пример https://git.io/vyYGh)
+#   * что-то сделать с декораторами (удалить вообще? вынести в класс? другой вариант?)
+#   *
 ##############################################################################################
 
 
@@ -31,7 +29,7 @@ logger = logging.getLogger(__name__)
 
 
 def _execute_if_enabled(method_to_decorate):
-    def wrapper(self: Player, *args, **kwargs):
+    def wrapper(self, *args, **kwargs):
         if not self._is_enabled:
             return Actuator.ExecutionResult.IGNORED_UNAVAILABLE
         else:
@@ -41,7 +39,7 @@ def _execute_if_enabled(method_to_decorate):
 
 
 def _lost_checker(method_to_decorate):
-    def wrapper(self: Player, *args, **kwargs):
+    def wrapper(self, *args, **kwargs):
         try:
             return method_to_decorate(self, *args, **kwargs)
         except mpd.ConnectionError:
@@ -70,7 +68,7 @@ class MPDPlayer(Player):
         self._last_current_track = {}  # type: dict
         self._upd_thread = None  # type: threading.Thread
         self._upd_interval = 2  # seconds
-        self.__var_is_lost = False  # type: bool
+        self._is_lost_value = False  # type: bool
         self._con_lock = threading.Lock()  # type: threading.Lock
 
         self._restart_updater()
@@ -150,12 +148,12 @@ class MPDPlayer(Player):
 
     @property
     def _is_lost(self) -> bool:
-        return self.__var_is_lost
+        return self._is_lost_value
 
     @_is_lost.setter
     def _is_lost(self, value: bool) -> None:
-        if self.__var_is_lost != value:
-            self.__var_is_lost = value
+        if self._is_lost_value != value:
+            self._is_lost_value = value
             logger.debug("Connection status change: lost = %s on %s", self._is_lost, self)
             self._call_on_update()
 
@@ -165,11 +163,13 @@ class MPDPlayer(Player):
         делает его неактивным
         :return: None
         """
-        logger.debug("Component disabled: %s", self)
-        self._is_enabled = False
-        self._upd_thread.join()
+        if self._is_enabled:
+            self._is_enabled = False
+            self._upd_thread.join()
 
-        self._call_on_avail_update(self, None)
+            logger.debug("Component disabled: %s", self)
+
+            self._call_on_avail_update(self, None)
 
     def enable(self) -> None:
         """
@@ -177,21 +177,13 @@ class MPDPlayer(Player):
         его активным
         :return: None
         """
-        logger.debug("Component enabled: %s", self)
-        self._is_enabled = True
-        self._restart_updater()
+        if not self._is_enabled:
+            self._is_enabled = True
+            self._restart_updater()
 
-        self._call_on_avail_update(self, None)
+            logger.debug("Component enabled: %s", self)
 
-    def _get_status(self) -> dict:
-        warnings.warn(
-            "This method is a temporary solution and must be removed  "
-            "or changed before release",
-            DeprecationWarning
-        )
-
-        with self._connection():
-            return self._con_instance.status()  # CC 17
+            self._call_on_avail_update(self, None)
 
     @_lost_checker
     def _update(self, skip_check: bool=False) -> None:
@@ -204,8 +196,9 @@ class MPDPlayer(Player):
 
         old_properies = self.to_dict()
 
-        new_status = self._get_status()
-        new_curr_track = self._get_current_track_info()
+        with self._connection():
+            new_status = self._con_instance.status()
+            new_curr_track = self._con_instance.currentsong()
 
         self._last_status = new_status
         self._last_current_track = new_curr_track
@@ -260,14 +253,11 @@ class MPDPlayer(Player):
         :param: Информация о текущем треке, полученная от MPD
         :return: название трека
         """
-        default = ""
+        default = "unknown"
 
         source = ti.get("file", default)  # Если источник неизвестен - вернуть None
         name = ti.get("name", source)  # Если поток неизвестен - вернуть источник
         title = ti.get("title", name)  # Если название трека неизевстно - вернуть поток
-
-        if title is default:  # Если источник неизвестен - похоже, у нас ошибка
-            logger.error("Unable to fetch title: %s", self)
 
         return title
 
@@ -333,7 +323,7 @@ class MPDPlayer(Player):
 
     @_execute_if_enabled
     @_lost_checker
-    def play(self) -> Actuator.ExecutionResult:  # CC15
+    def play(self) -> Actuator.ExecutionResult:
         with self._connection():
             self._con_instance.play()
 
@@ -341,7 +331,7 @@ class MPDPlayer(Player):
 
     @_execute_if_enabled
     @_lost_checker
-    def stop(self) -> Actuator.ExecutionResult:  # CC15
+    def stop(self) -> Actuator.ExecutionResult:
         with self._connection():
             self._con_instance.stop()
 
@@ -349,7 +339,7 @@ class MPDPlayer(Player):
 
     @_execute_if_enabled
     @_lost_checker
-    def pause(self) -> Actuator.ExecutionResult:  # CC15
+    def pause(self) -> Actuator.ExecutionResult:
         with self._connection():
             self._con_instance.pause()
 
@@ -357,7 +347,7 @@ class MPDPlayer(Player):
 
     @_execute_if_enabled
     @_lost_checker
-    def next(self) -> Actuator.ExecutionResult:  # CC15
+    def next(self) -> Actuator.ExecutionResult:
         with self._connection():
             try:
                 self._con_instance.next()
@@ -366,7 +356,7 @@ class MPDPlayer(Player):
 
     @_execute_if_enabled
     @_lost_checker
-    def prev(self) -> Actuator.ExecutionResult:  # CC15
+    def prev(self) -> Actuator.ExecutionResult:
         with self._connection():
             try:
                 self._con_instance.previous()
@@ -386,27 +376,6 @@ class MPDPlayer(Player):
                 self._con_instance.seekcur(track_pos)
             except mpd.CommandError:  # Треки нельзя переключать тогда, когда плеер MPD остановлен
                 return self.ExecutionResult.IGNORED_BAD_STATE
-
-    def _get_current_track_info(self) -> dict:
-        warnings.warn(
-            "This method is a temporary solution and must be removed  "
-            "or changed before release",
-            DeprecationWarning
-        )
-
-        try:
-            with self._connection():
-                return self._con_instance.currentsong()  # CC 17
-        except ConnectionRefusedError:
-            return dict()  # CC 18
-
-    def get_current_track(self) -> dict:  # CC16
-        warnings.warn(
-            "This method will be removed in v0.4. "
-            "All needed information is moved to corresponding properties",
-            PendingDeprecationWarning
-        )
-        return self._get_current_track_info()
 
 
 class MPDPlayerFactory(ThingFactory):
