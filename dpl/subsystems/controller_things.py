@@ -73,8 +73,7 @@ class ControllerThings(object):
             if thing_id in item["objects"]:
                 return item["id"]
 
-        else:
-            return None
+        return None
 
     def __init_all_things(self):
         self.all_things = dict()
