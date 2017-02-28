@@ -276,4 +276,4 @@ class ControllerThings(object):
         return info_list
 
     def print_obj_info(self, obj_id: str):
-        print(self.get_object_info(obj_id))
+        print(self.get_thing_info(obj_id))

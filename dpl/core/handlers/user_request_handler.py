@@ -4,9 +4,12 @@
 #   Проверять права на исполнение
 ##############################################################################################
 
+import logging
 
 from dpl.core.handlers.abs_handler import AbsHandler, MessagePattern, Message
 from dpl.subsystems.controller_things import ControllerThings
+
+logger = logging.getLogger(__name__)
 
 
 class UserRequestHandler(AbsHandler):
@@ -14,4 +17,10 @@ class UserRequestHandler(AbsHandler):
         super().__init__(message_pattern, to_control)
 
     def handle(self, message: Message):
-        self.to_control.do_action(**message.body)  # CC11
+        returned = self.to_control.do_action(**message.body)  # CC11
+        logger.debug(
+            "Handler caught command: %s. "
+            "CMD returned: %s",
+            message.body["action"],
+            returned
+        )

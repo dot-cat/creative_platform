@@ -60,4 +60,4 @@ class ListenerCli(Listener):
 
         self.feedback.accept_msg(msg)
 
-        print('command "{0}" executed'.format(raw_data))
+        print('command "{0}" accepted'.format(raw_data))
