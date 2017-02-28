@@ -246,7 +246,8 @@ class MPDPlayer(Player):
 
         return result
 
-    def _get_title(self, ti: dict) -> str:
+    @staticmethod
+    def _get_title(ti: dict) -> str:
         """
         Вернуть название текущего трека.
         Подход к составлению заголовка, который используется в MPDroid и ncmpcpp
