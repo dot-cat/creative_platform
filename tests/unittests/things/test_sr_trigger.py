@@ -5,7 +5,7 @@ from unittest.mock import Mock
 from dpl.libs.abs_shift_reg import AbsShiftRegister
 from dpl.specific.things.triggers.shift_reg_trigger import ShiftRegTrigger, ShiftRegBuffered
 
-LOGGER = logging.getLogger(__name__)
+logger = logging.getLogger(__name__)
 
 sr_base = Mock(spec_set=AbsShiftRegister)
 sr_base.get_capacity.return_value = 8
@@ -14,7 +14,7 @@ sr = ShiftRegBuffered(sr_base)
 
 tr_bit_pos = 0
 
-LOGGER.debug('test_sr_trigger: {0}'.format(sr))
+logger.debug('test_sr_trigger: {0}'.format(sr))
 
 
 class TestTriggerInit(unittest.TestCase): 

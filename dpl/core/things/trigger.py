@@ -9,7 +9,7 @@ from enum import Enum
 
 from dpl.core.things import Actuator
 
-LOGGER = logging.getLogger(__name__)
+logger = logging.getLogger(__name__)
 
 
 class Trigger(Actuator):
@@ -96,7 +96,7 @@ class Trigger(Actuator):
         if self.state == self.States.unknown:
             warnings.warn("Unknown state handling may be deleted", FutureWarning)
 
-            LOGGER.debug(
+            logger.debug(
                 "Unable to toggle %s object from %s state",
                 self,
                 self.state

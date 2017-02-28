@@ -4,7 +4,7 @@ from dpl.core.listener import Listener
 from dpl.core.message_hub import MessageHub
 from dpl.core.messages.message import Message, time
 
-LOGGER = logging.getLogger(__name__)
+logger = logging.getLogger(__name__)
 
 
 class ListenerCli(Listener):
@@ -30,7 +30,7 @@ class ListenerCli(Listener):
         :param raw_data: данные, строка
         :return: None
         """
-        LOGGER.debug('Data read: %s', raw_data)
+        logger.debug('Data read: %s', raw_data)
 
         tokenized_data = raw_data.split(" ", maxsplit=3)
 

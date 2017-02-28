@@ -27,7 +27,7 @@ from dpl.subsystems.controller_handlers import ControllerHandlers
 from dpl.subsystems.controller_listeners import ControllerListeners
 from dpl.subsystems.controller_things import ControllerThings
 
-LOGGER = logging.getLogger(__name__)
+logger = logging.getLogger(__name__)
 
 
 class Controller(object):
@@ -38,7 +38,7 @@ class Controller(object):
         """
         GPIO.setmode(GPIO.BOARD)
 
-        LOGGER.debug("%s init started", self)
+        logger.debug("%s init started", self)
 
         self.model = Config("../configs")  # FIXME: TD4
 
@@ -47,7 +47,7 @@ class Controller(object):
         self.__init_msg_hub()
         self.listeners = ControllerListeners(self.msg_hub)
 
-        LOGGER.debug("%s init finished", self)
+        logger.debug("%s init finished", self)
 
     def disable_all_things(self):
         self.things.disable_all()
@@ -57,7 +57,7 @@ class Controller(object):
         Деструктор, выполняет освобождение и остановку всего и вся
         :return: none
         """
-        LOGGER.debug("%s destruction started", self)
+        logger.debug("%s destruction started", self)
 
         debug_refs.print_referrers(self.listeners)
         debug_refs.print_referrers(self.msg_hub)
@@ -69,7 +69,7 @@ class Controller(object):
         del self.handlers
         del self.things
 
-        LOGGER.debug("%s destruction finished", self)
+        logger.debug("%s destruction finished", self)
 
     def __init_msg_hub(self):
         self.msg_hub = MessageHub()
@@ -88,18 +88,18 @@ class Controller(object):
 
     # FIXME: CC19
     def run_api(self):
-        LOGGER.debug("Loading API libs...")
+        logger.debug("Loading API libs...")
         import dpl.core.api as api
 
-        LOGGER.debug("API init...")
+        logger.debug("API init...")
         api.init(self.model, self.things, self.msg_hub)
 
-        LOGGER.debug("API is ready to run")
+        logger.debug("API is ready to run")
 
         api_params = self.__get_api_params()
 
         if api_params is None:
-            LOGGER.warning("REST API settings not found, "
+            logger.warning("REST API settings not found, "
                            "falling back to default API settings")
             api.run(debug=True, use_reloader=False)
         else:
