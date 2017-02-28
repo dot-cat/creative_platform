@@ -30,19 +30,29 @@ import mpd
 logger = logging.getLogger(__name__)
 
 
+def _execute_if_enabled(method_to_decorate):
+    def wrapper(self: Player, *args, **kwargs):
+        if not self._is_enabled:
+            return Actuator.ExecutionResult.IGNORED_UNAVAILABLE
+        else:
+            return method_to_decorate(self, *args, **kwargs)
+
+    return wrapper
+
+
 def _lost_checker(method_to_decorate):
     def wrapper(self: Player, *args, **kwargs):
         try:
             return method_to_decorate(self, *args, **kwargs)
         except mpd.ConnectionError:
             self._is_lost = True
-            return Actuator.ExecutionResult.IGNORED_BAD_STATE
+            return Actuator.ExecutionResult.IGNORED_UNAVAILABLE
         except ConnectionRefusedError:
             self._is_lost = True
-            return Actuator.ExecutionResult.IGNORED_BAD_STATE
+            return Actuator.ExecutionResult.IGNORED_UNAVAILABLE
         except ConnectionResetError:
             self._is_lost = True
-            return Actuator.ExecutionResult.IGNORED_BAD_STATE
+            return Actuator.ExecutionResult.IGNORED_UNAVAILABLE
 
     return wrapper
 
@@ -94,7 +104,7 @@ class MPDPlayer(Player):
         elif mpd_state == "pause":
             return cls.States.paused
         else:
-            logger.warning("Unknown state of MPD player: %s", mpd_state)
+            logger.debug("Unknown state of MPD player: %s", mpd_state)
             return cls.States.unknown
 
     def _call_on_update(self, *args, **kwargs):
@@ -184,6 +194,8 @@ class MPDPlayer(Player):
         :skip_check: Пропускать ли проверку на наличие отличий
         :return:
         """
+        assert self._is_enabled
+
         old_properies = self.to_dict()
 
         new_status = self._get_status()
@@ -297,6 +309,7 @@ class MPDPlayer(Player):
         """
         return self._last_current_track.get("time", -1.0)
 
+    @_execute_if_enabled
     @_lost_checker
     def set_volume(self, value: int) -> Actuator.ExecutionResult:
         """
@@ -312,6 +325,7 @@ class MPDPlayer(Player):
 
         return Actuator.ExecutionResult.OK
 
+    @_execute_if_enabled
     @_lost_checker
     def play(self) -> Actuator.ExecutionResult:  # CC15
         with self._connection():
@@ -319,6 +333,7 @@ class MPDPlayer(Player):
 
         return Actuator.ExecutionResult.OK
 
+    @_execute_if_enabled
     @_lost_checker
     def stop(self) -> Actuator.ExecutionResult:  # CC15
         with self._connection():
@@ -326,6 +341,7 @@ class MPDPlayer(Player):
 
         return Actuator.ExecutionResult.OK
 
+    @_execute_if_enabled
     @_lost_checker
     def pause(self) -> Actuator.ExecutionResult:  # CC15
         with self._connection():
@@ -333,6 +349,7 @@ class MPDPlayer(Player):
 
         return Actuator.ExecutionResult.OK
 
+    @_execute_if_enabled
     @_lost_checker
     def next(self) -> Actuator.ExecutionResult:  # CC15
         with self._connection():
@@ -341,6 +358,7 @@ class MPDPlayer(Player):
             except mpd.CommandError:  # Треки нельзя переключать тогда, когда плеер MPD остановлен
                 return self.ExecutionResult.IGNORED_BAD_STATE
 
+    @_execute_if_enabled
     @_lost_checker
     def prev(self) -> Actuator.ExecutionResult:  # CC15
         with self._connection():
@@ -349,6 +367,7 @@ class MPDPlayer(Player):
             except mpd.CommandError:  # Треки нельзя переключать тогда, когда плеер MPD остановлен
                 return self.ExecutionResult.IGNORED_BAD_STATE
 
+    @_execute_if_enabled
     @_lost_checker
     def seek(self, track_pos: float) -> Actuator.ExecutionResult:
         """
