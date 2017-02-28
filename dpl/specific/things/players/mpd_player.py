@@ -83,8 +83,7 @@ class MPDPlayer(Player):
             else:
                 raise
         finally:
-            #self._con_instance.disconnect()
-            pass
+            self._con_instance.disconnect()
 
     @classmethod
     def __mpd_state_to_self_state(cls, mpd_state: str) -> Player.States:
