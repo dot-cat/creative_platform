@@ -193,8 +193,8 @@ def get_thing(thing_id):
 
 @app.route('/messages/', methods=['OPTIONS'])
 def messages_options():
-    return  '', 204, \
-            {'Access-Control-Allow-Methods': 'POST, OPTIONS'}
+    return '', 204, \
+           {'Access-Control-Allow-Methods': 'POST, OPTIONS'}
 
 
 @app.route('/messages/', methods=['POST'])

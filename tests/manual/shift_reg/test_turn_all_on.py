@@ -18,9 +18,9 @@ temp = 16
 
 WorkRegistr = ShiftRegGPIO(si, sck, rck, sclr, 2)
 
-#while 1:
+# while 1:
 WorkRegistr.write_data(0b11111111111111111111111)
 #    time.sleep(1)
-#WorkRegistr.write_data(0b00000000000000000000000)
+# WorkRegistr.write_data(0b00000000000000000000000)
 
 time.sleep(1000000)
