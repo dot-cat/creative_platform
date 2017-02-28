@@ -12,7 +12,7 @@ valid_message_pattern_params = {
 
 class TestMessagePatternInit(unittest.TestCase):
     def test_normal_init(self):
-        mp = MessagePattern(
+        MessagePattern(
             **valid_message_pattern_params
         )
 
@@ -22,7 +22,7 @@ class TestMessagePatternInit(unittest.TestCase):
         invalid_params["source_list"] = None
 
         with self.assertRaisesRegex(ValueError, "source_list must be iterable"):
-            mp = MessagePattern(
+            MessagePattern(
                 **invalid_params
             )
 
@@ -32,7 +32,7 @@ class TestMessagePatternInit(unittest.TestCase):
         invalid_params["event_list"] = None
 
         with self.assertRaisesRegex(ValueError, "event_list must be iterable"):
-            mp = MessagePattern(
+            MessagePattern(
                 **invalid_params
             )
 
@@ -42,7 +42,7 @@ class TestMessagePatternInit(unittest.TestCase):
         invalid_params["source_list"] = []
 
         with self.assertRaisesRegex(ValueError, "source_list can't be empty"):
-            mp = MessagePattern(
+            MessagePattern(
                 **invalid_params
             )
 
@@ -52,7 +52,7 @@ class TestMessagePatternInit(unittest.TestCase):
         invalid_params["event_list"] = []
 
         with self.assertRaisesRegex(ValueError, "event_list can't be empty"):
-            mp = MessagePattern(
+            MessagePattern(
                 **invalid_params
             )
 
