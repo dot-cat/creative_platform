@@ -134,6 +134,8 @@ class Thing(object):
         """
         if self.__is_good_callback(func):
             self._on_update = func
+        else:
+            raise ValueError("func must be an instance of callable or None")
 
     @property
     def on_avail_update(self) -> callable:
@@ -154,6 +156,8 @@ class Thing(object):
         """
         if self.__is_good_callback(func):
             self._on_avail_update = func
+        else:
+            raise ValueError("func must be an instance of callable or None")
 
     def disable(self) -> None:  # Fixme: CC29
         """
