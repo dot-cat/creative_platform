@@ -29,6 +29,9 @@ class Trigger(Actuator):
     def __init__(self, con_instance, con_params, metadata=None):
         """
         Конструктор, копия конструктора из базового класса
+        :param con_instance: экземпляр соединения
+        :param con_params: параметры доступа к соединению
+        :param metadata: метаданные объекта (см. свойство metadata)
         """
         super().__init__(con_instance, con_params, metadata)
 
