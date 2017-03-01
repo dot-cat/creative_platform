@@ -2,6 +2,8 @@
 # FIXME List:
 # CC29 - Consider Change 29
 #   Переименовать enable в enable_connection и disable в disable_connection
+# TD6 - To Do 6
+#   Формализировать список параметров, которые передаются в делегат при обновлении объекта
 ##############################################################################################
 
 from enum import Enum
@@ -115,7 +117,7 @@ class Thing(object):
         return self._on_update
 
     @on_update.setter
-    def on_update(self, func: callable or None):
+    def on_update(self, func: callable or None):  # Fixme: TD6
         """
         Устанавливает функтор, который будет вызван при обновлении свойств объекта
         :param func: функтор, принимающий два аргумента:
@@ -135,7 +137,7 @@ class Thing(object):
         return self._on_avail_update
 
     @on_avail_update.setter
-    def on_avail_update(self, func):
+    def on_avail_update(self, func):  # Fixme: TD6
         """
         Устанавливает функтор, который будет вызван при изменении доступности объекта
         :param func: функтор, принимающий два аргумента:
