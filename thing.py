@@ -1,6 +1,7 @@
 ##############################################################################################
 # FIXME List:
-#
+# CC29 - Consider Change 29
+#   Переименовать enable в enable_connection и disable в disable_connection
 ##############################################################################################
 
 from enum import Enum
@@ -145,7 +146,7 @@ class Thing(object):
         if self.__is_good_callback(func):
             self._on_avail_update = func
 
-    def disable(self) -> None:
+    def disable(self) -> None:  # Fixme: CC29
         """
         Отключает объект, останавливает обновление состояния и
         делает его неактивным
@@ -153,7 +154,7 @@ class Thing(object):
         """
         raise NotImplementedError
 
-    def enable(self) -> None:
+    def enable(self) -> None:  # Fixme: CC29
         """
         Включает объект, запускает обновление состояние и делает
         его активным
