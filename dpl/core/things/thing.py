@@ -108,6 +108,11 @@ class Thing(object):
 
     @staticmethod
     def __is_good_callback(func) -> bool:
+        """
+        Проверяет, является ли аргумент допустимым функтором
+        :param func: функтор либо None (для отвязки текущего ф-ра)
+        :return: bool
+        """
         return isinstance(func, callable) or func is None
 
     @property
