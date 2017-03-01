@@ -2,6 +2,8 @@
 # FIXME List:
 # CC29 - Consider Change 29
 #   Переименовать enable в enable_connection и disable в disable_connection
+# CC30 - Consider Change 30
+#   Переместить реализацию в другой класс (View)
 # TD6 - To Do 6
 #   Формализировать список параметров, которые передаются в делегат при обновлении объекта
 ##############################################################################################
@@ -89,7 +91,7 @@ class Thing(object):
         """
         raise NotImplementedError
 
-    def to_dict(self) -> dict:
+    def to_dict(self) -> dict:  # Fixme: CC30
         """
         Метод, возвращающий копию объекта в виде словаря
         :return: словарь-копия значений из свойств
