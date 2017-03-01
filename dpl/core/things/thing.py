@@ -161,16 +161,14 @@ class Thing(object):
 
     def disable(self) -> None:  # Fixme: CC29
         """
-        Отключает объект, останавливает обновление состояния и
-        делает его неактивным
+        Отключает объект, останавливает обновление состояния и делает его неактивным
         :return: None
         """
         raise NotImplementedError
 
     def enable(self) -> None:  # Fixme: CC29
         """
-        Включает объект, запускает обновление состояние и делает
-        его активным
+        Включает объект, запускает обновление состояние и делает его активным
         :return: None
         """
         raise NotImplementedError
@@ -178,8 +176,7 @@ class Thing(object):
 
 class ThingFactory(object):
     """
-    Фабрика вещей. Абстрактный класс, который содержит
-    единственный метод build
+    Фабрика вещей. Абстрактный класс, который содержит единственный метод build
     """
     @staticmethod
     def build(con_instance, con_params: dict, metadata: dict=None) -> Thing:
