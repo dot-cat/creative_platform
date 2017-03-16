@@ -12,9 +12,11 @@ import threading
 import time
 import warnings
 import copy
+import platform
 
 from flask import Flask, jsonify, abort, url_for, request
 
+import dpl
 from dpl.core.config import Config
 from dpl.core.message_hub import MessageHub
 from dpl.core.messages.message import Message
@@ -52,7 +54,8 @@ def get_structure():
             'placements': url_for('get_placements'),
             'objects': url_for('get_objects'),
             'things': url_for('get_things'),
-            'messages': url_for('receive_message')
+            'messages': url_for('receive_message'),
+            'system': url_for('get_system_info')
         }
     )
 
@@ -152,6 +155,16 @@ def get_current_track(object_id):
         abort(404)
 
     return jsonify(object_item)
+
+
+@app.route('/system/', methods=['GET'])
+def get_system_info():
+    info = {
+        "version": dpl.VERSION,
+        "machine": platform.machine(),
+        "python_version": platform.python_version()
+    }
+    return jsonify(info)
 
 
 @app.route('/things/', methods=['GET'])

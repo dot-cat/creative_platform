@@ -8,3 +8,6 @@
 # Подробнее: https://docs.python.org/3/library/logging.html#logging.basicConfig
 import logging
 logging.basicConfig()
+
+# Сохранение информации о версии платформы
+VERSION = "v0.4-dev.1"
