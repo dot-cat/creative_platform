@@ -40,6 +40,8 @@ def _execute_if_enabled(method_to_decorate):
 
 def _lost_checker(method_to_decorate):
     def wrapper(self, *args, **kwargs):
+        # FIXME: unhandled "socket.gaierror: [Errno -3] Temporary failure in name resolution"
+        # Example: updater loop fails is network connection is lost
         try:
             return method_to_decorate(self, *args, **kwargs)
         except mpd.ConnectionError:
