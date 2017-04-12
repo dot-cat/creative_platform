@@ -21,14 +21,25 @@ Small platform for IoT applications
 ### UML diagram:
 [to be filled]
 
+### Compatibility
+Core platform can be runned on any computer with Linux-based OS and Python 3 installed.
+
+Additional dependencies: [requirements.txt](requirements.txt)
+
 ### In the next release (v0.4):
 * upgraded `Things` subsystem;
 * caching of `Thing`'s state, dynamic state updating;
 * support of dynamic connection, reconnection and disconnection of Things;
 * filtering of Things by placement (room, for example) in REST API;
-* support of `Sensor`s;
+* basic support of `Sensor`s and `MQTTSensor`s;
 * authorization of clients;
 * proper documentation.
+
+### In future releases:
+* data/history logger;
+* support of the command-line parameters;
+* users and permissions;
+* more things and connections.
 
 ### Outdated description of the system (v0.2):
 Подробное опиcание и документация данного проекта (**устаревшие**) размещены на [ Google Docs ]( https://docs.google.com/document/d/1ZmPlSTxpE9TxT5H26R77BYhkNbkK-HwpbFaOIhWRylA/edit# )
