@@ -14,7 +14,7 @@
     "id": "MPD1",
     "con_type": "mpd_server",
     "con_params": {
-      "host": "ks-cube.tk",
+      "host": "localhost",
       "port": 6600,
       "timeout": 10
     }
