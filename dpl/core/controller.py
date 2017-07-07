@@ -13,14 +13,14 @@
 #   Добавить функцию освобождения ресурсов (аналог dispose)
 # TD2 - To Do 2
 #   Сделать полноценную реализацию проверки разрешений на выполнение действия.
-# TD4 - To Do 4
-#   Сделать путь к конфиг-файлах изменяемым
 # DH3 - Dirty Hack 4
 #   Вынести обработку core-параметров в отдельный блок, убрать полный перебор или сделать
 #   его резонным
 ##############################################################################################
 
 import logging
+
+import appdirs
 
 import dpl.utils.debug_refs as debug_refs
 from dpl.core.config import Config
@@ -32,9 +32,11 @@ from dpl.subsystems.controller_things import ControllerThings
 
 logger = logging.getLogger(__name__)
 
+DEFAULT_CONFIG_PATH = appdirs.user_config_dir(appname="dpl")
+
 
 class Controller(object):
-    def __init__(self):
+    def __init__(self, config_path: str = DEFAULT_CONFIG_PATH):
         """
         Конструктор, выполняет инициализацию и запуск всего и вся
         :return: none
@@ -43,7 +45,7 @@ class Controller(object):
 
         logger.debug("%s init started", self)
 
-        self.model = Config("../configs")  # FIXME: TD4
+        self.model = Config(config_path)
 
         self.things = ControllerThings(self.model)
         self.handlers = ControllerHandlers(self.model, self.things)
