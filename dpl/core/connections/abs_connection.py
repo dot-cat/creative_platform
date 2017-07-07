@@ -72,6 +72,10 @@ class Connection(object):
         """
         raise NotImplementedError
 
+    # IObservable
+    # Subscribe observers, notify on new data, notify on connection status change.
+    # OnNext, OnError, OnCompleted ???
+
 
 class ConnectionFactory(object):
     """
