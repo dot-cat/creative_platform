@@ -53,6 +53,10 @@ def _lost_checker(method_to_decorate):
         except ConnectionResetError:
             self._is_lost = True
             return Actuator.ExecutionResult.IGNORED_UNAVAILABLE
+        except Exception as e:
+            logger.error("MPD connection failed with unexpected exception: {0}", e)
+            self._is_lost = True
+            return Actuator.ExecutionResult.IGNORED_UNAVAILABLE
 
     return wrapper
 
