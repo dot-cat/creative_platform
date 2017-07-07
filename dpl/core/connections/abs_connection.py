@@ -46,7 +46,7 @@ class Connection(object):
     def status(self) -> ConnectionStatus:
         """
         Получение текущего статуса соединения
-        :return: объект типа Connection.Status
+        :return: объект типа ConnectionStatus
         """
         raise NotImplementedError
 
