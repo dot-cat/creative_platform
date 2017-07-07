@@ -76,6 +76,11 @@ class Connection(object):
     # Subscribe observers, notify on new data, notify on connection status change.
     # OnNext, OnError, OnCompleted ???
 
+    # 'command' method?
+    # Sends specific command with arguments via this connection
+    # def command(name: str, *args, **kwargs)
+    # ????
+
 
 class ConnectionFactory(object):
     """
