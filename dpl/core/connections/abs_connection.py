@@ -26,22 +26,24 @@ ConnectionRegistry.register_factory(
 import enum
 
 
+class ConnectionStatus(enum):
+    """
+    Возможные состояния соединения
+    """
+    Connected = 0  # соединение успешно восстановлено
+    Connecting = 1  # выполняется восстановление соединения
+    Disconnected = 2  # соединение разорвано
+
+
 class Connection(object):
     """
     Соединение. Абстрактный класс соединений (подключений) в программе.
     Соединения являются средой, через которую идет передача данных
     между контроллером (устройством с DPL) и объектами (things)
     """
-    class Status(enum):
-        """
-        Возможные состояния соединения
-        """
-        Connected = 0  # соединение успешно восстановлено
-        Connecting = 1  # выполняется восстановление соединения
-        Disconnected = 2  # соединение разорвано
 
     @property
-    def status(self) -> Status:
+    def status(self) -> ConnectionStatus:
         """
         Получение текущего статуса соединения
         :return: объект типа Connection.Status
@@ -54,7 +56,7 @@ class Connection(object):
         Проверка на то, установлено ли соединение
         :return: true - установлено, false - нет
         """
-        return self.status == Connection.Status.Connected
+        return self.status == ConnectionStatus.Connected
 
     def connect(self) -> None:
         """
