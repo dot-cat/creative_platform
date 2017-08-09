@@ -76,6 +76,9 @@ class Connection(object):
     # Subscribe observers, notify on new data, notify on connection status change.
     # OnNext, OnError, OnCompleted ???
 
+    # asyncio.Transport implementation with its callbacks???
+    # (it is the most similar alternative to IObservable in C#)
+
     # 'command' method?
     # Sends specific command with arguments via this connection
     # def command(name: str, *args, **kwargs)
