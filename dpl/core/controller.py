@@ -45,10 +45,10 @@ class Controller(object):
 
         logger.debug("%s init started", self)
 
-        self.model = Config(config_path)
+        self.configuration = Config(config_path)
 
-        self.things = ControllerThings(self.model)
-        self.handlers = ControllerHandlers(self.model, self.things)
+        self.things = ControllerThings(self.configuration)
+        self.handlers = ControllerHandlers(self.configuration, self.things)
         self.__init_msg_hub()
         self.listeners = ControllerListeners(self.msg_hub)
 
@@ -83,7 +83,7 @@ class Controller(object):
 
     # FIXME: DH4
     def __get_api_params(self) -> dict or None:
-        core_params = self.model.get_category_config("core")
+        core_params = self.configuration.get_category_config("core")
 
         for item in core_params:
             if item["module"] == "rest_api":
@@ -97,7 +97,7 @@ class Controller(object):
         import dpl.core.api as api
 
         logger.debug("API init...")
-        api.init(self.model, self.things, self.msg_hub)
+        api.init(self.configuration, self.things, self.msg_hub)
 
         logger.debug("API is ready to run")
 
