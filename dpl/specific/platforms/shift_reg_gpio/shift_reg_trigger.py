@@ -16,7 +16,7 @@
 import time
 
 from dpl.core.things import Trigger, ThingRegistry, ThingFactory, Actuator
-from dpl.specific.connections.shift_reg_gpio_buffered import ShiftRegBuffered, ShiftRegGPIOBuffered
+from .shift_reg_gpio_buffered import ShiftRegBuffered, ShiftRegGPIOBuffered
 
 
 def check_shift_reg_type(test_obj):

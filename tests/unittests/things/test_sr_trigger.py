@@ -3,7 +3,7 @@ import unittest
 from unittest.mock import Mock
 
 from dpl.libs.abs_shift_reg import AbsShiftRegister
-from dpl.specific.things.triggers.shift_reg_trigger import ShiftRegTrigger, ShiftRegBuffered
+from dpl.specific.platforms.shift_reg_gpio.shift_reg_trigger import ShiftRegTrigger, ShiftRegBuffered
 
 logger = logging.getLogger(__name__)
 

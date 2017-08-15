@@ -20,10 +20,10 @@ import threading
 
 import mpd
 
-from dpl.core.things import ThingFactory, ThingRegistry
 from dpl.core.things import Actuator
 from dpl.core.things import Player
-from dpl.specific.connections.mpd_client import MPDClientConnection
+from dpl.core.things import ThingFactory, ThingRegistry
+from .mpd_client import MPDClientConnection
 
 logger = logging.getLogger(__name__)
 
