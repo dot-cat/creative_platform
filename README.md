@@ -2,10 +2,7 @@
 Small platform for IoT applications
 
 ### How to clone
-This repository uses git submodules. To clone it properly, use `git clone --recursive` instead of simple `git clone`. Additional information is available here: 
-* StackOverflow: https://stackoverflow.com/questions/3796927/how-to-git-clone-including-submodules
-* Git docs (en): [git-scm/book/en](https://git-scm.com/book/en/v2/Git-Tools-Submodules)
-* Git docs (ru): [git-scm/book/ru](https://git-scm.com/book/ru/v1/%D0%98%D0%BD%D1%81%D1%82%D1%80%D1%83%D0%BC%D0%B5%D0%BD%D1%82%D1%8B-Git-%D0%9F%D0%BE%D0%B4%D0%BC%D0%BE%D0%B4%D1%83%D0%BB%D0%B8)
+This repository uses git submodules. To clone it properly, use `git clone --recursive` instead of simple `git clone`. Additional infromation is available here: https://stackoverflow.com/questions/3796927/how-to-git-clone-including-submodules
 
 ### Goals:
 * provide an authomous software platform for various IoT systems
