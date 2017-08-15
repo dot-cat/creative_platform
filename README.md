@@ -1,6 +1,9 @@
 # .CAT Platform
 Small platform for IoT applications
 
+### How to clone
+This repository uses git submodules. To clone it properly, use `git clone --recursive` instead of simple `git clone`. Additional infromation is available here: https://stackoverflow.com/questions/3796927/how-to-git-clone-including-submodules
+
 ### Goals:
 * provide an authomous software platform for various IoT systems
 * collection of information from different sources, including physical sensors
