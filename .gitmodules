@@ -1,0 +1,3 @@
+[submodule "dpl/libs"]
+	path = dpl/libs
+	url = https://github.com/dot-cat/dpl_libs
